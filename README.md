@@ -82,3 +82,16 @@ Options:
 - **Offline Support**: Create Next App will automatically detect if you're offline and bootstrap your project using your local package cache.
 - **Support for Examples**: Create Next App can bootstrap your application using an example from the Next.js examples collection (e.g. `npx create-next-app --example api-routes`).
 - **Tested**: The package is part of the Next.js monorepo and tested using the same integration test suite as Next.js itself, ensuring it works as expected with every release.
+
+### How does it work?
+
+TypeError: fetch failed
+at Object.fetch (node:internal/deps/undici/undici:11118:11)
+at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+cause: [Error: 409B614CF87F0000:error:0A000152:SSL routines:final_renegotiate:unsafe legacy renegotiation disabled:../deps/openssl/openssl/ssl/statem/extensions.c:908:
+] {
+library: 'SSL routines',
+reason: 'unsafe legacy renegotiation disabled',
+code: 'ERR_SSL_UNSAFE_LEGACY_RENEGOTIATION_DISABLED'
+}
+}

@@ -1,12 +1,13 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { type ClassValue, clsx } from "clsx";
+import noop from "lodash-es/noop";
+import { twMerge } from "tailwind-merge";
 import {
   uniqueUsernameGenerator,
   nouns,
   adjectives,
   type Config,
-} from 'unique-username-generator';
-import { isEmpty, isNull, isUndefined } from '~/utils/assertion';
+} from "unique-username-generator";
+import { isEmpty, isNull, isUndefined } from "~/utils/assertion";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -31,8 +32,8 @@ export const generatorName = (seed: string) => {
 
   const config: Config = {
     dictionaries: [adjectives, nouns, marvelCharacters],
-    separator: '_',
-    style: 'capital',
+    separator: "_",
+    style: "capital",
     randomDigits: 3,
   };
 
@@ -47,12 +48,12 @@ export const createSearchParams = (params?: Record<string, any>) => {
   Object.keys(params).forEach((key) => {
     if (params[key] !== undefined || params[key] !== null) {
       if (Array.isArray(params[key])) {
-        searchParams.append(key, params[key].join(','));
+        searchParams.append(key, params[key].join(","));
       } else {
         if (isUndefined(params[key]) || isNull(params[key])) return;
         const hasToString = Object.prototype.hasOwnProperty.call(
           params[key],
-          'toString',
+          "toString"
         );
         if (hasToString) {
           searchParams.append(key, params[key].toString());
@@ -86,7 +87,7 @@ export const getDateFormatted = (date: Date | string) => {
   const diffYears = Math.floor(diffMonths / 12);
 
   if (diffSeconds < 60) {
-    return '방금 전';
+    return "방금 전";
   }
 
   if (diffMinutes < 60) {
@@ -106,4 +107,26 @@ export const getDateFormatted = (date: Date | string) => {
   }
 
   return `${diffYears}년 전`;
+};
+
+export const delayPromise = (ms: number) => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let rejectFn: (reason?: any) => void = noop;
+  const promise = new Promise((resolve, reject) => {
+    timer = setTimeout(resolve, ms);
+    rejectFn = reject;
+  });
+
+  return {
+    promise,
+    cancel: () => {
+      clearTimeout(timer);
+      rejectFn?.(new Error("Cancelled"));
+    },
+    close: () => {
+      clearTimeout(timer);
+      timer = undefined;
+      rejectFn = noop;
+    },
+  };
 };
