@@ -4,7 +4,9 @@ import { nouvelles, type Item } from "./neusral.model";
 import { isEmpty } from "~/utils/assertion";
 import { db } from "~/server/db/prisma";
 import dayjs from "dayjs";
-
+import { Agent } from "undici";
+import crypto from "node:crypto";
+// https://github.com/nuxt/nuxt/issues/21609
 const findOrCreate = async (text: string) => {
   const data = await db.tag.findUnique({
     where: {

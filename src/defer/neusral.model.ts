@@ -1,4 +1,6 @@
 // the `defer()` helper will be used to define a background function
+// import { Agent } from "undici";
+// import crypto from "node:crypto";
 import { createId } from "@paralleldrive/cuid2";
 import puppeteer, {
   type Browser,
@@ -239,7 +241,15 @@ class Nouvelles {
             const { promise, close } = delayPromise(1000);
 
             try {
-              const response = await fetch(input.link);
+              const response = await fetch(input.link, {
+                // dispatcher: new Agent({
+                //   connect: {
+                //     rejectUnauthorized: false,
+                //     secureOptions:
+                //       crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+                //   },
+                // }),
+              });
               const html = await response.text();
               let description = matchDescription(html);
               if (description && HANGUL_BREAK_REGEX.test(description)) {
