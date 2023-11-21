@@ -85,6 +85,37 @@ Options:
 
 ### How does it work?
 
+```javascript
+import crypto from 'crypto';
+import https from 'https';
+
+/**
+ * Handle this problem with Node 18
+ * write EPROTO B8150000:error:0A000152:SSL routines:final_renegotiate:unsafe legacy renegotiation disabled
+ * see https://stackoverflow.com/questions/74324019/allow-legacy-renegotiation-for-nodejs/74600467#74600467
+ **/
+const allowLegacyRenegotiationforNodeJsOptions = {
+  httpsAgent: new https.Agent({
+    // for self signed you could also add
+    // rejectUnauthorized: false,
+    // allow legacy server
+    secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+  }),
+};
+
+function makeRequest(url: string, data: object) {
+  return axios({
+    ...allowLegacyRenegotiationforNodeJsOptions,
+    url,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    data: { some: 'data' },
+  });
+}
+
 TypeError: fetch failed
 at Object.fetch (node:internal/deps/undici/undici:11118:11)
 at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
@@ -95,3 +126,4 @@ reason: 'unsafe legacy renegotiation disabled',
 code: 'ERR_SSL_UNSAFE_LEGACY_RENEGOTIATION_DISABLED'
 }
 }
+```
