@@ -54,6 +54,7 @@
     "@t3-oss/env-nextjs": "^0.7.1",
     "@tanstack/react-query": "^5.8.3",
     "@tanstack/react-query-devtools": "^5.8.3",
+    "axios": "^1.6.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cross-env": "^7.0.3",

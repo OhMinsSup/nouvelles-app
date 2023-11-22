@@ -1,25 +1,31 @@
-// the `defer()` helper will be used to define a background function
-// import { Agent } from "undici";
-// import crypto from "node:crypto";
 import { createId } from "@paralleldrive/cuid2";
+import { delayPromise } from "~/utils/utils";
 import puppeteer, {
   type Browser,
   type Page,
   type ElementHandle,
 } from "puppeteer";
-import { delayPromise } from "~/utils/utils";
 
-export type Item = {
+export type Nouvelle = {
   id: string;
   neusralId: string | undefined;
-  parentCategory: string | undefined;
-  childCategory: string | undefined;
+  category: string | undefined;
+  tag: string | undefined;
   reporter: string | undefined;
   title: string | undefined;
   link: string | undefined;
+  realLink: string | undefined;
   date: string | undefined;
   description: string | undefined;
 };
+
+type PageCloseOptions =
+  | {
+      runBeforeUnload?: boolean | undefined;
+    }
+  | undefined;
+
+const NEUSRAL_URL = "https://www.neusral.com/briefing_subscriptions";
 
 const DESCRIPTION_REGEX =
   /<meta[^>]*name="description"[^>]*content="([^"]*)"[^>]*>/;
@@ -28,6 +34,27 @@ const OG_DESCRIPTION_REGEX =
   /<meta[^>]*property="og:description"[^>]*content="([^"]*)"[^>]*>/;
 
 const HANGUL_BREAK_REGEX = /�/;
+
+// 'https://www.neusral.com/r?n=YKCRY7Lyem' => 'YKCRY7Lyem'
+const NEUSRAL_N_ID_REGEX = /r\?n=(.*)/;
+
+const ELE_ITEM_CONTAINER = ".item-container";
+
+const ELE_CATEGORY = ".report-header .left .title";
+
+const ELE_TAG = ".tab-name > .tab_input_box";
+
+const ELE_TAB = ".each-tab";
+
+const ELE_ITEM_NEWS = "a[class='news-url']";
+
+const ELE_ITEM_NEWS_TITLE = ".news-title > span";
+
+const ELE_ITEM_NEWS_LINK = ".news-list";
+
+const ELE_ITEM_NEWS_DATE = ".news-date span[class='news-date-text']";
+
+const ELE_ITEM_NEWS_REPORTER = ".news-media-date";
 
 const replaceDescription = (html: string, isOgDescription?: boolean) => {
   return html.replace(
@@ -60,35 +87,32 @@ const matchDescription = (html: string) => {
   return undefined;
 };
 
-class Nouvelles {
-  private _URL = "https://www.neusral.com/briefing_subscriptions";
+const getDescription = (html: string) => {
+  let description = html ? matchDescription(html) : undefined;
+  if (description && HANGUL_BREAK_REGEX.test(description)) {
+    description = undefined;
+  }
+  return description;
+};
 
-  private _browser: Browser | undefined;
-
+class NouvellePage {
   private _page: Page | undefined;
 
-  private _items: Map<string, Item> = new Map();
+  private _items: Map<string, Nouvelle> = new Map();
 
-  async run() {
-    // make sure to pass the `--no-sandbox` option
-    this._browser = await puppeteer.launch({
-      args: ["--no-sandbox"],
-      headless: "new",
-    });
-
+  async run(browser: Browser) {
     try {
-      this._page = await this._browser.newPage();
+      this._page = await browser.newPage();
 
-      // pass the following `waitUntil` option to avoid
-      // unnecessary blocking when loading a page
-      await this._page.goto(this._URL, { waitUntil: "networkidle0" });
+      await this._page.goto(NEUSRAL_URL, { waitUntil: "networkidle0" });
 
-      // ".slick-list draggable" is the selector of the element
-      const $ele1 = await this._findTargetContainer();
+      const $ele1 = await this.$findTargetContainer();
 
-      await this._findNews($ele1);
+      await this.$findItems($ele1);
 
-      return Array.from(this._items.values());
+      await this.dispose();
+
+      return await this.$getRealItems();
     } catch (error) {
       console.error(error);
       return [];
@@ -97,12 +121,12 @@ class Nouvelles {
     }
   }
 
-  private async _findTargetContainer() {
+  private async $findTargetContainer() {
     if (!this._page) {
       throw new Error("No page found");
     }
 
-    const $ele = await this._page.$$(".slick-list.draggable");
+    const $ele = await this._page.$$(ELE_ITEM_CONTAINER);
     if (!$ele) {
       throw new Error("No container found");
     }
@@ -110,11 +134,8 @@ class Nouvelles {
     return $ele;
   }
 
-  private async _findByParentCategory($ele: ElementHandle<Element>) {
-    const text = await $ele.$eval(
-      ".report-header .left .title",
-      (el) => el.textContent
-    );
+  private async $findByCategory($ele: ElementHandle<Element>) {
+    const text = await $ele.$eval(ELE_CATEGORY, (el) => el.textContent);
 
     if (!text) {
       return undefined;
@@ -123,11 +144,8 @@ class Nouvelles {
     return text.trim();
   }
 
-  private async _findByChildCategory($ele: ElementHandle<Element>) {
-    const text = await $ele.$eval(
-      ".tab-name > .tab_input_box",
-      (el) => el.textContent
-    );
+  private async $findByTag($ele: ElementHandle<Element>) {
+    const text = await $ele.$eval(ELE_TAG, (el) => el.textContent);
 
     if (!text) {
       return undefined;
@@ -136,37 +154,24 @@ class Nouvelles {
     return text.trim();
   }
 
-  private async _findByReporter($ele: ElementHandle<Element>) {
-    const text = await $ele.$eval(
-      ".report-header .left .reporter",
-      (el) => el.textContent
-    );
-
-    if (!text) {
-      return undefined;
-    }
-
-    return text.trim();
-  }
-
-  private async _findByEachTab($ele: ElementHandle<Element>) {
-    const $tabs = await $ele.$$(".each-tab");
+  private async $findByEachTab($ele: ElementHandle<Element>) {
+    const $tabs = await $ele.$$(ELE_TAB);
     if (!$tabs) {
       return [];
     }
     return $tabs;
   }
 
-  private async _findByNews($ele: ElementHandle<Element>) {
-    const $tabs = await $ele.$$("a[class='news-url']");
+  private async $findByNews($ele: ElementHandle<Element>) {
+    const $tabs = await $ele.$$(ELE_ITEM_NEWS);
     if (!$tabs) {
       return [];
     }
     return $tabs;
   }
 
-  private async _findByTitle($ele: ElementHandle<Element>) {
-    const text = await $ele.$eval(".news-title > span", (el) => el.textContent);
+  private async $findByTitle($ele: ElementHandle<Element>) {
+    const text = await $ele.$eval(ELE_ITEM_NEWS_TITLE, (el) => el.textContent);
 
     if (!text) {
       return undefined;
@@ -175,8 +180,8 @@ class Nouvelles {
     return text.trim();
   }
 
-  private async _findByLink($ele: ElementHandle<Element>) {
-    const text = await $ele.$eval(".news-list", (e) => {
+  private async $findByLink($ele: ElementHandle<Element>) {
+    const text = await $ele.$eval(ELE_ITEM_NEWS_LINK, (e) => {
       return e.parentElement?.getAttribute("href");
     });
 
@@ -187,11 +192,8 @@ class Nouvelles {
     return text.trim();
   }
 
-  private async _findByDate($ele: ElementHandle<Element>) {
-    const text = await $ele.$eval(
-      ".news-date span[class='news-date-text']",
-      (el) => el.textContent
-    );
+  private async $findByDate($ele: ElementHandle<Element>) {
+    const text = await $ele.$eval(ELE_ITEM_NEWS_DATE, (el) => el.textContent);
 
     if (!text) {
       return undefined;
@@ -200,82 +202,129 @@ class Nouvelles {
     return text.trim();
   }
 
-  private async _findNews($eles: ElementHandle<Element>[]) {
+  private async $findByReporter($ele: ElementHandle<Element>) {
+    const text = await $ele.$eval(
+      ELE_ITEM_NEWS_REPORTER,
+      (el) => el.textContent
+    );
+
+    if (!text) {
+      return undefined;
+    }
+
+    const text_next = text.trim().replace(/\s/g, "");
+    const reporter = text_next?.split("|")?.at(0)?.trim();
+    return reporter;
+  }
+
+  private async $findItems($eles: ElementHandle<Element>[]) {
     for (const $item of $eles) {
-      const [parentCategory, reporter, $tabs] = await Promise.all([
-        this._findByParentCategory($item),
-        this._findByReporter($item),
-        this._findByEachTab($item),
+      const [category, $tabs] = await Promise.all([
+        this.$findByCategory($item),
+        this.$findByEachTab($item),
       ]);
 
       for (const $tab of $tabs) {
-        const [childCategory, $news] = await Promise.all([
-          this._findByChildCategory($tab),
-          this._findByNews($tab),
+        const [tag, $news] = await Promise.all([
+          this.$findByTag($tab),
+          this.$findByNews($tab),
         ]);
 
         for (const $new of $news) {
-          const [title, link, date] = await Promise.all([
-            this._findByTitle($new),
-            this._findByLink($new),
-            this._findByDate($new),
+          const [title, link, date, reporter] = await Promise.all([
+            this.$findByTitle($new),
+            this.$findByLink($new),
+            this.$findByDate($new),
+            this.$findByReporter($new),
           ]);
 
           const input = {
             id: createId(),
             neusralId: undefined,
             description: undefined,
-            parentCategory,
-            childCategory,
+            realLink: undefined,
+            category,
+            tag,
             reporter,
             title,
             link,
             date,
-          };
+          } as Nouvelle;
 
           if (input.link) {
-            // 'https://www.neusral.com/r?n=YKCRY7Lyem' => 'YKCRY7Lyem'
-            const neusralId = input.link?.match(/r\?n=(.*)/)?.at(1);
+            const neusralId = input.link?.match(NEUSRAL_N_ID_REGEX)?.at(1);
             Object.assign(input, { neusralId });
-
-            const { promise, close } = delayPromise(1000);
-
-            try {
-              const response = await fetch(input.link, {
-                // dispatcher: new Agent({
-                //   connect: {
-                //     rejectUnauthorized: false,
-                //     secureOptions:
-                //       crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
-                //   },
-                // }),
-              });
-              const html = await response.text();
-              let description = matchDescription(html);
-              if (description && HANGUL_BREAK_REGEX.test(description)) {
-                description = undefined;
-              }
-              Object.assign(input, { description });
-
-              await promise;
-            } catch (error) {
-              console.error(error);
-            } finally {
-              close();
-            }
           }
 
-          if (!this._items.has(input.id)) this._items.set(input.id, input);
+          this._items.set(input.id, input);
         }
       }
     }
   }
 
-  async dispose() {
-    if (this._browser) {
-      await this._browser.close();
+  private async $getRealItems() {
+    for (const item of this._items.values()) {
+      if (item.link) {
+        const response = await fetch(item.link).catch((error) => {
+          console.error(error);
+          return undefined;
+        });
+
+        if (response && this._items.has(item.id)) {
+          const html = await response.text();
+          this._items.set(item.id, {
+            ...item,
+            realLink: response.url,
+            description: getDescription(html),
+          });
+        } else {
+          continue;
+        }
+      } else {
+        continue;
+      }
+    }
+
+    return Array.from(this._items.values());
+  }
+
+  async dispose(options?: PageCloseOptions) {
+    if (this._page) {
+      await this._page.close(options);
+      if (this._page.isClosed()) this._page = undefined;
     }
   }
 }
 
-export const nouvelles = new Nouvelles();
+class NouvellesSite {
+  private _browser: Browser | undefined;
+
+  private _nouvellaPage: NouvellePage | undefined;
+
+  async run() {
+    // make sure to pass the `--no-sandbox` option
+    this._browser = await puppeteer.launch({
+      args: ["--no-sandbox"],
+      headless: "new",
+      timeout: 0,
+    });
+
+    try {
+      this._nouvellaPage = new NouvellePage();
+
+      return await this._nouvellaPage.run(this._browser);
+    } catch (error) {
+      console.error(error);
+      return [];
+    } finally {
+      await this.dispose();
+    }
+  }
+
+  async dispose() {
+    if (this._nouvellaPage) await this._nouvellaPage.dispose();
+    if (this._browser) await this._browser.close();
+  }
+}
+
+export const nouvellesSite = new NouvellesSite();

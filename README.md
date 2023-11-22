@@ -126,4 +126,14 @@ reason: 'unsafe legacy renegotiation disabled',
 code: 'ERR_SSL_UNSAFE_LEGACY_RENEGOTIATION_DISABLED'
 }
 }
+
+TypeError: fetch failed
+    at Object.fetch (node:internal/deps/undici/undici:11118:11) {
+  cause: Error: read ECONNRESET
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:217:20)
+      at TLSWrap.callbackTrampoline (node:internal/async_hooks:130:17) {
+    errno: -54,
+    code: 'ECONNRESET',
+    syscall: 'read'
+  }
 ```

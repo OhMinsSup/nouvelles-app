@@ -1,90 +1,20 @@
 // the `defer()` helper will be used to define a background function
 import { defer } from "@defer/client";
-import { nouvelles, type Item } from "./neusral.model";
-import { isEmpty } from "~/utils/assertion";
-import { db } from "~/server/db/prisma";
-import dayjs from "dayjs";
-import { Agent } from "undici";
-import crypto from "node:crypto";
-// https://github.com/nuxt/nuxt/issues/21609
-const findOrCreate = async (text: string) => {
-  const data = await db.tag.findUnique({
-    where: {
-      name: text,
-    },
-  });
-  if (!data) {
-    const tag = await db.tag.create({
-      data: {
-        name: text,
-      },
-    });
-    return tag;
-  }
-  return data;
-};
+import { nouvellesSite, type Nouvelle } from "./neusral.model";
+import { createItems } from "~/server/item";
 
 // a background function must be `async`
 export async function getNeusralCollection() {
-  let items: Item[] = [];
+  let items: Nouvelle[] = [];
   try {
-    items = await nouvelles.run();
+    items = await nouvellesSite.run();
   } catch (error) {
     console.error(error);
   } finally {
-    await nouvelles.dispose();
+    await nouvellesSite.dispose();
   }
 
-  if (isEmpty(items)) return false;
-
-  const unionTags = new Set<string>();
-  items.forEach((item) => {
-    if (item.parentCategory) unionTags.add(item.parentCategory);
-    if (item.childCategory) unionTags.add(item.childCategory);
-  });
-
-  const tags = Array.from(unionTags);
-
-  const tagItems = await Promise.all(tags.map((tag) => findOrCreate(tag)));
-
-  for (const item of items) {
-    const { parentCategory, childCategory } = item;
-    const tag1 = tagItems.find((tag) => tag.name === parentCategory);
-    const tag2 = tagItems.find((tag) => tag.name === childCategory);
-
-    const date = item.date ? dayjs(item.date).toDate() : undefined;
-
-    await db.item.create({
-      data: {
-        neusralId: item.neusralId,
-        reporter: item.reporter,
-        title: item.title,
-        link: item.link,
-        description: item.description,
-        pulbishedAt: date,
-        ItemTag: {
-          create: [
-            {
-              tag: {
-                connect: {
-                  id: tag1?.id,
-                },
-              },
-            },
-            {
-              tag: {
-                connect: {
-                  id: tag2?.id,
-                },
-              },
-            },
-          ],
-        },
-      },
-    });
-  }
-
-  return true;
+  await createItems(items);
 }
 
 export default defer(getNeusralCollection);
