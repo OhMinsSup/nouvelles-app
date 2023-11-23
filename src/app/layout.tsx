@@ -73,7 +73,7 @@ export default function Layout(props: RoutesProps) {
 
       <body
         className={cn(
-          "bg-background font-sans antialiased",
+          "font-sans antialiased",
           fontSans.variable,
           fontHeading.variable
         )}
