@@ -1,4 +1,13 @@
-export const QUERIES_KEY = {};
+export const QUERIES_KEY = {
+  items: {
+    root: ["items"],
+    search: (q?: string) => {
+      const searchParams = new URLSearchParams();
+      if (q) searchParams.append("q", q);
+      return ["items", "search", searchParams.toString()];
+    },
+  },
+};
 
 export const MUTATIONS_KEY = {};
 
@@ -16,6 +25,17 @@ export const ASSET_URL = {};
 
 export const PAGE_ENDPOINTS = {
   ROOT: "/",
+  AUTH: {
+    SIGNIN: "/signin",
+    SIGNUP: "/signup",
+  },
+  MY_PAGE: {
+    ID: (id: string) => `/profile/${id}`,
+  },
+  THREADS: {
+    ROOT: "/threads",
+    LIKES: "/threads/likes",
+  },
 } as const;
 
 export const SITE_CONFIG = {

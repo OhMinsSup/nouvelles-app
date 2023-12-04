@@ -10,8 +10,8 @@ import { API_ENDPOINTS } from "./constants";
 
 // types
 
-class FetchService {
-  static baseURL = isBrowser
+export class FetchService {
+  baseURL = isBrowser
     ? (function () {
         return "http://localhost:3000";
       })()
@@ -19,11 +19,11 @@ class FetchService {
         return "http://localhost:3000";
       })();
 
-  static prefix = "/api";
+  prefix = "/api";
 
-  static defineApis = API_ENDPOINTS;
+  defineApis = API_ENDPOINTS;
 
-  static getSearchParams = (
+  getSearchParams = (
     url: FetchSchema.ApiRoutes | string,
     params?: URLSearchParams | string
   ) => {
@@ -38,7 +38,7 @@ class FetchService {
     return toStringUrl.replace(/(?:\?.*?)?(?=#|$)/, searchParams);
   };
 
-  static makeURL = (
+  makeURL = (
     request: FetchSchema.ApiRoutes,
     options?: FetchSchema.ApiOptions
   ) => {
@@ -89,7 +89,7 @@ class FetchService {
     };
   };
 
-  static makeBody = (body?: FetchSchema.Body) => {
+  makeBody = (body?: FetchSchema.Body) => {
     if (body instanceof FormData) {
       return body;
     }
@@ -109,10 +109,7 @@ class FetchService {
     return body as BodyInit;
   };
 
-  static async get(
-    request: FetchSchema.ApiRoutes,
-    options?: FetchSchema.ApiOptions
-  ) {
+  async get(request: FetchSchema.ApiRoutes, options?: FetchSchema.ApiOptions) {
     const { url } = this.makeURL(request, options);
     const requset = new Request(url, {
       ...options?.requestInit,
@@ -125,7 +122,7 @@ class FetchService {
     return response;
   }
 
-  static async post(
+  async post(
     request: FetchSchema.ApiRoutes,
     input?: FetchSchema.Body,
     options?: FetchSchema.ApiOptions
@@ -144,7 +141,7 @@ class FetchService {
     return response;
   }
 
-  static async delete(
+  async delete(
     request: FetchSchema.ApiRoutes,
     options?: FetchSchema.ApiOptions
   ) {
@@ -160,7 +157,7 @@ class FetchService {
     return response;
   }
 
-  static async put(
+  async put(
     request: FetchSchema.ApiRoutes,
     input?: FetchSchema.Body,
     options?: FetchSchema.ApiOptions
@@ -179,11 +176,11 @@ class FetchService {
     return response;
   }
 
-  static async toJson<FetchData = any>(response: Response) {
+  async toJson<FetchData = any>(response: Response) {
     return response.json() as Promise<FetchData>;
   }
 
-  static async raw(input: RequestInfo | URL, init?: RequestInit | undefined) {
+  async raw(input: RequestInfo | URL, init?: RequestInit | undefined) {
     const requset = new Request(input, init);
     const response = await fetch(requset);
     if (!response.ok) {
