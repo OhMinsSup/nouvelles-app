@@ -90,7 +90,7 @@ export async function POST(request: Request) {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Bearer y7TBvOKp2XNFTDhY2oOjBkXMh5CDzJ6t`,
+        Authorization: `Bearer`,
       },
       body: new URLSearchParams({
         template_object: JSON.stringify(template_object),
