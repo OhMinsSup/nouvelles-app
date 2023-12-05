@@ -6,5 +6,7 @@ export type BaseItemQuery = {
 
 export type ItemQuery = BaseItemQuery & {
   q?: string;
+  type?: string;
+  tag?: string;
   category?: string;
 };

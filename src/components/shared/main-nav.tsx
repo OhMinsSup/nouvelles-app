@@ -10,11 +10,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { useTheme } from "next-themes";
 import SkipRenderOnClient from "./skip-render-on-client";
+import { useTheme } from "next-themes";
 
 export default function MainNav() {
   return (
@@ -95,10 +94,6 @@ MainNav.Menu = function Item() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" sideOffset={20}>
         <DropdownMenuItem onClick={onClick}>모드전환</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => console.log("123")}>
-          로그아웃
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

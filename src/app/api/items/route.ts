@@ -7,7 +7,9 @@ import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 const searchParamsSchema = z.object({
   cursor: z.string().optional(),
   limit: z.string().optional(),
-  category: z.enum(["search"]).optional(),
+  category: z.string().optional(),
+  tag: z.string().optional(),
+  type: z.enum(["root", "search"]).optional(),
   q: z.string().optional(),
 });
 
@@ -18,7 +20,9 @@ export async function GET(request: Request) {
     const query = await searchParamsSchema.parseAsync({
       cursor: searchParams.get("cursor") ?? undefined,
       limit: searchParams.get("limit") ?? undefined,
+      type: searchParams.get("type") ?? undefined,
       category: searchParams.get("category") ?? undefined,
+      tag: searchParams.get("tag") ?? undefined,
       q: searchParams.get("q") ?? undefined,
     });
 

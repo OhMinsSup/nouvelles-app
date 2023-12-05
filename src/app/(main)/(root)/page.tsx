@@ -5,8 +5,15 @@ import { itemService } from "~/server/items/items.server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { QUERIES_KEY } from "~/constants/constants";
 
-export default async function Pages() {
+interface Props {
+  searchParams: { category: string | undefined; tag: string | undefined };
+}
+
+export default async function Pages({ searchParams }: Props) {
   const queryClient = getQueryClient();
+
+  const category = searchParams?.category ?? undefined;
+  const tag = searchParams?.tag ?? undefined;
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: QUERIES_KEY.items.root,
@@ -14,6 +21,8 @@ export default async function Pages() {
     queryFn: async () => {
       return await itemService.getItems({
         limit: 10,
+        category,
+        tag,
       });
     },
   });
@@ -31,7 +40,11 @@ export default async function Pages() {
   return (
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        {isEmptyData ? <>Empty</> : <ItemList type="root" />}
+        {isEmptyData ? (
+          <>Empty</>
+        ) : (
+          <ItemList type="root" category={category} tag={tag} />
+        )}
       </HydrationBoundary>
     </>
   );

@@ -21,7 +21,10 @@ type InputCreate = {
 };
 
 export class ItemService {
-  createItems() {}
+  async createItems(input: InputCreate[]) {
+    const items = await Promise.all(input.map((item) => this.createItem(item)));
+    return items;
+  }
 
   async createItem(input: InputCreate) {
     const {
@@ -49,13 +52,24 @@ export class ItemService {
       return exists;
     }
 
+    const tagItem = await db.tag.findFirst({
+      where: {
+        name: tag,
+      },
+    });
+    const categoryItem = await db.category.findFirst({
+      where: {
+        name: category,
+      },
+    });
+
     const dateString = dayjs(input.date, "YY.MM.DD").format(
       "YYYY-MM-DD HH:mm:ss"
     );
     const dateTime = dayjs(dateString).toDate();
     const pulbishedAt = isInvaliDate(dateTime) ? undefined : dateTime;
 
-    await db.item.create({
+    const data = await db.item.create({
       data: {
         neusralId,
         reporter,
@@ -64,32 +78,34 @@ export class ItemService {
         realLink,
         description,
         pulbishedAt,
-        // ...(categoryItem && {
-        //   Category: {
-        //     connect: {
-        //       id: categoryItem?.id,
-        //     },
-        //   },
-        // }),
-        // ...(tagItem && {
-        //   ItemTag: {
-        //     create: [
-        //       {
-        //         tag: {
-        //           connect: {
-        //             id: tagItem?.id,
-        //           },
-        //         },
-        //       },
-        //     ],
-        //   },
-        // }),
+        ...(categoryItem && {
+          Category: {
+            connect: {
+              id: categoryItem.id,
+            },
+          },
+        }),
+        ...(tagItem && {
+          ItemTag: {
+            create: [
+              {
+                tag: {
+                  connect: {
+                    id: tagItem.id,
+                  },
+                },
+              },
+            ],
+          },
+        }),
       },
     });
+
+    return data;
   }
 
   getItems(query: ItemQuery, currentUserId?: string) {
-    if (query.category === "search") {
+    if (query.type === "search") {
       return this._getItemsBySearch(query, currentUserId);
     }
     return this._getItemsByCursor(query, currentUserId);
@@ -105,7 +121,7 @@ export class ItemService {
   }
 
   private async _getItemsByCursor(
-    { cursor, limit }: ItemQuery,
+    { cursor, limit, category, tag }: ItemQuery,
     currentUserId?: string
   ) {
     if (isString(cursor)) {
@@ -118,10 +134,59 @@ export class ItemService {
       limit = limit ?? 25;
     }
 
+    const categoryItem = category
+      ? await db.category.findFirst({
+          where: {
+            name: category,
+          },
+        })
+      : undefined;
+
+    const tagItem = tag
+      ? await db.tag.findFirst({
+          where: {
+            name: tag,
+          },
+        })
+      : undefined;
+
     try {
       const [totalCount, list] = await Promise.all([
-        db.item.count(),
+        db.item.count({
+          where: {
+            ...(categoryItem && {
+              Category: {
+                id: categoryItem.id,
+              },
+            }),
+            ...(tagItem && {
+              ItemTag: {
+                some: {
+                  tag: {
+                    id: tagItem.id,
+                  },
+                },
+              },
+            }),
+          },
+        }),
         db.item.findMany({
+          where: {
+            ...(categoryItem && {
+              Category: {
+                id: categoryItem.id,
+              },
+            }),
+            ...(tagItem && {
+              ItemTag: {
+                some: {
+                  tag: {
+                    id: tagItem.id,
+                  },
+                },
+              },
+            }),
+          },
           select: {
             id: true,
             neusralId: true,
@@ -148,19 +213,44 @@ export class ItemService {
               },
             },
           },
+          orderBy: {
+            pulbishedAt: "desc",
+          },
         }),
       ]);
 
-      const endCursor = list.at(-1)?.id ?? null;
-      const hasNextPage = endCursor
-        ? (await db.item.count({
-            where: {
-              id: {
-                lt: endCursor,
+      const endItem = list.at(-1);
+
+      const endCursor = endItem?.id ?? null;
+      const hasNextPage =
+        endItem && endCursor
+          ? (await db.item.count({
+              where: {
+                id: {
+                  lt: endCursor,
+                },
+                ...(endItem.pulbishedAt && {
+                  pulbishedAt: {
+                    lt: endItem.pulbishedAt,
+                  },
+                }),
+                ...(categoryItem && {
+                  Category: {
+                    id: categoryItem.id,
+                  },
+                }),
+                ...(tagItem && {
+                  ItemTag: {
+                    some: {
+                      tag: {
+                        id: tagItem.id,
+                      },
+                    },
+                  },
+                }),
               },
-            },
-          })) > 0
-        : false;
+            })) > 0
+          : false;
 
       return {
         totalCount,
@@ -174,7 +264,7 @@ export class ItemService {
   }
 
   private async _getItemsBySearch(
-    { cursor, limit, q }: ItemQuery,
+    { cursor, limit, q, tag, category }: ItemQuery,
     currentUserId?: string
   ) {
     if (isString(cursor)) {
@@ -203,6 +293,20 @@ export class ItemService {
                 },
               },
             ],
+            ...(category && {
+              Category: {
+                name: category,
+              },
+            }),
+            ...(tag && {
+              ItemTag: {
+                some: {
+                  tag: {
+                    name: tag,
+                  },
+                },
+              },
+            }),
           },
         }),
         db.item.findMany({
@@ -219,6 +323,20 @@ export class ItemService {
                 },
               },
             ],
+            ...(category && {
+              Category: {
+                name: category,
+              },
+            }),
+            ...(tag && {
+              ItemTag: {
+                some: {
+                  tag: {
+                    name: tag,
+                  },
+                },
+              },
+            }),
           },
           select: {
             id: true,
@@ -246,31 +364,55 @@ export class ItemService {
               },
             },
           },
+          orderBy: {
+            pulbishedAt: "desc",
+          },
         }),
       ]);
 
-      const endCursor = list.at(-1)?.id ?? null;
-      const hasNextPage = endCursor
-        ? (await db.item.count({
-            where: {
-              id: {
-                lt: endCursor,
+      const endItem = list.at(-1);
+      const endCursor = endItem?.id ?? null;
+      const hasNextPage =
+        endItem && endCursor
+          ? (await db.item.count({
+              where: {
+                id: {
+                  lt: endCursor,
+                },
+                ...(endItem.pulbishedAt && {
+                  pulbishedAt: {
+                    lt: endItem.pulbishedAt,
+                  },
+                }),
+                ...(category && {
+                  Category: {
+                    name: category,
+                  },
+                }),
+                ...(tag && {
+                  ItemTag: {
+                    some: {
+                      tag: {
+                        name: tag,
+                      },
+                    },
+                  },
+                }),
+                OR: [
+                  {
+                    title: {
+                      contains: q,
+                    },
+                  },
+                  {
+                    description: {
+                      contains: q,
+                    },
+                  },
+                ],
               },
-              OR: [
-                {
-                  title: {
-                    contains: q,
-                  },
-                },
-                {
-                  description: {
-                    contains: q,
-                  },
-                },
-              ],
-            },
-          })) > 0
-        : false;
+            })) > 0
+          : false;
 
       return {
         totalCount,

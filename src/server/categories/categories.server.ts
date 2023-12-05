@@ -3,6 +3,11 @@ import { db } from "~/server/db/prisma";
 import type { Category } from "@prisma/client";
 
 export class CategoriesService {
+  async findMany(): Promise<Category[]> {
+    const data = await db.category.findMany();
+    return data;
+  }
+
   async findOrCreate(text: string): Promise<Category> {
     const data = await db.category.findUnique({
       where: {

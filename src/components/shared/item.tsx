@@ -1,20 +1,23 @@
 "use client";
-import z from "zod";
 import { useMemo } from "react";
 import { Card } from "~/components/ui/card";
 import Avatars from "~/components/shared/avatars";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { TipTapEditor } from "~/components/editor/tiptap-editor";
 import { cn, getDateFormatted } from "~/utils/utils";
 
 import type { ItemSchema } from "~/server/items/items.model";
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface ItemProps {
   item: ItemSchema;
 }
 
 export default function Item({ item }: ItemProps) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const date =
     item && item.pulbishedAt ? getDateFormatted(item.pulbishedAt) : null;
 
@@ -36,6 +39,29 @@ export default function Item({ item }: ItemProps) {
       href: "#",
     };
   }, [item]);
+
+  const categoryUrl = useMemo(() => {
+    const _searchParams = new URLSearchParams(searchParams);
+    if (_searchParams.has("category")) {
+      _searchParams.delete("category");
+    } else {
+      _searchParams.set("category", item.Category.name);
+    }
+    return `${pathname}?${_searchParams.toString()}`;
+  }, [searchParams, pathname]);
+
+  const tagUrl = useMemo(() => {
+    const _searchParams = new URLSearchParams(searchParams);
+    if (_searchParams.has("tag")) {
+      _searchParams.delete("tag");
+    } else {
+      const firstTag = item.ItemTag.at(0);
+      if (firstTag) {
+        _searchParams.set("tag", firstTag.tag.name);
+      }
+    }
+    return `${pathname}?${_searchParams.toString()}`;
+  }, [searchParams, pathname]);
 
   return (
     <Card className="m-3 mx-auto overflow-hidden rounded-none border-x-0 border-b border-t-0 shadow-none">
@@ -97,9 +123,31 @@ export default function Item({ item }: ItemProps) {
           </div>
           <div className="flex items-center justify-end space-x-4 py-4">
             <div className="flex items-center space-x-1">
-              {item.Category ? <Badge>{item.Category.name}</Badge> : null}
+              {item.Category ? (
+                <Link
+                  href={categoryUrl}
+                  replace
+                  className={buttonVariants({
+                    variant: "secondary",
+                    size: "xxs",
+                    className: "text-xs",
+                  })}
+                >
+                  {item.Category.name}
+                </Link>
+              ) : null}
               {item.ItemTag.map((data) => (
-                <Badge key={data.tag.id}>{data.tag.name}</Badge>
+                <Link
+                  href={tagUrl}
+                  replace
+                  key={data.tag.id}
+                  className={buttonVariants({
+                    variant: "secondary",
+                    size: "xxs",
+                  })}
+                >
+                  {data.tag.name}
+                </Link>
               ))}
             </div>
           </div>

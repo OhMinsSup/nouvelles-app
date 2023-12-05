@@ -6,9 +6,9 @@ import { getNeusralCollection } from "./getNeusralCollection";
 
 // cron expression: 매일 아침 8시에 실행
 // cron expression: every day at 8:00 AM
-// const cron = "0 8 * * *";
+const cron = "0 8 * * *";
 // cron expression: every 10 seconds
-const cron = "*/10 * * * * *";
+// const cron = "*/10 * * * * *";
 
 export default defer.cron(getNeusralCollection, cron, {
   retry: 5,

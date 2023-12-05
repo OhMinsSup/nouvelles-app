@@ -284,7 +284,7 @@ class NouvellePage {
       }
     }
 
-    return Array.from(this._items.values());
+    return [...this._items.values()];
   }
 
   async dispose(options?: PageCloseOptions) {
@@ -292,6 +292,7 @@ class NouvellePage {
       await this._page.close(options);
       if (this._page.isClosed()) this._page = undefined;
     }
+    this._items.clear();
   }
 }
 

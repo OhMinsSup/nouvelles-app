@@ -1,7 +1,7 @@
 // the `defer()` helper will be used to define a background function
 import { defer } from "@defer/client";
 import { nouvellesSite, type Nouvelle } from "./neusral.model";
-import { createItems } from "~/server/item";
+import { itemService } from "~/server/items/items.server";
 
 // a background function must be `async`
 export async function getNeusralCollection() {
@@ -14,7 +14,7 @@ export async function getNeusralCollection() {
     await nouvellesSite.dispose();
   }
 
-  await createItems(items);
+  await itemService.createItems(items);
 }
 
 export default defer(getNeusralCollection);

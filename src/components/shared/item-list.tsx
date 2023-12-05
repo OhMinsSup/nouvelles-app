@@ -17,6 +17,7 @@ const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 interface ItemListProps {
   type: "root" | "search";
   category?: string;
+  tag?: string;
   q?: string;
   userId?: string;
 }
@@ -30,13 +31,14 @@ export default function ItemList({
   userId,
   type = "root",
   q,
+  tag,
   category,
 }: ItemListProps) {
   const $virtuoso = useRef<VirtuosoHandle>(null);
   const $cache = useRef<Cache | null>(null);
 
   const key = useMemo(() => {
-    return `@threads::scroll::${type}`;
+    return `@items::scroll::${type}`;
   }, [type]);
 
   const getCache = useCallback(() => {
@@ -58,7 +60,9 @@ export default function ItemList({
     queryFn: async ({ pageParam }) => {
       return await getItemsApi({
         ...(category ? { category } : {}),
-        ...(category && category === "search" ? { q } : {}),
+        ...(tag ? { tag } : {}),
+        ...(type ? { type } : {}),
+        ...(type && type === "search" ? { q } : {}),
         ...(userId ? { userId: userId } : {}),
         limit: 10,
         cursor: pageParam ? pageParam : undefined,
