@@ -7,7 +7,10 @@
     "dev:cli": "node dist/cli.js --env local",
     "dev:start": "next",
     "start": "next start",
-    "build": "next build",
+    "build": "run-s build:*",
+    "build:db": "prisma generate",
+    "build:supabase": "prisma db push",
+    "build:next": "next build",
     "export": "next export",
     "fix": "run-p fix:*",
     "fix:types": "tsc --noEmit",
@@ -19,8 +22,7 @@
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "db:init": "prisma generate",
-    "db:dev": "prisma migrate dev",
-    "db:push": "prisma db push"
+    "db:dev": "prisma migrate dev"
   },
   "keywords": [
     "nextjs"
