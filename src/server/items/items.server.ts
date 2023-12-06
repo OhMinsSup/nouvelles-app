@@ -22,6 +22,7 @@ type InputCreate = {
 
 export class ItemService {
   async createItems(input: InputCreate[]) {
+    console.log("createItems", input);
     const items = await Promise.all(input.map((item) => this.createItem(item)));
     return items;
   }

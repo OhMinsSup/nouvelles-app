@@ -8,23 +8,10 @@ import Kakao from "next-auth/providers/kakao";
 import { db } from "~/server/db/prisma";
 import { env } from "../../../env.mjs";
 
-// Read more at: https://next-auth.js.org/getting-started/typescript#module-augmentation
-declare module "next-auth/jwt" {
-  interface JWT {
-    /** The user's role. */
-    user: {
-      id: string;
-      name: string | undefined;
-      username: string;
-      email: string | undefined;
-      emailVerified: boolean;
-      image: string | undefined;
-      profile: {
-        bio: string | undefined;
-      };
-      isActive: boolean;
-    };
-  }
+// Define a role enum
+export enum Role {
+  user = "user",
+  admin = "admin",
 }
 
 declare module "next-auth" {
@@ -35,13 +22,9 @@ declare module "next-auth" {
     user: {
       id: string;
       name: string | undefined;
-      username: string;
       email: string | undefined;
-      emailVerified: boolean;
       image: string | undefined;
-      profile: {
-        bio: string | undefined;
-      };
+      role?: Role;
     };
   }
 }
@@ -51,14 +34,37 @@ export const authOptions = {
     Kakao({
       clientId: env.KAKAO_CLIENT_ID,
       clientSecret: env.KAKAO_CLIENT_SECRET,
+      profile: (profile) => {
+        return {
+          id: profile.id.toString(),
+          name: profile.kakao_account?.profile?.nickname,
+          email: profile.kakao_account?.email,
+          image: profile.kakao_account?.profile?.profile_image_url,
+          role: "admin",
+        };
+      },
     }),
   ],
   pages: {
-    signIn: "/signin",
-    verifyRequest: "/signin",
-    error: "/signin", // Error code passed in query string as ?error=
+    signIn: "/admin/signin",
+    verifyRequest: "/admin/signin",
+    error: "/admin/signin", // Error code passed in query string as ?error=
   },
   adapter: PrismaAdapter(db),
+  callbacks: {
+    async session({ session, user }) {
+      if (user) {
+        session.user = {
+          ...(session.user ?? {}),
+          id: user.id,
+          // @ts-ignore TODO: fix this
+          role: user.role,
+        };
+      }
+
+      return session;
+    },
+  },
 } satisfies NextAuthConfig;
 
 export function getSession() {
@@ -66,14 +72,8 @@ export function getSession() {
     user: {
       id: string;
       name: string | undefined;
-      username: string;
       email: string | undefined;
-      emailVerified: boolean;
       image: string | undefined;
-      profile: {
-        bio: string | undefined;
-      };
-      isActive: boolean;
     };
   } | null>;
 }

@@ -14,6 +14,8 @@ export async function getNeusralCollection() {
     await nouvellesSite.dispose();
   }
 
+  console.log("items", items);
+
   await itemService.createItems(items);
 }
 

@@ -15,11 +15,10 @@ model User {
     id            String    @id @default(uuid())
     name          String?
     username      String?   @unique
-    password      String?
-    salt          String?
     email         String?   @unique
     emailVerified DateTime? @map(name: "email_verified")
     image         String?
+    role          String? // New column
     createdAt     DateTime  @default(now()) @map(name: "created_at")
     updatedAt     DateTime  @updatedAt @map(name: "updated_at")
     accounts      Account[]

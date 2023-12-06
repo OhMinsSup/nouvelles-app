@@ -13,7 +13,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Icons } from "~/components/icons";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { PAGE_ENDPOINTS } from "~/constants/constants";
 import { cn } from "~/utils/utils";
