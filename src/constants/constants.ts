@@ -30,7 +30,6 @@ export const PAGE_ENDPOINTS = {
     ROOT: "/admin",
     AUTH: {
       SIGNIN: "/admin/signin",
-      SIGNUP: "/admin/signup",
     },
   },
 } as const;

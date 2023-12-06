@@ -109,14 +109,12 @@ class NouvellePage {
 
       await this.$findItems($ele1);
 
-      await this.dispose();
-
       return await this.$getRealItems();
     } catch (error) {
       console.error(error);
       return [];
     } finally {
-      await this.dispose();
+      await this.close();
     }
   }
 
@@ -287,12 +285,17 @@ class NouvellePage {
     return [...this._items.values()];
   }
 
-  async dispose(options?: PageCloseOptions) {
+  async close(options?: PageCloseOptions) {
     if (this._page) {
       await this._page.close(options);
-      if (this._page.isClosed()) this._page = undefined;
     }
+  }
+
+  cleanup() {
     this._items.clear();
+    if (this._page && this._page.isClosed()) {
+      this._page = undefined;
+    }
   }
 }
 
@@ -316,14 +319,23 @@ class NouvellesSite {
     } catch (error) {
       console.error(error);
       return [];
-    } finally {
-      await this.dispose();
     }
   }
 
-  async dispose() {
-    if (this._nouvellaPage) await this._nouvellaPage.dispose();
+  async close() {
+    if (this._nouvellaPage) await this._nouvellaPage.close();
     if (this._browser) await this._browser.close();
+  }
+
+  cleanup() {
+    if (this._nouvellaPage) {
+      this._nouvellaPage.cleanup();
+      this._nouvellaPage = undefined;
+    }
+
+    if (this._browser) {
+      this._browser = undefined;
+    }
   }
 }
 

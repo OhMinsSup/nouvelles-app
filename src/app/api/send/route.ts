@@ -1,17 +1,32 @@
+import { accountsService } from "~/server/accounts/accounts.server";
+import { getSession } from "~/server/auth";
+
 export async function POST(request: Request) {
-  //   const response1 = await fetch("https://kauth.kakao.com/oauth/authorize", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/x-www-form-urlencoded",
-  //     },
-  //     body: new URLSearchParams({
-  //       grant_type: "authorization_code",
-  //       client_id: "f5f9a3f8c3b6e0c0b3e6c8e2e4a2e2a4",
-  //       redirect_uri: "https://neusral.com",
-  //       code: "1p4Y2cQ4Z1UxXfWtK1Y1XwZ1WxZ1WxZ1",
-  //       prompt: "none",
-  //     }).toString(),
-  //   });
+  const session = await getSession();
+
+  if (!session) {
+    return new Response(
+      JSON.stringify({ status: 401, statusText: "Unauthorized" }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
+
+  const account = await accountsService.getAccount(session.user.id, "kakao");
+  console.log(account);
+  if (!account) {
+    return new Response(
+      JSON.stringify({ status: 404, statusText: "Not Found" }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
 
   const template_object = {
     object_type: "list",
@@ -90,7 +105,7 @@ export async function POST(request: Request) {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Bearer`,
+        Authorization: `Bearer ${account.access_token}`,
       },
       body: new URLSearchParams({
         template_object: JSON.stringify(template_object),

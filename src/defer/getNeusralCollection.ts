@@ -11,12 +11,16 @@ export async function getNeusralCollection() {
   } catch (error) {
     console.error(error);
   } finally {
-    await nouvellesSite.dispose();
+    await nouvellesSite.close();
   }
 
-  console.log("items", items);
-
-  await itemService.createItems(items);
+  try {
+    await itemService.createItems(items);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    nouvellesSite.cleanup();
+  }
 }
 
 export default defer(getNeusralCollection);

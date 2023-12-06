@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 interface Props {
@@ -5,5 +6,19 @@ interface Props {
 }
 
 export default function Page({ children }: Props) {
-  return <div>Page</div>;
+  return (
+    <div
+      onClick={() => {
+        try {
+          fetch("/api/send", {
+            method: "POST",
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }}
+    >
+      Page
+    </div>
+  );
 }

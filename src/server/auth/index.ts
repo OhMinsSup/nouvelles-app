@@ -14,18 +14,24 @@ export enum Role {
   admin = "admin",
 }
 
+export type SessionUser = {
+  id: string;
+  name: string | undefined;
+  email: string | undefined;
+  image: string | undefined;
+  role?: Role;
+};
+
+export type SessionData = {
+  user: SessionUser;
+};
+
 declare module "next-auth" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
-    user: {
-      id: string;
-      name: string | undefined;
-      email: string | undefined;
-      image: string | undefined;
-      role?: Role;
-    };
+    user: SessionUser;
   }
 }
 
@@ -68,12 +74,28 @@ export const authOptions = {
 } satisfies NextAuthConfig;
 
 export function getSession() {
-  return getServerSession(authOptions) as Promise<{
-    user: {
-      id: string;
-      name: string | undefined;
-      email: string | undefined;
-      image: string | undefined;
-    };
-  } | null>;
+  return getServerSession(authOptions) as Promise<SessionData | null>;
 }
+
+export const isAuthorized = <T extends SessionData>(
+  session: T | null,
+  role?: Role
+): session is T => {
+  if (!session) {
+    return false;
+  }
+
+  if (!session.user) {
+    return false;
+  }
+
+  if (!session.user.id) {
+    return false;
+  }
+
+  if (role && session.user.role !== role) {
+    return false;
+  }
+
+  return true;
+};
