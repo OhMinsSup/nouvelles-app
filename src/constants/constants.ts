@@ -25,16 +25,13 @@ export const ASSET_URL = {};
 
 export const PAGE_ENDPOINTS = {
   ROOT: "/",
-  AUTH: {
-    SIGNIN: "/signin",
-    SIGNUP: "/signup",
-  },
-  MY_PAGE: {
-    ID: (id: string) => `/profile/${id}`,
-  },
-  THREADS: {
-    ROOT: "/threads",
-    LIKES: "/threads/likes",
+  SEARCH: "/search",
+  ADMIN: {
+    ROOT: "/admin",
+    AUTH: {
+      SIGNIN: "/admin/signin",
+      SIGNUP: "/admin/signup",
+    },
   },
 } as const;
 
