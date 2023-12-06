@@ -15,6 +15,7 @@ export type Nouvelle = {
   link: string | undefined;
   realLink: string | undefined;
   date: string | undefined;
+  image: string | undefined;
   description: string | undefined;
 };
 
@@ -31,6 +32,9 @@ const DESCRIPTION_REGEX =
 
 const OG_DESCRIPTION_REGEX =
   /<meta[^>]*property="og:description"[^>]*content="([^"]*)"[^>]*>/;
+
+const OG_IMAGE_REGEX =
+  /<meta[^>]*property="og:image"[^>]*content="([^"]*)"[^>]*>/;
 
 const HANGUL_BREAK_REGEX = /�/;
 
@@ -86,12 +90,31 @@ const matchDescription = (html: string) => {
   return undefined;
 };
 
+const matchImage = (html: string) => {
+  const og_image_html = html.match(OG_IMAGE_REGEX);
+  const og_image = og_image_html?.at(0);
+
+  if (og_image) {
+    return og_image.replace(/"/g, "").replace(/content=/g, "");
+  }
+
+  return undefined;
+};
+
 const getDescription = (html: string) => {
   let description = html ? matchDescription(html) : undefined;
   if (description && HANGUL_BREAK_REGEX.test(description)) {
     description = undefined;
   }
   return description;
+};
+
+const getOgImage = (html: string) => {
+  let image = html ? matchImage(html) : undefined;
+  if (image && HANGUL_BREAK_REGEX.test(image)) {
+    image = undefined;
+  }
+  return image;
 };
 
 class NouvellePage {
@@ -272,6 +295,7 @@ class NouvellePage {
           this._items.set(item.id, {
             ...item,
             realLink: response.url,
+            image: getOgImage(html),
             description: getDescription(html),
           });
         } else {

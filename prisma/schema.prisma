@@ -81,6 +81,7 @@ model Item {
     link        String?
     realLink    String?
     description String?
+    image       String?
     pulbishedAt DateTime?
     categoryId  String?
     createdAt   DateTime  @default(now())

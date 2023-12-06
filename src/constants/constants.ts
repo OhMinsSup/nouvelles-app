@@ -12,6 +12,7 @@ export const QUERIES_KEY = {
 export const MUTATIONS_KEY = {};
 
 export const API_ENDPOINTS = {
+  kakao_default_message: "https://kapi.kakao.com/v2/api/talk/memo/default/send",
   avatar: (searchParams: URLSearchParams, styles = "notionists") => {
     const url = new URL(`/7.x/${styles}/jpg`, "https://api.dicebear.com");
     for (const [key, value] of searchParams.entries()) {

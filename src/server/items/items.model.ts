@@ -15,6 +15,7 @@ export type ItemSchema = {
   realLink: Item["realLink"];
   description: Item["description"];
   pulbishedAt: Item["pulbishedAt"];
+  image: Item["image"];
   Category: Pick<Category, "id" | "name">;
   ItemTag: {
     tag: Pick<Tag, "id" | "name">;

@@ -4,6 +4,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { db } from "~/server/db/prisma";
 import { isInvaliDate, isString } from "~/utils/assertion";
 import type { ItemQuery } from "~/server/items/items.query";
+import { ItemSchema } from "./items.model";
 
 dayjs.extend(customParseFormat);
 
@@ -17,6 +18,7 @@ type InputCreate = {
   link: string | undefined;
   realLink: string | undefined;
   date: string | undefined;
+  image: string | undefined;
   description: string | undefined;
 };
 
@@ -35,6 +37,7 @@ export class ItemService {
       reporter,
       title,
       link,
+      image,
       description,
       realLink,
     } = input;
@@ -79,6 +82,7 @@ export class ItemService {
         realLink,
         description,
         pulbishedAt,
+        image,
         ...(categoryItem && {
           Category: {
             connect: {
@@ -197,6 +201,7 @@ export class ItemService {
             realLink: true,
             description: true,
             pulbishedAt: true,
+            image: true,
             Category: {
               select: {
                 id: true,
@@ -255,12 +260,12 @@ export class ItemService {
 
       return {
         totalCount,
-        list,
+        list: list as unknown as ItemSchema[],
         endCursor,
         hasNextPage,
       };
     } catch (error) {
-      return this.getDefaultItems();
+      return this.getDefaultItems<ItemSchema>();
     }
   }
 
@@ -348,6 +353,7 @@ export class ItemService {
             realLink: true,
             description: true,
             pulbishedAt: true,
+            image: true,
             Category: {
               select: {
                 id: true,
@@ -417,12 +423,12 @@ export class ItemService {
 
       return {
         totalCount,
-        list,
+        list: list as unknown as ItemSchema[],
         endCursor,
         hasNextPage,
       };
     } catch (error) {
-      return this.getDefaultItems();
+      return this.getDefaultItems<ItemSchema>();
     }
   }
 }
