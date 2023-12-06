@@ -135,3 +135,7 @@ prisma/nouvelles.db
 prisma/nouvelles.db-journal
 prisma/dev.db-journal
 prisma/migrations
+
+# env
+scripts/env/.env.development
+scripts/env/.env.production
