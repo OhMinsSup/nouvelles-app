@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { list } = await itemService.getItems({
+  const { list } = await itemService.getItemsByMessage({
     category: "MZ 소비 트렌드",
     limit: 5,
   });

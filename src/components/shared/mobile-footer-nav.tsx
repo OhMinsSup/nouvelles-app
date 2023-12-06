@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { cn } from "~/utils/utils";
 import { NAV_CONFIG, NavItem } from "~/constants/nav";
 import SkipRenderOnClient from "./skip-render-on-client";
@@ -42,14 +42,10 @@ interface ItemProps {
 }
 
 MobileFooterNav.Link = function Item({ item }: ItemProps) {
-  const segment = useSelectedLayoutSegment();
+  const pathname = usePathname();
   const href = item.href as string;
   const isActive =
-    segment === null && href === "/"
-      ? true
-      : segment && href.startsWith(`/${segment}`)
-        ? true
-        : false;
+    href === "/" ? pathname === "/" : pathname.startsWith(href) && href !== "/";
 
   return (
     <Link

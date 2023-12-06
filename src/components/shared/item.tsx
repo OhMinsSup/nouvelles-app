@@ -45,7 +45,7 @@ export default function Item({ item }: ItemProps) {
     if (_searchParams.has("category")) {
       _searchParams.delete("category");
     } else {
-      _searchParams.set("category", item.Category.name);
+      if (item.Category) _searchParams.set("category", item.Category.name);
     }
     return `${pathname}?${_searchParams.toString()}`;
   }, [searchParams, pathname]);
@@ -56,9 +56,7 @@ export default function Item({ item }: ItemProps) {
       _searchParams.delete("tag");
     } else {
       const firstTag = item.ItemTag.at(0);
-      if (firstTag) {
-        _searchParams.set("tag", firstTag.tag.name);
-      }
+      if (firstTag && firstTag.tag) _searchParams.set("tag", firstTag.tag.name);
     }
     return `${pathname}?${_searchParams.toString()}`;
   }, [searchParams, pathname]);
@@ -73,7 +71,7 @@ export default function Item({ item }: ItemProps) {
           <div className="flex items-center justify-between">
             <div className="flex w-full items-center">
               <Avatars
-                src={item?.reporter ?? undefined}
+                src={undefined}
                 alt={`${item?.reporter} profile picture`}
                 fallback="T"
               />
@@ -127,6 +125,7 @@ export default function Item({ item }: ItemProps) {
                 <Link
                   href={categoryUrl}
                   replace
+                  prefetch={false}
                   className={buttonVariants({
                     variant: "secondary",
                     size: "xxs",
@@ -140,6 +139,7 @@ export default function Item({ item }: ItemProps) {
                 <Link
                   href={tagUrl}
                   replace
+                  prefetch={false}
                   key={data.tag.id}
                   className={buttonVariants({
                     variant: "secondary",

@@ -26,6 +26,7 @@ export const ASSET_URL = {};
 
 export const PAGE_ENDPOINTS = {
   ROOT: "/",
+  TODAY: "/today",
   SEARCH: "/search",
   ADMIN: {
     ROOT: "/admin",

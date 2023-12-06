@@ -15,7 +15,7 @@ import { KeyProvider } from "~/libs/providers/key";
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 
 interface ItemListProps {
-  type: "root" | "search";
+  type: "root" | "search" | "today";
   category?: string;
   tag?: string;
   q?: string;
@@ -152,9 +152,9 @@ export default function ItemList({
         totalCount={lastItem?.totalCount ?? 0}
         computeItemKey={(index, item) => {
           if (!item) {
-            return `${type}-threads-${index}`;
+            return `${type}-items-${index}`;
           }
-          return `${type}-threads-${item.id}-${index}`;
+          return `${type}-items-${item.id}-${index}`;
         }}
         overscan={10}
         initialItemCount={list.length - 1}

@@ -24,7 +24,6 @@ type InputCreate = {
 
 export class ItemService {
   async createItems(input: InputCreate[]) {
-    console.log("createItems", input);
     const items = await Promise.all(input.map((item) => this.createItem(item)));
     return items;
   }
@@ -110,10 +109,18 @@ export class ItemService {
   }
 
   getItems(query: ItemQuery, currentUserId?: string) {
-    if (query.type === "search") {
-      return this._getItemsBySearch(query, currentUserId);
+    switch (query.type) {
+      case "search":
+        return this._getItemsBySearch(query, currentUserId);
+      case "today":
+        return this._getItemsByToDay(query);
+      default:
+        return this._getItemsByCursor(query, currentUserId);
     }
-    return this._getItemsByCursor(query, currentUserId);
+  }
+
+  getItemsByMessage(query: Omit<ItemQuery, "q" | "pageNo" | "cursor">) {
+    return this._getItemsByMessage(query);
   }
 
   getDefaultItems<Data = any>() {
@@ -123,6 +130,125 @@ export class ItemService {
       endCursor: null,
       hasNextPage: false,
     };
+  }
+
+  getMessageDefaultItems<Data = any>() {
+    return {
+      totalCount: 0,
+      list: [] as Data[],
+    };
+  }
+
+  private async _getItemsByMessage({
+    limit,
+    category,
+    tag,
+  }: Omit<ItemQuery, "q" | "pageNo" | "cursor">) {
+    if (isString(limit)) {
+      limit = Number(limit);
+    } else {
+      limit = limit ?? 25;
+    }
+
+    const categoryItem = category
+      ? await db.category.findFirst({
+          where: {
+            name: category,
+          },
+        })
+      : undefined;
+
+    const tagItem = tag
+      ? await db.tag.findFirst({
+          where: {
+            name: tag,
+          },
+        })
+      : undefined;
+
+    try {
+      const [totalCount, list] = await Promise.all([
+        db.item.count({
+          where: {
+            image: {
+              not: null,
+            },
+            ...(categoryItem && {
+              Category: {
+                id: categoryItem.id,
+              },
+            }),
+            ...(tagItem && {
+              ItemTag: {
+                some: {
+                  tag: {
+                    id: tagItem.id,
+                  },
+                },
+              },
+            }),
+          },
+        }),
+        db.item.findMany({
+          where: {
+            image: {
+              not: null,
+            },
+            ...(categoryItem && {
+              Category: {
+                id: categoryItem.id,
+              },
+            }),
+            ...(tagItem && {
+              ItemTag: {
+                some: {
+                  tag: {
+                    id: tagItem.id,
+                  },
+                },
+              },
+            }),
+          },
+          select: {
+            id: true,
+            neusralId: true,
+            reporter: true,
+            title: true,
+            link: true,
+            realLink: true,
+            description: true,
+            pulbishedAt: true,
+            image: true,
+            Category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            ItemTag: {
+              select: {
+                tag: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            pulbishedAt: "desc",
+          },
+        }),
+      ]);
+
+      return {
+        totalCount,
+        list: list as unknown as ItemSchema[],
+      };
+    } catch (error) {
+      return this.getMessageDefaultItems<ItemSchema>();
+    }
   }
 
   private async _getItemsByCursor(
@@ -426,6 +552,128 @@ export class ItemService {
         list: list as unknown as ItemSchema[],
         endCursor,
         hasNextPage,
+      };
+    } catch (error) {
+      return this.getDefaultItems<ItemSchema>();
+    }
+  }
+
+  private async _getItemsByToDay(
+    { cursor, limit, category, tag }: ItemQuery,
+    currentUserId?: string
+  ) {
+    if (isString(cursor)) {
+      cursor = cursor;
+    }
+
+    if (isString(limit)) {
+      limit = Number(limit);
+    } else {
+      limit = limit ?? 25;
+    }
+
+    const start = dayjs().startOf("day").toDate();
+    const end = dayjs().endOf("day").toDate();
+
+    const categoryItem = category
+      ? await db.category.findFirst({
+          where: {
+            name: category,
+          },
+        })
+      : undefined;
+
+    const tagItem = tag
+      ? await db.tag.findFirst({
+          where: {
+            name: tag,
+          },
+        })
+      : undefined;
+
+    try {
+      const [totalCount, list] = await Promise.all([
+        db.item.count({
+          where: {
+            pulbishedAt: {
+              gte: start,
+              lte: end,
+            },
+            ...(categoryItem && {
+              Category: {
+                id: categoryItem.id,
+              },
+            }),
+            ...(tagItem && {
+              ItemTag: {
+                some: {
+                  tag: {
+                    id: tagItem.id,
+                  },
+                },
+              },
+            }),
+          },
+        }),
+        db.item.findMany({
+          where: {
+            pulbishedAt: {
+              gte: start,
+              lte: end,
+            },
+            ...(categoryItem && {
+              Category: {
+                id: categoryItem.id,
+              },
+            }),
+            ...(tagItem && {
+              ItemTag: {
+                some: {
+                  tag: {
+                    id: tagItem.id,
+                  },
+                },
+              },
+            }),
+          },
+          select: {
+            id: true,
+            neusralId: true,
+            reporter: true,
+            title: true,
+            link: true,
+            realLink: true,
+            description: true,
+            pulbishedAt: true,
+            image: true,
+            Category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            ItemTag: {
+              select: {
+                tag: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            pulbishedAt: "desc",
+          },
+        }),
+      ]);
+
+      return {
+        totalCount,
+        list: list as unknown as ItemSchema[],
+        endCursor: null,
+        hasNextPage: false,
       };
     } catch (error) {
       return this.getDefaultItems<ItemSchema>();

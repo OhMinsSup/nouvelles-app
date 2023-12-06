@@ -9,7 +9,7 @@ const searchParamsSchema = z.object({
   limit: z.string().optional(),
   category: z.string().optional(),
   tag: z.string().optional(),
-  type: z.enum(["root", "search"]).optional(),
+  type: z.enum(["root", "search", "today"]).optional(),
   q: z.string().optional(),
 });
 

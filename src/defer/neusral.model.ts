@@ -66,6 +66,10 @@ const replaceDescription = (html: string, isOgDescription?: boolean) => {
   );
 };
 
+const replaceImage = (html: string) => {
+  return html.replace(OG_IMAGE_REGEX, "$1");
+};
+
 const matchDescription = (html: string) => {
   const description_html = html.match(DESCRIPTION_REGEX);
   const og_description_html = html.match(OG_DESCRIPTION_REGEX);
@@ -95,7 +99,7 @@ const matchImage = (html: string) => {
   const og_image = og_image_html?.at(0);
 
   if (og_image) {
-    return og_image.replace(/"/g, "").replace(/content=/g, "");
+    return replaceImage(og_image);
   }
 
   return undefined;
@@ -136,8 +140,6 @@ class NouvellePage {
     } catch (error) {
       console.error(error);
       return [];
-    } finally {
-      await this.close();
     }
   }
 
@@ -262,6 +264,7 @@ class NouvellePage {
             id: createId(),
             neusralId: undefined,
             description: undefined,
+            image: undefined,
             realLink: undefined,
             category,
             tag,
@@ -277,6 +280,8 @@ class NouvellePage {
           }
 
           this._items.set(input.id, input);
+
+          console.log(input);
         }
       }
     }
@@ -310,9 +315,7 @@ class NouvellePage {
   }
 
   async close(options?: PageCloseOptions) {
-    if (this._page) {
-      await this._page.close(options);
-    }
+    if (this._page) await this._page.close(options);
   }
 
   cleanup() {
@@ -339,7 +342,9 @@ class NouvellesSite {
     try {
       this._nouvellaPage = new NouvellePage();
 
-      return await this._nouvellaPage.run(this._browser);
+      const items = await this._nouvellaPage.run(this._browser);
+      console.log(items);
+      return items;
     } catch (error) {
       console.error(error);
       return [];

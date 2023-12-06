@@ -22,6 +22,13 @@ export const NAV_CONFIG = {
       icon: Icons.home,
     },
     {
+      id: "recent",
+      type: "link",
+      title: "Today",
+      href: PAGE_ENDPOINTS.TODAY,
+      icon: Icons.today,
+    },
+    {
       id: "search",
       type: "link",
       title: "Search",

@@ -61,6 +61,7 @@ Categories.Category = function Item({ category }: CategoryProps) {
     <Link
       replace
       href={url}
+      prefetch={false}
       className={buttonVariants({
         variant: "ghost",
         className: cn({

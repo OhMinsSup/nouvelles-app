@@ -74,6 +74,7 @@ import {
   Text,
   Underline,
   WrapText,
+  CalendarCheck2,
 } from "lucide-react";
 import { cva } from "class-variance-authority";
 
@@ -281,6 +282,8 @@ export const Icons = {
   underline: Underline,
   unlink: Link2Off,
   viewing: Eye,
+  today: CalendarCheck2,
+
   kakao,
 };
 
