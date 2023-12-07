@@ -137,5 +137,5 @@ prisma/dev.db-journal
 prisma/migrations
 
 # env
-env/.env.development
-env/.env.production
+scripts/env/.env.dev
+scripts/env/.env.prod

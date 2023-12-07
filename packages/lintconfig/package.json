@@ -1,0 +1,14 @@
+{
+  "name": "@nouvelles/lintconfig",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "@vercel/style-guide": "^5.1.0",
+    "eslint-config-turbo": "^1.10.16",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "prettier-plugin-packagejson": "^2.4.7",
+    "prettier-plugin-prisma": "^5.0.0"
+  }
+}
