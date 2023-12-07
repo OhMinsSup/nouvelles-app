@@ -2,15 +2,6 @@
   "name": "@nouvelles/eli",
   "version": "0.0.0",
   "license": "MIT",
-  "bin": {
-    "eli": "./dist/cli-default.js"
-  },
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "/dist"
-  ],
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -19,9 +10,19 @@
       "require": "./dist/index.js"
     }
   },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "eli": "./dist/cli-default.js"
+  },
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch"
+    "env:init": "tsup",
+    "watch": "tsup --watch"
   },
   "devDependencies": {
     "chalk": "^5.3.0",
@@ -30,7 +31,7 @@
     "tsup": "^8.0.1"
   },
   "publishConfig": {
-    "directory": "dist",
-    "access": "public"
+    "access": "public",
+    "directory": "dist"
   }
 }

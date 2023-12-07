@@ -6,7 +6,7 @@
  * @type {import('prettier').Config}
  */
 const overridableDefaults = {
-  endOfLine: "lf",
+  endOfLine: 'lf',
   tabWidth: 2,
   printWidth: 80,
   useTabs: false,
@@ -16,9 +16,9 @@ const overridableDefaults = {
 const config = Object.assign({}, overridableDefaults, {
   semi: true,
   singleQuote: true,
-  htmlWhitespaceSensitivity: "ignore",
-  trailingComma: "all",
-  plugins: ["prettier-plugin-packagejson", "prettier-plugin-prisma"],
+  htmlWhitespaceSensitivity: 'ignore',
+  trailingComma: 'all',
+  plugins: ['prettier-plugin-packagejson', 'prettier-plugin-prisma'],
 });
 
 module.exports = config;

@@ -2,8 +2,8 @@
   "name": "@nouvelles/tsconfig",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "license": "MIT",
+  "type": "module",
   "publishConfig": {
     "access": "public"
   }

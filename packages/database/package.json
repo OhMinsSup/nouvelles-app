@@ -11,12 +11,12 @@
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx src/seed.ts",
+    "predev": "npm run generate",
     "dev": "tsup --watch",
     "format": "prisma format",
     "generate": "prisma generate",
     "lint": "eslint . --max-warnings 0",
     "prebuild": "npm run generate",
-    "predev": "npm run generate",
     "studio": "prisma studio"
   },
   "dependencies": {
@@ -24,10 +24,11 @@
   },
   "devDependencies": {
     "@nouvelles/lintconfig": "workspace:*",
+    "@nouvelles/tsconfig": "workspace:*",
+    "@types/node": "^20.10.3",
     "eslint": "^8.55.0",
     "prisma": "^5.6.0",
     "rimraf": "^5.0.5",
-    "@nouvelles/tsconfig": "workspace:*",
     "tsx": "^4.6.2",
     "typescript": "^5.3.2"
   }

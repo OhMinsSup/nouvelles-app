@@ -1,3 +1,3 @@
 function bootstrapSeed() {
-  console.log("Seed");
+  console.log('Seed');
 }

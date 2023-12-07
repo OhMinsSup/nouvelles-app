@@ -1,12 +1,12 @@
-import "~/assets/css/globals.css";
-import { env } from "../../env.mjs/index.js";
-import { PreloadResources } from "apps/nouvelles/src/libs/react/preload";
-import { Inter as FontSans } from "next/font/google";
-import localFont from "next/font/local";
-import { Providers } from "./providers";
-import { cn } from "apps/nouvelles/src/utils/utils";
-import { SITE_CONFIG } from "apps/nouvelles/src/constants/constants";
-import type { Metadata } from "next";
+import '~/assets/css/globals.css';
+import { env } from '../../env.mjs/index.js';
+import { PreloadResources } from 'apps/nouvelles/src/libs/react/preload';
+import { Inter as FontSans } from 'next/font/google';
+import localFont from 'next/font/local';
+import { Providers } from './providers';
+import { cn } from 'apps/nouvelles/src/utils/utils';
+import { SITE_CONFIG } from 'apps/nouvelles/src/constants/constants';
+import type { Metadata } from 'next';
 
 const url = new URL(env.NEXT_PUBLIC_SITE_URL);
 
@@ -14,11 +14,11 @@ export const metadata: Metadata = {
   title: SITE_CONFIG.title,
   description: SITE_CONFIG.description,
   keywords: [
-    "Next.js",
-    "React",
-    "Tailwind CSS",
-    "Server Components",
-    "Radix UI",
+    'Next.js',
+    'React',
+    'Tailwind CSS',
+    'Server Components',
+    'Radix UI',
   ],
   icons: {
     icon: SITE_CONFIG.favicon,
@@ -26,26 +26,26 @@ export const metadata: Metadata = {
   metadataBase: url,
   manifest: SITE_CONFIG.manifest,
   alternates: {
-    canonical: "/",
+    canonical: '/',
   },
   openGraph: {
     title: SITE_CONFIG.title,
     description: SITE_CONFIG.description,
     url: url.href,
     siteName: SITE_CONFIG.title,
-    locale: "ko_KR",
-    type: "article",
+    locale: 'ko_KR',
+    type: 'article',
   },
 };
 
 const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
+  subsets: ['latin'],
+  variable: '--font-sans',
 });
 
 const fontHeading = localFont({
-  src: "../assets/fonts/CalSans-SemiBold.woff2",
-  variable: "--font-heading",
+  src: '../assets/fonts/CalSans-SemiBold.woff2',
+  variable: '--font-heading',
 });
 
 interface RoutesProps {
@@ -73,15 +73,15 @@ export default function Layout(props: RoutesProps) {
 
       <body
         className={cn(
-          "font-sans antialiased",
+          'font-sans antialiased',
           fontSans.variable,
-          fontHeading.variable
+          fontHeading.variable,
         )}
       >
         <Providers
           theme={{
-            attribute: "class",
-            defaultTheme: "system",
+            attribute: 'class',
+            defaultTheme: 'system',
             enableSystem: true,
             disableTransitionOnChange: true,
           }}
