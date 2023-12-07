@@ -282,6 +282,18 @@ importers:
         version: 8.0.1(typescript@5.3.2)
     publishDirectory: dist
 
+  packages/libs:
+    devDependencies:
+      '@nouvelles/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsup:
+        specifier: ^8.0.1
+        version: 8.0.1(typescript@5.3.2)
+      typescript:
+        specifier: ^5.3.2
+        version: 5.3.2
+
   packages/lintconfig:
     devDependencies:
       '@vercel/style-guide':

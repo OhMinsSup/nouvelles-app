@@ -1,0 +1,3 @@
+{
+  "extends": "@nouvelles/tsconfig/base.json"
+}

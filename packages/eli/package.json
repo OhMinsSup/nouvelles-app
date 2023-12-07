@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "env:init": "tsup",
+    "postinstall": "tsup",
     "watch": "tsup --watch"
   },
   "devDependencies": {
