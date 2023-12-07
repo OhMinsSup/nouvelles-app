@@ -139,3 +139,5 @@ prisma/migrations
 # env
 env/.env.development
 env/.env.production
+
+.turbo

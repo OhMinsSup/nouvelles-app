@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local", "**/.env"],
+  "globalDependencies": ["**/.env.*local", ".env"],
   "globalEnv": ["NODE_ENV"],
   "pipeline": {
     "build": {
@@ -8,9 +8,16 @@
       "env": ["PRIVATE_*", "PUBLIC_*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
+    "db:migrate:deploy": {},
+    "db:push": {},
+    "db:seed": {},
     "dev": {
       "cache": false,
       "persistent": true
-    }
+    },
+    "generate": {
+      "dependsOn": ["^generate"]
+    },
+    "lint": {}
   }
 }
