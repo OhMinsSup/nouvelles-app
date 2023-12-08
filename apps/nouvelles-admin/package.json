@@ -11,8 +11,7 @@
   "license": "ISC",
   "author": "",
   "scripts": {
-    "dev": "run-s dev:*",
-    "dev:start": "next",
+    "dev": "next",
     "start": "next start",
     "build": "run-s build:*",
     "build:next": "next build",

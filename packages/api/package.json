@@ -19,8 +19,8 @@
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch",
-    "postinstall": "tsup"
+    "postinstall": "tsup",
+    "watch": "tsup --watch"
   },
   "dependencies": {
     "@nouvelles/error": "workspace:*",

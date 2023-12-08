@@ -8,7 +8,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "node index.js"
+    "dev": "",
+    "watch": "node index.js"
   },
   "dependencies": {
     "@nouvelles/defer": "workspace:*",

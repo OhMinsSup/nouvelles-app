@@ -12,9 +12,10 @@
   "author": "",
   "type": "module",
   "scripts": {
+    "clean": "turbo clean",
     "db:push": "turbo run db:push",
     "dev": "turbo run dev --concurrency 255",
-    "clean": "turbo clean"
+    "watch": "turbo run watch --concurrency 50%"
   },
   "devDependencies": {
     "@nouvelles/lintconfig": "workspace:*",

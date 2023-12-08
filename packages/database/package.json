@@ -11,13 +11,13 @@
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx src/seed.ts",
-    "predev": "npm run generate",
-    "dev": "tsup --watch",
     "format": "prisma format",
     "postinstall": "prisma generate",
     "lint": "eslint . --max-warnings 0",
     "prebuild": "npm run generate",
-    "studio": "prisma studio"
+    "predev": "npm run generate",
+    "studio": "prisma studio",
+    "watch": "tsup --watch"
   },
   "dependencies": {
     "@prisma/client": "^5.6.0"

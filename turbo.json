@@ -8,14 +8,15 @@
       "env": ["PRIVATE_*", "PUBLIC_*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
-    "env:init": {
-      "cache": false
-    },
     "db:migrate:deploy": {},
     "db:push": {},
     "db:seed": {},
     "dev": {
       "cache": false,
+      "persistent": true
+    },
+    "watch": {
+      "dependsOn": ["^watch"],
       "persistent": true
     },
     "generate": {

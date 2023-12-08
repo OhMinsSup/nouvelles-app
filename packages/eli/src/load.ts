@@ -1,11 +1,11 @@
-import fs from "fs";
-import path from "path";
-import dotenv from "dotenv";
-import { logger } from "./log";
-import { makeEnvFileName } from "./utils";
-import { defaultOptions } from "./options";
-import type { Options } from "./options";
-import type { EnvType } from "./constants";
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv';
+import { logger } from './log';
+import { deepEqual, makeEnvFileName } from './utils';
+import { defaultOptions } from './options';
+import type { Options } from './options';
+import type { EnvType } from './constants';
 
 const processEnv = (config: Options) => {
   let envFileData: dotenv.DotenvConfigOutput;
@@ -33,17 +33,47 @@ const processEnv = (config: Options) => {
 
   if (!envFileData.parsed) {
     const error = new Error();
-    error.name = "EnvironmentError";
+    error.name = 'EnvironmentError';
     error.message = `Please check the config file: "${loadPath}"`;
     throw error;
   }
 
   const envData = envFileData.parsed;
 
+  let exitsEnvData: dotenv.DotenvConfigOutput | undefined;
+
+  if (fs.existsSync(saveEnvPath)) {
+    logger.warn(
+      `[Environment] - Environment file already exists: "${saveEnvPath}"`,
+    );
+
+    try {
+      exitsEnvData = dotenv.config({
+        path: saveEnvPath,
+      });
+
+      if (exitsEnvData.error) {
+        throw exitsEnvData.error;
+      }
+    } catch (error) {
+      logger.error(`[Environment] -`, error);
+      exitsEnvData = undefined;
+    }
+  }
+
+  if (exitsEnvData?.parsed) {
+    if (deepEqual(envData, exitsEnvData.parsed)) {
+      logger.success(
+        `[Environment] - Environment variables are the same: "${saveEnvPath}"`,
+      );
+      return envData;
+    }
+  }
+
   fs.copyFileSync(loadPath, saveEnvPath);
 
   logger.success(
-    `[Environment] - Successfully created environment file: "${saveEnvPath}"`
+    `[Environment] - Successfully created environment file: "${saveEnvPath}"`,
   );
 
   return envData;

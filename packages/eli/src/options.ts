@@ -1,4 +1,4 @@
-import { EnvType } from "./constants";
+import { EnvType } from './constants';
 
 export type Options = {
   /** @internal Used in CI. */
@@ -20,11 +20,11 @@ export type Options = {
 const noop = () => {};
 
 export const defaultOptions: Options = {
-  envType: "local",
-  loadPath: "./env",
-  loadName: ".env",
-  savePath: ".",
-  saveName: ".env",
+  envType: 'local',
+  loadPath: './env',
+  loadName: '.env',
+  savePath: '.',
+  saveName: '.env',
   onSuccess: noop,
   onError: noop,
 };
