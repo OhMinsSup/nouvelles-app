@@ -2,9 +2,11 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { db } from '@nouvelles/database';
-import { isInvaliDate, isString } from '@nouvelles/libs';
+import { isEmpty, isInvaliDate, isString } from '@nouvelles/libs';
 import type { ItemQuery } from '~/server/items/items.query';
-import { ItemSchema } from './items.model';
+import type { ItemSchema } from '~/server/items/items.model';
+import { tagsService } from '~/server/tags/tags.server';
+import { categoriesService } from '~/server/categories/categories.server';
 
 dayjs.extend(customParseFormat);
 
@@ -23,6 +25,37 @@ type InputCreate = {
 };
 
 export class ItemService {
+  async createItemsByCrawler(items: InputCreate[]) {
+    if (!isEmpty(items)) {
+      const unionTags = new Set<string>();
+      const unionCategories = new Set<string>();
+      items.forEach((item) => {
+        if (item.tag) unionTags.add(item.tag);
+        if (item.category) unionCategories.add(item.category);
+      });
+
+      try {
+        const tags = [...unionTags];
+        await Promise.all(tags.map((tag) => tagsService.findOrCreate(tag)));
+      } catch (error) {
+        console.error(error);
+      }
+
+      try {
+        const categories = [...unionCategories];
+        await Promise.all(
+          categories.map((item) => categoriesService.findOrCreate(item)),
+        );
+      } catch (error) {
+        console.error(error);
+      }
+
+      return await this.createItems(items);
+    }
+
+    return [];
+  }
+
   async createItems(input: InputCreate[]) {
     const items = await Promise.all(input.map((item) => this.createItem(item)));
     return items;

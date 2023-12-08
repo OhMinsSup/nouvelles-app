@@ -1,9 +1,9 @@
-import { createId } from "@paralleldrive/cuid2";
+import { createId } from '@paralleldrive/cuid2';
 import puppeteer, {
   type Browser,
   type Page,
   type ElementHandle,
-} from "puppeteer";
+} from 'puppeteer';
 
 export type Nouvelle = {
   id: string;
@@ -25,7 +25,7 @@ type PageCloseOptions =
     }
   | undefined;
 
-const NEUSRAL_URL = "https://www.neusral.com/briefing_subscriptions";
+const NEUSRAL_URL = 'https://www.neusral.com/briefing_subscriptions';
 
 const DESCRIPTION_REGEX =
   /<meta[^>]*name="description"[^>]*content="([^"]*)"[^>]*>/;
@@ -41,33 +41,33 @@ const HANGUL_BREAK_REGEX = /�/;
 // 'https://www.neusral.com/r?n=YKCRY7Lyem' => 'YKCRY7Lyem'
 const NEUSRAL_N_ID_REGEX = /r\?n=(.*)/;
 
-const ELE_ITEM_CONTAINER = ".item-container";
+const ELE_ITEM_CONTAINER = '.item-container';
 
-const ELE_CATEGORY = ".report-header .left .title";
+const ELE_CATEGORY = '.report-header .left .title';
 
-const ELE_TAG = ".tab-name > .tab_input_box";
+const ELE_TAG = '.tab-name > .tab_input_box';
 
-const ELE_TAB = ".each-tab";
+const ELE_TAB = '.each-tab';
 
 const ELE_ITEM_NEWS = "a[class='news-url']";
 
-const ELE_ITEM_NEWS_TITLE = ".news-title > span";
+const ELE_ITEM_NEWS_TITLE = '.news-title > span';
 
-const ELE_ITEM_NEWS_LINK = ".news-list";
+const ELE_ITEM_NEWS_LINK = '.news-list';
 
 const ELE_ITEM_NEWS_DATE = ".news-date span[class='news-date-text']";
 
-const ELE_ITEM_NEWS_REPORTER = ".news-media-date";
+const ELE_ITEM_NEWS_REPORTER = '.news-media-date';
 
 const replaceDescription = (html: string, isOgDescription?: boolean) => {
   return html.replace(
     isOgDescription ? OG_DESCRIPTION_REGEX : DESCRIPTION_REGEX,
-    "$1"
+    '$1',
   );
 };
 
 const replaceImage = (html: string) => {
-  return html.replace(OG_IMAGE_REGEX, "$1");
+  return html.replace(OG_IMAGE_REGEX, '$1');
 };
 
 const matchDescription = (html: string) => {
@@ -130,7 +130,7 @@ class NouvellePage {
     try {
       this._page = await browser.newPage();
 
-      await this._page.goto(NEUSRAL_URL, { waitUntil: "networkidle0" });
+      await this._page.goto(NEUSRAL_URL, { waitUntil: 'networkidle0' });
 
       const $ele1 = await this.$findTargetContainer();
 
@@ -145,12 +145,12 @@ class NouvellePage {
 
   private async $findTargetContainer() {
     if (!this._page) {
-      throw new Error("No page found");
+      throw new Error('No page found');
     }
 
     const $ele = await this._page.$$(ELE_ITEM_CONTAINER);
     if (!$ele) {
-      throw new Error("No container found");
+      throw new Error('No container found');
     }
 
     return $ele;
@@ -204,7 +204,7 @@ class NouvellePage {
 
   private async $findByLink($ele: ElementHandle<Element>) {
     const text = await $ele.$eval(ELE_ITEM_NEWS_LINK, (e) => {
-      return e.parentElement?.getAttribute("href");
+      return e.parentElement?.getAttribute('href');
     });
 
     if (!text) {
@@ -227,15 +227,15 @@ class NouvellePage {
   private async $findByReporter($ele: ElementHandle<Element>) {
     const text = await $ele.$eval(
       ELE_ITEM_NEWS_REPORTER,
-      (el) => el.textContent
+      (el) => el.textContent,
     );
 
     if (!text) {
       return undefined;
     }
 
-    const text_next = text.trim().replace(/\s/g, "");
-    const reporter = text_next?.split("|")?.at(0)?.trim();
+    const text_next = text.trim().replace(/\s/g, '');
+    const reporter = text_next?.split('|')?.at(0)?.trim();
     return reporter;
   }
 
@@ -334,8 +334,8 @@ class NouvellesSite {
   async run() {
     // make sure to pass the `--no-sandbox` option
     this._browser = await puppeteer.launch({
-      args: ["--no-sandbox"],
-      headless: "new",
+      args: ['--no-sandbox'],
+      headless: 'new',
       timeout: 0,
     });
 

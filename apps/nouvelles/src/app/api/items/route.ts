@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-// import { getSession } from '~/server/auth';
 import { itemService } from '~/server/items/items.server';
 import * as z from 'zod';
 import { PrismaClientValidationError } from '@prisma/client/runtime/library';
@@ -70,3 +69,5 @@ export async function GET(request: Request) {
     return new Response(null, { status: 500 });
   }
 }
+
+export async function POST(request: Request) {}

@@ -42,10 +42,23 @@ export class ItemNamespace {
     this._service = service;
   }
 
+  createItems(body: any, opts?: CallOptions | undefined) {
+    const httpUri = constructMethodCallUri('/items', this._service.uri);
+    const httpHeaders = opts?.headers;
+    const httpReqBody = body;
+
+    return this._service._baseClient.fetch({
+      uri: httpUri,
+      method: 'POST',
+      headers: httpHeaders,
+      reqBody: httpReqBody,
+    });
+  }
+
   getItems(params: any, opts?: CallOptions | undefined) {
     const httpUri = constructMethodCallUri('/items', this._service.uri, params);
     const httpHeaders = opts?.headers;
-    const httpReqBody = opts?.reqBody;
+    const httpReqBody = undefined;
 
     return this._service._baseClient.fetch({
       uri: httpUri,
@@ -58,7 +71,7 @@ export class ItemNamespace {
   getItem(id: string, opts?: CallOptions | undefined) {
     const httpUri = constructMethodCallUri(`/items/${id}`, this._service.uri);
     const httpHeaders = opts?.headers;
-    const httpReqBody = opts?.reqBody;
+    const httpReqBody = undefined;
 
     return this._service._baseClient.fetch({
       uri: httpUri,

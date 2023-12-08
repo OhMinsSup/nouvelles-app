@@ -1,0 +1,38 @@
+{
+  "name": "@nouvelles/defer",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "module": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "postinstall": "tsup"
+  },
+  "dependencies": {
+    "@defer/client": "^1.14.0",
+    "@nouvelles/api": "workspace:*",
+    "@nouvelles/error": "workspace:*",
+    "@nouvelles/libs": "workspace:*",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "puppeteer": "^21.5.2"
+  },
+  "devDependencies": {
+    "@nouvelles/tsconfig": "workspace:*",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.2"
+  }
+}
