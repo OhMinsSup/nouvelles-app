@@ -75,8 +75,8 @@ import {
   Underline,
   WrapText,
   CalendarCheck2,
-} from "lucide-react";
-import { cva } from "class-variance-authority";
+} from 'lucide-react';
+import { cva } from 'class-variance-authority';
 
 const borderAll = (props: LucideProps) => (
   <svg
@@ -287,15 +287,15 @@ export const Icons = {
   kakao,
 };
 
-export const iconVariants = cva("", {
+export const iconVariants = cva('', {
   variants: {
     variant: {
-      toolbar: "h-5 w-5",
-      menuItem: "mr-2 h-5 w-5",
+      toolbar: 'h-5 w-5',
+      menuItem: 'mr-2 h-5 w-5',
     },
     size: {
-      sm: "mr-2 h-4 w-4",
-      md: "mr-2 h-6 w-6",
+      sm: 'mr-2 h-4 w-4',
+      md: 'mr-2 h-6 w-6',
     },
   },
   defaultVariants: {},

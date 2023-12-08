@@ -1,8 +1,8 @@
-"use client";
-import { usePathname, useRouter } from "next/navigation";
-import React, { useTransition } from "react";
-import { useDebouncedCallback } from "use-debounce";
-import { Input } from "~/components/ui/input";
+'use client';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useTransition } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
+import { Input } from '~/components/ui/input';
 
 interface SearchInputProps {
   defaultValue?: string;
@@ -18,16 +18,16 @@ export default function SearchInput({ defaultValue }: SearchInputProps) {
       const searchParams = new URLSearchParams(window.location.search);
 
       if (e.target.value) {
-        searchParams.set("q", e.target.value);
+        searchParams.set('q', e.target.value);
       } else {
-        searchParams.delete("q");
+        searchParams.delete('q');
       }
 
       startTransition(() => {
         router.push(`${pathname}?${searchParams.toString()}`);
       });
     },
-    250
+    250,
   );
 
   return (

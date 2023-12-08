@@ -1,21 +1,19 @@
-"use client";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import React, { useRef, useLayoutEffect, useCallback, useMemo } from "react";
-import last from "lodash-es/last";
-import { Virtuoso, type VirtuosoHandle } from "react-virtuoso";
-import Item from "~/components/shared/item";
-import { QUERIES_KEY } from "~/constants/constants";
-import { getItemsApi } from "~/server/items/items.api";
-import useBeforeUnload from "~/libs/hooks/useBeforeUnload";
-import useIsHydrating from "~/libs/hooks/useIsHydrating";
-import { isBrowser } from "~/libs/browser/dom";
-import { isEmpty } from "~/utils/assertion";
-import { KeyProvider } from "~/libs/providers/key";
+'use client';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import React, { useRef, useLayoutEffect, useCallback, useMemo } from 'react';
+import last from 'lodash-es/last';
+import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
+import Item from '~/components/shared/item';
+import { QUERIES_KEY } from '~/constants/constants';
+import { getItemsApi } from '~/server/items/items.api';
+import { useBeforeUnload, useIsHydrating, isBrowser } from '@nouvelles/hook';
+import { isEmpty } from '@nouvelles/libs';
+import { KeyProvider } from '~/libs/providers/key';
 
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 
 interface ItemListProps {
-  type: "root" | "search" | "today";
+  type: 'root' | 'search' | 'today';
   category?: string;
   tag?: string;
   q?: string;
@@ -29,7 +27,7 @@ type Cache = {
 
 export default function ItemList({
   userId,
-  type = "root",
+  type = 'root',
   q,
   tag,
   category,
@@ -49,7 +47,7 @@ export default function ItemList({
     $cache.current = data;
   }, []);
 
-  const hydrating = useIsHydrating("[data-hydrating-signal]");
+  const hydrating = useIsHydrating('[data-hydrating-signal]');
 
   const queryKey = useMemo(() => {
     return QUERIES_KEY.items.root;
@@ -62,7 +60,7 @@ export default function ItemList({
         ...(category ? { category } : {}),
         ...(tag ? { tag } : {}),
         ...(type ? { type } : {}),
-        ...(type && type === "search" ? { q } : {}),
+        ...(type && type === 'search' ? { q } : {}),
         ...(userId ? { userId: userId } : {}),
         limit: 10,
         cursor: pageParam ? pageParam : undefined,
@@ -100,14 +98,14 @@ export default function ItemList({
             ?.filter((page) => page?.endCursor)
             ?.map((page) => page.endCursor)
             ?.filter(Boolean),
-        })
+        }),
       );
     });
   });
 
   useSSRLayoutEffect(() => {
     if (hydrating) {
-      const _data = JSON.parse(sessionStorage.getItem(key) || "{}") as Cache;
+      const _data = JSON.parse(sessionStorage.getItem(key) || '{}') as Cache;
       if (_data) setCache(_data);
     }
     return () => {
@@ -121,7 +119,7 @@ export default function ItemList({
       const _pages = data?.pages ?? [];
       const currentCursor = _pages.at(_pages.length - 1)?.endCursor;
       const _cursorIndex = _data.pages.findIndex(
-        (page) => page === currentCursor
+        (page) => page === currentCursor,
       );
       const _pagesAfterCursor = _data.pages.slice(_cursorIndex + 1);
       for (const page of _pagesAfterCursor) {
@@ -130,7 +128,7 @@ export default function ItemList({
       setCache(null);
       $virtuoso.current?.scrollTo({
         top: _data.top,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     }
   };
@@ -147,7 +145,7 @@ export default function ItemList({
         ref={$virtuoso}
         data-hydrating-signal
         useWindowScroll
-        style={{ height: "100%" }}
+        style={{ height: '100%' }}
         data={list}
         totalCount={lastItem?.totalCount ?? 0}
         computeItemKey={(index, item) => {

@@ -1,11 +1,11 @@
-"use client";
-import React, { useEffect, useRef, useState } from "react";
+'use client';
+import React, { useEffect, useRef, useState } from 'react';
 import {
+  useEventListener,
   getTargetElement,
   getWindowScrollTop,
-} from "~/libs/browser/dom";
-import { useEventListener } from "~/libs/hooks/useEventListener";
-import { optimizeAnimation } from "~/utils/utils";
+} from '@nouvelles/hook';
+import { optimizeAnimation } from '~/utils/utils';
 
 interface HeaderProps {
   children: React.ReactNode;
@@ -44,7 +44,7 @@ Header.Internal = function Item({ children }: HeaderProps) {
     prevScrollTop.current = scrollTop;
   });
 
-  useEventListener("scroll", scrollMethod);
+  useEventListener('scroll', scrollMethod);
 
   useEffect(() => {
     const $ele = getTargetElement(ref);

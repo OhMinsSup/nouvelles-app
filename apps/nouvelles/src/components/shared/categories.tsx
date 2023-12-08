@@ -1,11 +1,11 @@
-"use client";
-import React, { useMemo } from "react";
-import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { buttonVariants } from "~/components/ui/button";
-import type { Category } from "@prisma/client";
-import Link from "next/link";
-import { cn } from "~/utils/utils";
-import { usePathname, useSearchParams } from "next/navigation";
+'use client';
+import React, { useMemo } from 'react';
+import * as ScrollArea from '@radix-ui/react-scroll-area';
+import { buttonVariants } from '~/components/ui/button';
+import type { Category } from '@prisma/client';
+import Link from 'next/link';
+import { cn } from '~/utils/utils';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 interface CategoriesProps {
   categories: Category[];
@@ -43,16 +43,16 @@ Categories.Category = function Item({ category }: CategoryProps) {
 
   const url = useMemo(() => {
     const _searchParams = new URLSearchParams(searchParams);
-    if (_searchParams.has("category")) {
-      _searchParams.delete("category");
+    if (_searchParams.has('category')) {
+      _searchParams.delete('category');
     } else {
-      _searchParams.set("category", category.name);
+      _searchParams.set('category', category.name);
     }
     return `${pathname}?${_searchParams.toString()}`;
   }, [category, pathname]);
 
   const isEquals = useMemo(() => {
-    const _category = searchParams.get("category");
+    const _category = searchParams.get('category');
     if (!_category) return false;
     return decodeURIComponent(_category) === category.name;
   }, [searchParams]);
@@ -63,9 +63,9 @@ Categories.Category = function Item({ category }: CategoryProps) {
       href={url}
       prefetch={false}
       className={buttonVariants({
-        variant: "ghost",
+        variant: 'ghost',
         className: cn({
-          "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50":
+          'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-50':
             isEquals,
         }),
       })}

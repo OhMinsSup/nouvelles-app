@@ -1,19 +1,19 @@
-"use client";
-import React, { useCallback, useState } from "react";
-import Link from "next/link";
-import { usePathname, useSelectedLayoutSegment } from "next/navigation";
-import { Icons } from "~/components/icons";
-import { cn } from "~/utils/utils";
-import { NAV_CONFIG, NavItem } from "~/constants/nav";
-import { PAGE_ENDPOINTS } from "~/constants/constants";
+'use client';
+import React, { useCallback, useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Icons } from '~/components/icons';
+import { cn } from '~/utils/utils';
+import { NAV_CONFIG, NavItem } from '~/constants/nav';
+import { PAGE_ENDPOINTS } from '~/constants/constants';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
-import SkipRenderOnClient from "./skip-render-on-client";
-import { useTheme } from "next-themes";
+} from '~/components/ui/dropdown-menu';
+import SkipRenderOnClient from './skip-render-on-client';
+import { useTheme } from 'next-themes';
 
 export default function MainNav() {
   return (
@@ -39,7 +39,7 @@ interface ItemProps {
 
 MainNav.Item = function Item({ item }: ItemProps) {
   switch (item.type) {
-    case "link": {
+    case 'link': {
       return <MainNav.Link item={item} />;
     }
     default: {
@@ -52,15 +52,15 @@ MainNav.Link = function Item({ item }: ItemProps) {
   const pathname = usePathname();
   const href = item.href as string;
   const isActive =
-    href === "/" ? pathname === "/" : pathname.startsWith(href) && href !== "/";
+    href === '/' ? pathname === '/' : pathname.startsWith(href) && href !== '/';
 
   return (
     <Link
-      href={item.disabled ? "#" : href}
+      href={item.disabled ? '#' : href}
       className={cn(
-        "px-8 py-5 mx-[2px] my-1 flex items-center text-lg font-medium transition-colors hover:bg-foreground/5 hover:rounded-md sm:text-sm",
-        isActive ? "text-foreground" : "text-foreground/60",
-        item.disabled && "cursor-not-allowed opacity-80"
+        'px-8 py-5 mx-[2px] my-1 flex items-center text-lg font-medium transition-colors hover:bg-foreground/5 hover:rounded-md sm:text-sm',
+        isActive ? 'text-foreground' : 'text-foreground/60',
+        item.disabled && 'cursor-not-allowed opacity-80',
       )}
     >
       <item.icon />
@@ -73,15 +73,15 @@ MainNav.Menu = function Item() {
   const { setTheme, theme } = useTheme();
 
   const onClick = useCallback(() => {
-    setTheme(theme === "light" ? "dark" : "light");
+    setTheme(theme === 'light' ? 'dark' : 'light');
   }, [setTheme, theme]);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger
         className={cn(
-          "hover:text-foreground leading-tight",
-          open ? "text-foreground" : "text-foreground/60"
+          'hover:text-foreground leading-tight',
+          open ? 'text-foreground' : 'text-foreground/60',
         )}
       >
         <Icons.alignLeft />
@@ -98,10 +98,10 @@ MainNav.Logo = function Item() {
 
   return (
     <Link href={PAGE_ENDPOINTS.ROOT} className="items-center space-x-2 md:flex">
-      <SkipRenderOnClient shouldRenderOnClient={() => systemTheme === "dark"}>
+      <SkipRenderOnClient shouldRenderOnClient={() => systemTheme === 'dark'}>
         <Icons.logo className="hidden h-8 w-8 dark:block" />
       </SkipRenderOnClient>
-      <SkipRenderOnClient shouldRenderOnClient={() => systemTheme === "light"}>
+      <SkipRenderOnClient shouldRenderOnClient={() => systemTheme === 'light'}>
         <Icons.logo className="block h-8 w-8 dark:hidden" />
       </SkipRenderOnClient>
     </Link>

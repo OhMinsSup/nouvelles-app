@@ -65,6 +65,9 @@ importers:
       '@nouvelles/hook':
         specifier: workspace:*
         version: link:../../packages/hook
+      '@nouvelles/libs':
+        specifier: workspace:*
+        version: link:../../packages/libs
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2

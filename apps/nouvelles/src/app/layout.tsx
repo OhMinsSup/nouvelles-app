@@ -1,5 +1,5 @@
 import '~/assets/css/globals.css';
-import { env } from '../../env.mjs/index.js';
+import { env } from '../../env.mjs';
 import { PreloadResources } from '~/libs/react/preload';
 import { Inter as FontSans } from 'next/font/google';
 import localFont from 'next/font/local';

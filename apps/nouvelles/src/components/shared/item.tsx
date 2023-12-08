@@ -1,17 +1,15 @@
-"use client";
-import { useMemo } from "react";
-import { Card } from "~/components/ui/card";
-import Avatars from "~/components/shared/avatars";
-import {
-  Button,
-  buttonVariants,
-} from "~/components/ui/button";
-import { TipTapEditor } from "~/components/editor/tiptap-editor";
-import { cn, getDateFormatted } from "~/utils/utils";
+'use client';
+import { useMemo } from 'react';
+import { Card } from '~/components/ui/card';
+import Avatars from '~/components/shared/avatars';
+import { Button, buttonVariants } from '~/components/ui/button';
+import { TipTapEditor } from '~/components/editor/tiptap-editor';
+import { cn } from '~/utils/utils';
 
-import type { ItemSchema } from "~/server/items/items.model";
-import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import type { ItemSchema } from '~/server/items/items.model';
+import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { getDateFormatted } from '@nouvelles/libs';
 
 interface ItemProps {
   item: ItemSchema;
@@ -25,41 +23,41 @@ export default function Item({ item }: ItemProps) {
     item && item.pulbishedAt ? getDateFormatted(item.pulbishedAt) : null;
 
   const link = useMemo(() => {
-    const _link = item.realLink ?? item.link ?? "#";
-    if (_link === "#") {
+    const _link = item.realLink ?? item.link ?? '#';
+    if (_link === '#') {
       return {
-        label: "No link",
-        href: "#",
+        label: 'No link',
+        href: '#',
       };
-    } else if (_link.startsWith("http") || _link.startsWith("https")) {
+    } else if (_link.startsWith('http') || _link.startsWith('https')) {
       return {
         label: _link,
         href: _link,
       };
     }
     return {
-      label: "Invalid link",
-      href: "#",
+      label: 'Invalid link',
+      href: '#',
     };
   }, [item]);
 
   const categoryUrl = useMemo(() => {
     const _searchParams = new URLSearchParams(searchParams);
-    if (_searchParams.has("category")) {
-      _searchParams.delete("category");
+    if (_searchParams.has('category')) {
+      _searchParams.delete('category');
     } else {
-      if (item.Category) _searchParams.set("category", item.Category.name);
+      if (item.Category) _searchParams.set('category', item.Category.name);
     }
     return `${pathname}?${_searchParams.toString()}`;
   }, [searchParams, pathname]);
 
   const tagUrl = useMemo(() => {
     const _searchParams = new URLSearchParams(searchParams);
-    if (_searchParams.has("tag")) {
-      _searchParams.delete("tag");
+    if (_searchParams.has('tag')) {
+      _searchParams.delete('tag');
     } else {
       const firstTag = item.ItemTag.at(0);
-      if (firstTag && firstTag.tag) _searchParams.set("tag", firstTag.tag.name);
+      if (firstTag && firstTag.tag) _searchParams.set('tag', firstTag.tag.name);
     }
     return `${pathname}?${_searchParams.toString()}`;
   }, [searchParams, pathname]);
@@ -114,10 +112,10 @@ export default function Item({ item }: ItemProps) {
               editable={false}
               debouncedUpdatesEnabled={false}
               name={`thraed-text-${item?.id}`}
-              value={item.description ? item.description : ""}
+              value={item.description ? item.description : ''}
               noBorder
               className={cn(
-                "prose prose-brand prose-headings:font-display font-default focus:outline-none"
+                'prose prose-brand prose-headings:font-display font-default focus:outline-none',
               )}
               customClassName="p-0 mt-4"
             />
@@ -130,9 +128,9 @@ export default function Item({ item }: ItemProps) {
                   replace
                   prefetch={false}
                   className={buttonVariants({
-                    variant: "secondary",
-                    size: "xxs",
-                    className: "text-xs",
+                    variant: 'secondary',
+                    size: 'xxs',
+                    className: 'text-xs',
                   })}
                 >
                   {item.Category.name}
@@ -145,8 +143,8 @@ export default function Item({ item }: ItemProps) {
                   prefetch={false}
                   key={data.tag.id}
                   className={buttonVariants({
-                    variant: "secondary",
-                    size: "xxs",
+                    variant: 'secondary',
+                    size: 'xxs',
                   })}
                 >
                   {data.tag.name}

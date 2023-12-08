@@ -1,15 +1,15 @@
-import { EditorProps } from "@tiptap/pm/view";
-import { cn } from "~/utils/utils";
+import { EditorProps } from '@tiptap/pm/view';
+import { cn } from '~/utils/utils';
 
 export function TiptapEditorProps(
   setIsSubmitting?: (
-    isSubmitting: "submitting" | "submitted" | "saved"
+    isSubmitting: 'submitting' | 'submitted' | 'saved',
   ) => void,
-  className?: string
+  className?: string,
 ): EditorProps {
   return {
     attributes: {
-      class: className ?? "",
+      class: className ?? '',
     },
   };
 }

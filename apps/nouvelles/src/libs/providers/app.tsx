@@ -1,9 +1,9 @@
-import { useMemo, useReducer } from "react";
-import { createContext } from "~/libs/react/context";
+import { useMemo, useReducer } from 'react';
+import { createContext } from '@nouvelles/hook';
 
 enum Action {
-  FORCED_UPDATE = "FORCED_UPDATE",
-  CHANGE_DATA_KEY = "CHANGE_DATA_KEY",
+  FORCED_UPDATE = 'FORCED_UPDATE',
+  CHANGE_DATA_KEY = 'CHANGE_DATA_KEY',
 }
 
 type ForcedUpdateAction = {
@@ -36,8 +36,8 @@ const initialState: AppState = {
 };
 
 const [Provider, useAppContext] = createContext<AppContext>({
-  name: "useAppContext",
-  errorMessage: "useAppContext: `context` is undefined.",
+  name: 'useAppContext',
+  errorMessage: 'useAppContext: `context` is undefined.',
   defaultValue: initialState,
 });
 
@@ -80,7 +80,7 @@ function AppProvider({ children }: Props) {
       changeDataKey,
       dispatch,
     }),
-    [state]
+    [state],
   );
 
   return <Provider value={actions}>{children}</Provider>;

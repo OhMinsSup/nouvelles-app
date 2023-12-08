@@ -1,7 +1,7 @@
-import React from "react";
-import Categories from "~/components/shared/categories";
-import { categoriesService } from "~/server/categories/categories.server";
-import { isEmpty } from "~/utils/assertion";
+import React from 'react';
+import Categories from '~/components/shared/categories';
+import { categoriesService } from '~/server/categories/categories.server';
+import { isEmpty } from '@nouvelles/libs';
 
 interface Props {
   children: React.ReactNode;

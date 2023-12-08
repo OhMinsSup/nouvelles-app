@@ -1,12 +1,12 @@
-"use client";
-import { useImperativeHandle, useRef, forwardRef } from "react";
-import type { Editor } from "@tiptap/react";
-import { useEditor, EditorContent } from "@tiptap/react";
+'use client';
+import { useImperativeHandle, useRef, forwardRef } from 'react';
+import type { Editor } from '@tiptap/react';
+import { useEditor, EditorContent } from '@tiptap/react';
 
-import { TiptapExtensions } from "./extensions";
-import { TiptapEditorProps } from "./props";
-import { useDebouncedCallback } from "use-debounce";
-import { cn } from "~/utils/utils";
+import { TiptapExtensions } from './extensions';
+import { TiptapEditorProps } from './props';
+import { useDebouncedCallback } from 'use-debounce';
+import { cn } from '~/utils/utils';
 
 export interface ITipTapRichTextEditor {
   value: string;
@@ -14,7 +14,7 @@ export interface ITipTapRichTextEditor {
   onChange?: (json: any, html: string, empty: boolean) => void;
   onBlur?: () => void;
   setIsSubmitting?: (
-    isSubmitting: "submitting" | "submitted" | "saved"
+    isSubmitting: 'submitting' | 'submitted' | 'saved',
   ) => void;
   setShouldShowAlert?: (showAlert: boolean) => void;
   editable?: boolean;
@@ -52,7 +52,7 @@ const Tiptap = (props: ITipTapRichTextEditor) => {
     content: value,
     onUpdate: async ({ editor }) => {
       // for instant feedback loop
-      setIsSubmitting?.("submitting");
+      setIsSubmitting?.('submitting');
       setShouldShowAlert?.(true);
 
       if (debouncedUpdatesEnabled) {
@@ -89,12 +89,12 @@ const Tiptap = (props: ITipTapRichTextEditor) => {
         }
       }, 500);
     },
-    1000
+    1000,
   );
 
   const editorClassNames = `relative w-full max-w-full sm:rounded-lg mt-2 p-3 relative focus:outline-none rounded-md
-  ${noBorder ? "" : "border border-custom-border-200"} ${
-    borderOnFocus ? "focus:border border-custom-border-300" : "focus:border-0"
+  ${noBorder ? '' : 'border border-custom-border-200'} ${
+    borderOnFocus ? 'focus:border border-custom-border-300' : 'focus:border-0'
   } ${customClassName}`;
 
   if (!editor) return null;
@@ -104,8 +104,8 @@ const Tiptap = (props: ITipTapRichTextEditor) => {
     <div
       id="tiptap-container"
       className={cn(
-        "tiptap-editor-container relative cursor-text",
-        editorClassNames
+        'tiptap-editor-container relative cursor-text',
+        editorClassNames,
       )}
       onClick={() => {
         editor?.chain().focus().run();
@@ -119,9 +119,9 @@ const Tiptap = (props: ITipTapRichTextEditor) => {
 };
 
 const TipTapEditor = forwardRef<ITipTapRichTextEditor, ITipTapRichTextEditor>(
-  (props, ref) => <Tiptap {...props} forwardedRef={ref} />
+  (props, ref) => <Tiptap {...props} forwardedRef={ref} />,
 );
 
-TipTapEditor.displayName = "TipTapEditor";
+TipTapEditor.displayName = 'TipTapEditor';
 
 export { TipTapEditor };

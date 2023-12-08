@@ -1,5 +1,5 @@
-import React from "react";
-import MainLayout from "~/components/layout/main-layout";
+import React from 'react';
+import MainLayout from '~/components/layout/main-layout';
 
 interface Props {
   children: React.ReactNode;

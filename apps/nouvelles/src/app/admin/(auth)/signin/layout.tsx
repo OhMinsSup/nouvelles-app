@@ -1,5 +1,5 @@
-import React from "react";
-import { Icons } from "~/components/icons";
+import React from 'react';
+import { Icons } from '~/components/icons';
 
 interface Props {
   children: React.ReactNode;

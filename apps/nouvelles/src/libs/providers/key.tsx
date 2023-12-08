@@ -1,9 +1,9 @@
-"use client";
-import { useMemo, useReducer } from "react";
-import { createContext } from "~/libs/react/context";
+'use client';
+import { useMemo, useReducer } from 'react';
+import { createContext } from '@nouvelles/hook';
 
 enum Action {
-  SET_QUERY_KEY = "SET_QUERY_KEY",
+  SET_QUERY_KEY = 'SET_QUERY_KEY',
 }
 
 type SetQueryKeyAction = {
@@ -20,7 +20,7 @@ interface KeyState {
 }
 
 interface keyContext extends KeyState {
-  setQueryKey: (payload: SetQueryKeyAction["payload"]) => void;
+  setQueryKey: (payload: SetQueryKeyAction['payload']) => void;
   dispatch: React.Dispatch<KeyAction>;
 }
 
@@ -29,8 +29,8 @@ const initialState: KeyState = {
 };
 
 const [Provider, useKeyContext] = createContext<keyContext>({
-  name: "useKeyContext",
-  errorMessage: "useKeyContext: `context` is undefined.",
+  name: 'useKeyContext',
+  errorMessage: 'useKeyContext: `context` is undefined.',
   defaultValue: initialState,
 });
 
@@ -54,10 +54,10 @@ function reducer(state = initialState, action: KeyAction) {
 function KeyProvider({ children, queryKey = [] }: Props) {
   const [state, dispatch] = useReducer(
     reducer,
-    Object.assign({}, initialState, { queryKey })
+    Object.assign({}, initialState, { queryKey }),
   );
 
-  const setQueryKey = (payload: SetQueryKeyAction["payload"]) => {
+  const setQueryKey = (payload: SetQueryKeyAction['payload']) => {
     dispatch({
       type: Action.SET_QUERY_KEY,
       payload,
@@ -70,7 +70,7 @@ function KeyProvider({ children, queryKey = [] }: Props) {
       setQueryKey,
       dispatch,
     }),
-    [state]
+    [state],
   );
 
   return <Provider value={actions}>{children}</Provider>;

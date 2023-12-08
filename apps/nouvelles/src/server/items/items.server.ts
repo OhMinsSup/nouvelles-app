@@ -1,10 +1,10 @@
-"server-only";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import { db } from "@nouvelles/database";
-import { isInvaliDate, isString } from "~/utils/assertion";
-import type { ItemQuery } from "~/server/items/items.query";
-import { ItemSchema } from "./items.model";
+'server-only';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { db } from '@nouvelles/database';
+import { isInvaliDate, isString } from '@nouvelles/libs';
+import type { ItemQuery } from '~/server/items/items.query';
+import { ItemSchema } from './items.model';
 
 dayjs.extend(customParseFormat);
 
@@ -66,8 +66,8 @@ export class ItemService {
       },
     });
 
-    const dateString = dayjs(input.date, "YY.MM.DD").format(
-      "YYYY-MM-DD HH:mm:ss"
+    const dateString = dayjs(input.date, 'YY.MM.DD').format(
+      'YYYY-MM-DD HH:mm:ss',
     );
     const dateTime = dayjs(dateString).toDate();
     const pulbishedAt = isInvaliDate(dateTime) ? undefined : dateTime;
@@ -110,16 +110,16 @@ export class ItemService {
 
   getItems(query: ItemQuery, currentUserId?: string) {
     switch (query.type) {
-      case "search":
+      case 'search':
         return this._getItemsBySearch(query, currentUserId);
-      case "today":
+      case 'today':
         return this._getItemsByToDay(query);
       default:
         return this._getItemsByCursor(query, currentUserId);
     }
   }
 
-  getItemsByMessage(query: Omit<ItemQuery, "q" | "pageNo" | "cursor">) {
+  getItemsByMessage(query: Omit<ItemQuery, 'q' | 'pageNo' | 'cursor'>) {
     return this._getItemsByMessage(query);
   }
 
@@ -143,7 +143,7 @@ export class ItemService {
     limit,
     category,
     tag,
-  }: Omit<ItemQuery, "q" | "pageNo" | "cursor">) {
+  }: Omit<ItemQuery, 'q' | 'pageNo' | 'cursor'>) {
     if (isString(limit)) {
       limit = Number(limit);
     } else {
@@ -237,7 +237,7 @@ export class ItemService {
             },
           },
           orderBy: {
-            pulbishedAt: "desc",
+            pulbishedAt: 'desc',
           },
         }),
       ]);
@@ -253,7 +253,7 @@ export class ItemService {
 
   private async _getItemsByCursor(
     { cursor, limit, category, tag }: ItemQuery,
-    currentUserId?: string
+    currentUserId?: string,
   ) {
     if (isString(cursor)) {
       cursor = cursor;
@@ -346,7 +346,7 @@ export class ItemService {
             },
           },
           orderBy: {
-            pulbishedAt: "desc",
+            pulbishedAt: 'desc',
           },
         }),
       ]);
@@ -397,7 +397,7 @@ export class ItemService {
 
   private async _getItemsBySearch(
     { cursor, limit, q, tag, category }: ItemQuery,
-    currentUserId?: string
+    currentUserId?: string,
   ) {
     if (isString(cursor)) {
       cursor = cursor;
@@ -498,7 +498,7 @@ export class ItemService {
             },
           },
           orderBy: {
-            pulbishedAt: "desc",
+            pulbishedAt: 'desc',
           },
         }),
       ]);
@@ -560,7 +560,7 @@ export class ItemService {
 
   private async _getItemsByToDay(
     { cursor, limit, category, tag }: ItemQuery,
-    currentUserId?: string
+    currentUserId?: string,
   ) {
     if (isString(cursor)) {
       cursor = cursor;
@@ -572,8 +572,8 @@ export class ItemService {
       limit = limit ?? 25;
     }
 
-    const start = dayjs().startOf("day").toDate();
-    const end = dayjs().endOf("day").toDate();
+    const start = dayjs().startOf('day').toDate();
+    const end = dayjs().endOf('day').toDate();
 
     const categoryItem = category
       ? await db.category.findFirst({
@@ -664,7 +664,7 @@ export class ItemService {
             },
           },
           orderBy: {
-            pulbishedAt: "desc",
+            pulbishedAt: 'desc',
           },
         }),
       ]);

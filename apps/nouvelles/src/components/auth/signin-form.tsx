@@ -1,25 +1,22 @@
-"use client";
-import React, { useCallback, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
+'use client';
+import React, { useCallback, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { useForm } from 'react-hook-form';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
-import {
-  Button,
-  buttonVariants,
-} from "~/components/ui/button";
-import { Icons } from "~/components/icons";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { PAGE_ENDPOINTS } from "~/constants/constants";
-import { cn } from "~/utils/utils";
+} from '~/components/ui/form';
+import { Input } from '~/components/ui/input';
+import { Button, buttonVariants } from '~/components/ui/button';
+import { Icons } from '~/components/icons';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { PAGE_ENDPOINTS } from '~/constants/constants';
+import { cn } from '~/utils/utils';
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -35,7 +32,7 @@ export default function SignInForm() {
   const form = useForm<FormFields>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      email: '',
     },
   });
 
@@ -43,13 +40,13 @@ export default function SignInForm() {
     async (input: FormFields) => {
       console.log(input);
     },
-    [router]
+    [router],
   );
 
   const onKakoLogin = useCallback(async () => {
     setLoading(true);
     try {
-      const resp = await signIn("kakao", {
+      const resp = await signIn('kakao', {
         redirect: false,
       });
 
@@ -113,7 +110,7 @@ export default function SignInForm() {
 
       <button
         type="button"
-        className={cn(buttonVariants({ variant: "outline" }))}
+        className={cn(buttonVariants({ variant: 'outline' }))}
         onClick={onKakoLogin}
         disabled={isLoading}
       >

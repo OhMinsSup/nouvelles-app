@@ -1,6 +1,6 @@
-"use client";
-import React from "react";
-import { isFunction } from "~/utils/assertion";
+'use client';
+import React from 'react';
+import { isFunction } from '@nouvelles/libs';
 
 export type FallbackRender = (errorData: {
   error: Error;
@@ -15,12 +15,12 @@ interface ErrorBoundaryProps {
   // componentWillUnmount
   onUnmount?(
     error: Error | null,
-    componentStack: string | null | undefined
+    componentStack: string | null | undefined,
   ): void;
   // 에러를 초기화하는 함수
   onReset?(
     error: Error | null,
-    componentStack: string | null | undefined
+    componentStack: string | null | undefined,
   ): void;
   // 에러가 발생할 때 호출
   onError?(error: Error, componentStack: string | null | undefined): void;
@@ -29,7 +29,7 @@ interface ErrorBoundaryProps {
 }
 
 interface ErrorBoundaryState {
-  componentStack: React.ErrorInfo["componentStack"] | null | undefined;
+  componentStack: React.ErrorInfo['componentStack'] | null | undefined;
   error: Error | null;
   hasError: boolean;
 }
@@ -49,7 +49,7 @@ export class ErrorBoundary extends React.Component<
 
   componentDidCatch(
     error: Error & { cause?: Error },
-    { componentStack }: React.ErrorInfo
+    { componentStack }: React.ErrorInfo,
   ): void {
     const { onError } = this.props;
 
@@ -120,7 +120,7 @@ export class ErrorBoundary extends React.Component<
       return null;
     }
 
-    if (typeof children === "function") {
+    if (typeof children === 'function') {
       return (children as () => React.ReactNode)();
     }
     return children;

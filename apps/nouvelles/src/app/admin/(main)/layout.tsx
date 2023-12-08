@@ -1,7 +1,7 @@
-import React from "react";
-import { redirect } from "next/navigation";
-import { PAGE_ENDPOINTS } from "~/constants/constants";
-import { Role, getSession, isAuthorized } from "~/server/auth";
+import React from 'react';
+import { redirect } from 'next/navigation';
+import { PAGE_ENDPOINTS } from '~/constants/constants';
+import { Role, getSession, isAuthorized } from '~/server/auth';
 
 interface Props {
   children: React.ReactNode;

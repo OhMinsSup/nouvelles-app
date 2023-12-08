@@ -1,9 +1,5 @@
-import React from "react";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "~/components/ui/avatar";
+import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 
 interface AvatarsProps {
   src?: string;

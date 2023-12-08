@@ -1,7 +1,7 @@
-import React from "react";
-import Header from "~/components/shared/header";
-import MobileFooterNav from "~/components/shared/mobile-footer-nav";
-import MainNav from "~/components/shared/main-nav";
+import React from 'react';
+import Header from '~/components/shared/header';
+import MobileFooterNav from '~/components/shared/mobile-footer-nav';
+import MainNav from '~/components/shared/main-nav';
 
 interface MainLayoutProps {
   before?: React.ReactNode;

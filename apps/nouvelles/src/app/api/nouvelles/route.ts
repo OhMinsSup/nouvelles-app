@@ -1,4 +1,4 @@
-import getNeusralCollection from "~/defer/getNeusralCollection";
+import getNeusralCollection from '~/defer/getNeusralCollection';
 
 export async function GET(request: Request) {
   try {
@@ -8,7 +8,7 @@ export async function GET(request: Request) {
       JSON.stringify({
         ok: true,
       }),
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error(error);

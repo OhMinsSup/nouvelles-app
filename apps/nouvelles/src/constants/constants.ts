@@ -1,10 +1,10 @@
 export const QUERIES_KEY = {
   items: {
-    root: ["items"],
+    root: ['items'],
     search: (q?: string) => {
       const searchParams = new URLSearchParams();
-      if (q) searchParams.append("q", q);
-      return ["items", "search", searchParams.toString()];
+      if (q) searchParams.append('q', q);
+      return ['items', 'search', searchParams.toString()];
     },
   },
 };
@@ -12,9 +12,9 @@ export const QUERIES_KEY = {
 export const MUTATIONS_KEY = {};
 
 export const API_ENDPOINTS = {
-  kakao_default_message: "https://kapi.kakao.com/v2/api/talk/memo/default/send",
-  avatar: (searchParams: URLSearchParams, styles = "notionists") => {
-    const url = new URL(`/7.x/${styles}/jpg`, "https://api.dicebear.com");
+  kakao_default_message: 'https://kapi.kakao.com/v2/api/talk/memo/default/send',
+  avatar: (searchParams: URLSearchParams, styles = 'notionists') => {
+    const url = new URL(`/7.x/${styles}/jpg`, 'https://api.dicebear.com');
     for (const [key, value] of searchParams.entries()) {
       url.searchParams.append(key, value);
     }
@@ -25,27 +25,27 @@ export const API_ENDPOINTS = {
 export const ASSET_URL = {};
 
 export const PAGE_ENDPOINTS = {
-  ROOT: "/",
-  TODAY: "/today",
-  SEARCH: "/search",
+  ROOT: '/',
+  TODAY: '/today',
+  SEARCH: '/search',
   ADMIN: {
-    ROOT: "/admin",
+    ROOT: '/admin',
     AUTH: {
-      SIGNIN: "/admin/signin",
+      SIGNIN: '/admin/signin',
     },
   },
 } as const;
 
 export const SITE_CONFIG = {
-  title: "Nouvelles",
-  description: "Nouvelles 새로운 소식을 만나보세요.",
+  title: 'Nouvelles',
+  description: 'Nouvelles 새로운 소식을 만나보세요.',
   ogImage: undefined,
-  favicon: "/favicon.ico",
-  logo: "/icons/icon.png",
+  favicon: '/favicon.ico',
+  logo: '/icons/icon.png',
   apple57x57: undefined,
   apple180x180: undefined,
   apple256x256: undefined,
-  manifest: "/manifest.json",
+  manifest: '/manifest.json',
 };
 
 export const STATUS_CODE = {

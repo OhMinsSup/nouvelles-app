@@ -1,13 +1,13 @@
-"server-only";
-import { env } from "../../../env.mjs/index.js";
-import { getDateFormatted } from "~/utils/utils";
-import type { ItemSchema } from "~/server/items/items.model";
-import dayjs from "dayjs";
+'server-only';
+import { env } from '../../../env.mjs';
+import { getDateFormatted } from '@nouvelles/libs';
+import type { ItemSchema } from '~/server/items/items.model';
+import dayjs from 'dayjs';
 
 export default function createTemplateMessage(items: ItemSchema[]) {
-  const currentDate = dayjs().format("YYYY년 MM월 DD일");
+  const currentDate = dayjs().format('YYYY년 MM월 DD일');
   const template_object = {
-    object_type: "list",
+    object_type: 'list',
     header_title: `${currentDate} 마케팅 뉴스클리핑`,
     header_link: {
       web_url: env.NEXT_PUBLIC_SITE_URL,
@@ -31,7 +31,7 @@ export default function createTemplateMessage(items: ItemSchema[]) {
     }),
     buttons: [
       {
-        title: "웹으로 이동",
+        title: '웹으로 이동',
         link: {
           web_url: env.NEXT_PUBLIC_SITE_URL,
           mobile_web_url: env.NEXT_PUBLIC_SITE_URL,
