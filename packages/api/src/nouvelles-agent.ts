@@ -2,7 +2,7 @@ import { Agent } from './agent';
 import type {
   GetItemsHandler,
   GetItemHandler,
-  CreateItems,
+  CreateItemsHandler,
 } from './client/types';
 
 export class NouvellesAgent extends Agent {
@@ -10,7 +10,7 @@ export class NouvellesAgent extends Agent {
     return this.api.app;
   }
 
-  createItems: CreateItems = (body, opts) => {
+  createItems: CreateItemsHandler = (body, opts) => {
     return this.api.app.item.createItems(body, opts);
   };
 

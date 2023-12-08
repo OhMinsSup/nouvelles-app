@@ -4,7 +4,7 @@ export type CallOptions = Partial<
   Pick<FetchHandlerOptions, 'headers' | 'reqBody'> & {}
 >;
 
-export type CreateItems = (
+export type CreateItemsHandler = (
   body: any,
   opts?: CallOptions | undefined,
 ) => Promise<FetchHandlerResponse>;
