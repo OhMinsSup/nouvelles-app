@@ -7,7 +7,7 @@ import {
   type BasicTarget,
   getTargetElement,
   isBrowser,
-} from "apps/nouvelles/src/libs/browser/dom";
+} from "~/libs/browser/dom";
 import { useUnmount } from "../hooks/useUnmount";
 
 const createEffectWithTarget = (

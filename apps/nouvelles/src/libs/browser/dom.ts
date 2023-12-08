@@ -1,4 +1,4 @@
-import { isElement } from "apps/nouvelles/src/utils/assertion";
+import { isElement } from "~/utils/assertion";
 
 export function canUseDOM(): boolean {
   return !!(

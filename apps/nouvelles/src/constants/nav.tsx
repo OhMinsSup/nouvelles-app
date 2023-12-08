@@ -1,6 +1,6 @@
 "use client";
 import type { LucideIcon } from "lucide-react";
-import { Icons } from "apps/nouvelles/src/components/icons";
+import { Icons } from "~/components/icons";
 import { PAGE_ENDPOINTS } from "./constants";
 
 export type NavItem = {

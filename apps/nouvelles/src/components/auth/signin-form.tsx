@@ -9,17 +9,17 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "apps/nouvelles/src/components/ui/form";
-import { Input } from "apps/nouvelles/src/components/ui/input";
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
 import {
   Button,
   buttonVariants,
-} from "apps/nouvelles/src/components/ui/button";
-import { Icons } from "apps/nouvelles/src/components/icons";
+} from "~/components/ui/button";
+import { Icons } from "~/components/icons";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { PAGE_ENDPOINTS } from "apps/nouvelles/src/constants/constants";
-import { cn } from "apps/nouvelles/src/utils/utils";
+import { PAGE_ENDPOINTS } from "~/constants/constants";
+import { cn } from "~/utils/utils";
 
 const formSchema = z.object({
   email: z.string().email(),

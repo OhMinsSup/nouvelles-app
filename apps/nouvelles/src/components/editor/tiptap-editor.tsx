@@ -6,7 +6,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import { TiptapExtensions } from "./extensions";
 import { TiptapEditorProps } from "./props";
 import { useDebouncedCallback } from "use-debounce";
-import { cn } from "apps/nouvelles/src/utils/utils";
+import { cn } from "~/utils/utils";
 
 export interface ITipTapRichTextEditor {
   value: string;

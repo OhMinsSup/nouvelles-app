@@ -2,7 +2,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { Input } from "apps/nouvelles/src/components/ui/input";
+import { Input } from "~/components/ui/input";
 
 interface SearchInputProps {
   defaultValue?: string;

@@ -1,15 +1,15 @@
 "use client";
 import { useMemo } from "react";
-import { Card } from "apps/nouvelles/src/components/ui/card";
-import Avatars from "apps/nouvelles/src/components/shared/avatars";
+import { Card } from "~/components/ui/card";
+import Avatars from "~/components/shared/avatars";
 import {
   Button,
   buttonVariants,
-} from "apps/nouvelles/src/components/ui/button";
-import { TipTapEditor } from "apps/nouvelles/src/components/editor/tiptap-editor";
-import { cn, getDateFormatted } from "apps/nouvelles/src/utils/utils";
+} from "~/components/ui/button";
+import { TipTapEditor } from "~/components/editor/tiptap-editor";
+import { cn, getDateFormatted } from "~/utils/utils";
 
-import type { ItemSchema } from "apps/nouvelles/src/server/items/items.model";
+import type { ItemSchema } from "~/server/items/items.model";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 

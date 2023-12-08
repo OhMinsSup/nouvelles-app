@@ -1,5 +1,5 @@
 import React from "react";
-import { Icons } from "apps/nouvelles/src/components/icons";
+import { Icons } from "~/components/icons";
 
 interface Props {
   children: React.ReactNode;

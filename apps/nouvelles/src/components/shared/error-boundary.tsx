@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { isFunction } from "apps/nouvelles/src/utils/assertion";
+import { isFunction } from "~/utils/assertion";
 
 export type FallbackRender = (errorData: {
   error: Error;

@@ -3,7 +3,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "apps/nouvelles/src/components/ui/avatar";
+} from "~/components/ui/avatar";
 
 interface AvatarsProps {
   src?: string;

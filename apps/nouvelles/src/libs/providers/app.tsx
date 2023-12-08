@@ -1,5 +1,5 @@
 import { useMemo, useReducer } from "react";
-import { createContext } from "apps/nouvelles/src/libs/react/context";
+import { createContext } from "~/libs/react/context";
 
 enum Action {
   FORCED_UPDATE = "FORCED_UPDATE",

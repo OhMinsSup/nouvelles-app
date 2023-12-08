@@ -1,6 +1,6 @@
 // libs
-import { isEmpty, isString } from "apps/nouvelles/src/utils/assertion";
-import { isBrowser } from "apps/nouvelles/src/libs/browser/dom";
+import { isEmpty, isString } from "~/utils/assertion";
+import { isBrowser } from "~/libs/browser/dom";
 
 // errors
 import { FetchError } from "./error";

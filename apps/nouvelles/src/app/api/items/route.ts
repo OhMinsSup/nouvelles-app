@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 // import { getSession } from '~/server/auth';
-import { itemService } from "apps/nouvelles/src/server/items/items.server";
+import { itemService } from "~/server/items/items.server";
 import * as z from "zod";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 

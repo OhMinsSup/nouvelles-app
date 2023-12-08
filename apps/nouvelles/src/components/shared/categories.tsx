@@ -1,10 +1,10 @@
 "use client";
 import React, { useMemo } from "react";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { buttonVariants } from "apps/nouvelles/src/components/ui/button";
+import { buttonVariants } from "~/components/ui/button";
 import type { Category } from "@prisma/client";
 import Link from "next/link";
-import { cn } from "apps/nouvelles/src/utils/utils";
+import { cn } from "~/utils/utils";
 import { usePathname, useSearchParams } from "next/navigation";
 
 interface CategoriesProps {

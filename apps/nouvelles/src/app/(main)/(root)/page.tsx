@@ -1,9 +1,9 @@
 import React from "react";
-import getQueryClient from "apps/nouvelles/src/services/query/get-query-client";
-import ItemList from "apps/nouvelles/src/components/shared/item-list";
-import { itemService } from "apps/nouvelles/src/server/items/items.server";
+import getQueryClient from "~/services/query/get-query-client";
+import ItemList from "~/components/shared/item-list";
+import { itemService } from "~/server/items/items.server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { QUERIES_KEY } from "apps/nouvelles/src/constants/constants";
+import { QUERIES_KEY } from "~/constants/constants";
 
 interface Props {
   searchParams: { category: string | undefined; tag: string | undefined };

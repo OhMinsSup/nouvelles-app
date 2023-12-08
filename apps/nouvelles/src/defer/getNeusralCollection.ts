@@ -1,10 +1,10 @@
 // the `defer()` helper will be used to define a background function
 import { defer } from "@defer/client";
 import { nouvellesSite, type Nouvelle } from "./neusral.model";
-import { tagsService } from "apps/nouvelles/src/server/tags/tags.server";
-import { categoriesService } from "apps/nouvelles/src/server/categories/categories.server";
-import { itemService } from "apps/nouvelles/src/server/items/items.server";
-import { isEmpty } from "apps/nouvelles/src/utils/assertion";
+import { tagsService } from "~/server/tags/tags.server";
+import { categoriesService } from "~/server/categories/categories.server";
+import { itemService } from "~/server/items/items.server";
+import { isEmpty } from "~/utils/assertion";
 
 // a background function must be `async`
 export async function getNeusralCollection() {

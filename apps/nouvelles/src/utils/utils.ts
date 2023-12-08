@@ -5,7 +5,7 @@ import {
   isEmpty,
   isNull,
   isUndefined,
-} from "apps/nouvelles/src/utils/assertion";
+} from "~/utils/assertion";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

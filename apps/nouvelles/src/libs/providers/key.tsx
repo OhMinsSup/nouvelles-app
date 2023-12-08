@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useReducer } from "react";
-import { createContext } from "apps/nouvelles/src/libs/react/context";
+import { createContext } from "~/libs/react/context";
 
 enum Action {
   SET_QUERY_KEY = "SET_QUERY_KEY",

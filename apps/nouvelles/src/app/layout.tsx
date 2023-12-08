@@ -1,11 +1,11 @@
 import '~/assets/css/globals.css';
 import { env } from '../../env.mjs/index.js';
-import { PreloadResources } from 'apps/nouvelles/src/libs/react/preload';
+import { PreloadResources } from '~/libs/react/preload';
 import { Inter as FontSans } from 'next/font/google';
 import localFont from 'next/font/local';
 import { Providers } from './providers';
-import { cn } from 'apps/nouvelles/src/utils/utils';
-import { SITE_CONFIG } from 'apps/nouvelles/src/constants/constants';
+import { cn } from '~/utils/utils';
+import { SITE_CONFIG } from '~/constants/constants';
 import type { Metadata } from 'next';
 
 const url = new URL(env.NEXT_PUBLIC_SITE_URL);

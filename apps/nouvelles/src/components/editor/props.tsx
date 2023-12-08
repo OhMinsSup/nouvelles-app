@@ -1,5 +1,5 @@
 import { EditorProps } from "@tiptap/pm/view";
-import { cn } from "apps/nouvelles/src/utils/utils";
+import { cn } from "~/utils/utils";
 
 export function TiptapEditorProps(
   setIsSubmitting?: (

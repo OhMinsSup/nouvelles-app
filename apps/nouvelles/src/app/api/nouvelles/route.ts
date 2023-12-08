@@ -1,4 +1,4 @@
-import getNeusralCollection from "apps/nouvelles/src/defer/getNeusralCollection";
+import getNeusralCollection from "~/defer/getNeusralCollection";
 
 export async function GET(request: Request) {
   try {

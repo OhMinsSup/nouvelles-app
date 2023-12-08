@@ -2,16 +2,16 @@
 import React, { useCallback, useState } from "react";
 import Link from "next/link";
 import { usePathname, useSelectedLayoutSegment } from "next/navigation";
-import { Icons } from "apps/nouvelles/src/components/icons";
-import { cn } from "apps/nouvelles/src/utils/utils";
-import { NAV_CONFIG, NavItem } from "apps/nouvelles/src/constants/nav";
-import { PAGE_ENDPOINTS } from "apps/nouvelles/src/constants/constants";
+import { Icons } from "~/components/icons";
+import { cn } from "~/utils/utils";
+import { NAV_CONFIG, NavItem } from "~/constants/nav";
+import { PAGE_ENDPOINTS } from "~/constants/constants";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "apps/nouvelles/src/components/ui/dropdown-menu";
+} from "~/components/ui/dropdown-menu";
 import SkipRenderOnClient from "./skip-render-on-client";
 import { useTheme } from "next-themes";
 

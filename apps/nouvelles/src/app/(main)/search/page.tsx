@@ -1,9 +1,9 @@
-import SearchInput from "apps/nouvelles/src/components/search/search-input";
-import SearchWapper from "apps/nouvelles/src/components/search/search-wrapper";
-import ItemList from "apps/nouvelles/src/components/shared/item-list";
-import { QUERIES_KEY } from "apps/nouvelles/src/constants/constants";
-import { itemService } from "apps/nouvelles/src/server/items/items.server";
-import getQueryClient from "apps/nouvelles/src/services/query/get-query-client";
+import SearchInput from "~/components/search/search-input";
+import SearchWapper from "~/components/search/search-wrapper";
+import ItemList from "~/components/shared/item-list";
+import { QUERIES_KEY } from "~/constants/constants";
+import { itemService } from "~/server/items/items.server";
+import getQueryClient from "~/services/query/get-query-client";
 
 interface Props {
   searchParams: { q: string | undefined };

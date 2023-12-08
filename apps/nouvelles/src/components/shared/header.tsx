@@ -3,9 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   getTargetElement,
   getWindowScrollTop,
-} from "apps/nouvelles/src/libs/browser/dom";
-import { useEventListener } from "apps/nouvelles/src/libs/hooks/useEventListener";
-import { optimizeAnimation } from "apps/nouvelles/src/utils/utils";
+} from "~/libs/browser/dom";
+import { useEventListener } from "~/libs/hooks/useEventListener";
+import { optimizeAnimation } from "~/utils/utils";
 
 interface HeaderProps {
   children: React.ReactNode;

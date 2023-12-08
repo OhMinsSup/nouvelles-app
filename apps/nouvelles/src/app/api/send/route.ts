@@ -1,9 +1,9 @@
-import { API_ENDPOINTS } from "apps/nouvelles/src/constants/constants";
-import { accountsService } from "apps/nouvelles/src/server/accounts/accounts.server";
-import { getSession } from "apps/nouvelles/src/server/auth";
-import { itemService } from "apps/nouvelles/src/server/items/items.server";
-import createTemplateMessage from "apps/nouvelles/src/server/template/createTemplateMessage";
-import { fetchService } from "apps/nouvelles/src/services/fetch/client";
+import { API_ENDPOINTS } from "~/constants/constants";
+import { accountsService } from "~/server/accounts/accounts.server";
+import { getSession } from "~/server/auth";
+import { itemService } from "~/server/items/items.server";
+import createTemplateMessage from "~/server/template/createTemplateMessage";
+import { fetchService } from "~/services/fetch/client";
 
 export async function POST(request: Request) {
   const session = await getSession();

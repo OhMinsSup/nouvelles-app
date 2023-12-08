@@ -2,10 +2,10 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "apps/nouvelles/src/utils/utils";
-import { NAV_CONFIG, NavItem } from "apps/nouvelles/src/constants/nav";
+import { cn } from "~/utils/utils";
+import { NAV_CONFIG, NavItem } from "~/constants/nav";
 import SkipRenderOnClient from "./skip-render-on-client";
-import { useMediaQuery } from "apps/nouvelles/src/libs/hooks/useMediaQuery";
+import { useMediaQuery } from "~/libs/hooks/useMediaQuery";
 
 export default function MobileFooterNav() {
   const isMobile = useMediaQuery("(max-width: 768px)", false);

@@ -3,14 +3,14 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useRef, useLayoutEffect, useCallback, useMemo } from "react";
 import last from "lodash-es/last";
 import { Virtuoso, type VirtuosoHandle } from "react-virtuoso";
-import Item from "apps/nouvelles/src/components/shared/item";
-import { QUERIES_KEY } from "apps/nouvelles/src/constants/constants";
-import { getItemsApi } from "apps/nouvelles/src/server/items/items.api";
-import useBeforeUnload from "apps/nouvelles/src/libs/hooks/useBeforeUnload";
-import useIsHydrating from "apps/nouvelles/src/libs/hooks/useIsHydrating";
-import { isBrowser } from "apps/nouvelles/src/libs/browser/dom";
-import { isEmpty } from "apps/nouvelles/src/utils/assertion";
-import { KeyProvider } from "apps/nouvelles/src/libs/providers/key";
+import Item from "~/components/shared/item";
+import { QUERIES_KEY } from "~/constants/constants";
+import { getItemsApi } from "~/server/items/items.api";
+import useBeforeUnload from "~/libs/hooks/useBeforeUnload";
+import useIsHydrating from "~/libs/hooks/useIsHydrating";
+import { isBrowser } from "~/libs/browser/dom";
+import { isEmpty } from "~/utils/assertion";
+import { KeyProvider } from "~/libs/providers/key";
 
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 

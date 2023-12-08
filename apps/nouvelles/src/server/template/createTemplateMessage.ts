@@ -1,7 +1,7 @@
 "server-only";
 import { env } from "../../../env.mjs/index.js";
-import { getDateFormatted } from "apps/nouvelles/src/utils/utils";
-import type { ItemSchema } from "apps/nouvelles/src/server/items/items.model";
+import { getDateFormatted } from "~/utils/utils";
+import type { ItemSchema } from "~/server/items/items.model";
 import dayjs from "dayjs";
 
 export default function createTemplateMessage(items: ItemSchema[]) {

@@ -1,5 +1,5 @@
-import { fetchService } from "apps/nouvelles/src/services/fetch/client";
-import { createSearchParams } from "apps/nouvelles/src/utils/utils";
+import { fetchService } from "~/services/fetch/client";
+import { createSearchParams } from "~/utils/utils";
 import type { ItemQuery } from "./items.query";
 import type { ItemListSchema } from "./items.model";
 

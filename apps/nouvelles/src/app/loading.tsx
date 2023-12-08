@@ -1,4 +1,4 @@
-import { Loader } from "apps/nouvelles/src/components/ui/loader";
+import { Loader } from "~/components/ui/loader";
 
 export default function Loading() {
   return (

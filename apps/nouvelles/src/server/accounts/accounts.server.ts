@@ -1,5 +1,5 @@
 "server-only";
-import { db } from "apps/nouvelles/src/server/db/prisma";
+import { db } from "~/server/db/prisma";
 
 export class AccountsService {
   async getAccount(userId: string, provider: string = "kakao") {
