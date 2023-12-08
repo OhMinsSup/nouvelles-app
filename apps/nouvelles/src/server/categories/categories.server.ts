@@ -1,5 +1,5 @@
 "server-only";
-import { db } from "~/server/db/prisma";
+import { db } from "@nouvelles/database";
 import type { Category } from "@prisma/client";
 
 export class CategoriesService {

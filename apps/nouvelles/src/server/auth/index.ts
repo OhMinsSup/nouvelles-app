@@ -5,8 +5,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import Kakao from "next-auth/providers/kakao";
 
-import { db } from "~/server/db/prisma";
-import { env } from "../../../env.mjs/index.js";
+import { db } from "@nouvelles/database";
+import { env } from "../../../env.mjs";
 
 // Define a role enum
 export enum Role {

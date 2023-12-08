@@ -1,5 +1,5 @@
 {
-  "name": "@nouvelles/libs",
+  "name": "@nouvelles/api",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -19,8 +19,11 @@
   ],
   "scripts": {
     "build": "tsup",
-    "postinstall": "tsup",
-    "watch": "tsup --watch"
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "@nouvelles/error": "workspace:*",
+    "@nouvelles/libs": "workspace:*"
   },
   "devDependencies": {
     "@nouvelles/tsconfig": "workspace:*",

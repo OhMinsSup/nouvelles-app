@@ -21,6 +21,9 @@
     "generate": {
       "dependsOn": ["^generate"]
     },
-    "lint": {}
+    "lint": {},
+    "clean": {
+      "cache": false
+    }
   }
 }

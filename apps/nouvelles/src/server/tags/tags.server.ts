@@ -1,5 +1,5 @@
 "server-only";
-import { db } from "~/server/db/prisma";
+import { db } from "@nouvelles/database";
 import type { Tag } from "@prisma/client";
 
 export class TagsService {

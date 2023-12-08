@@ -1,7 +1,7 @@
 "server-only";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { db } from "~/server/db/prisma";
+import { db } from "@nouvelles/database";
 import { isInvaliDate, isString } from "~/utils/assertion";
 import type { ItemQuery } from "~/server/items/items.query";
 import { ItemSchema } from "./items.model";

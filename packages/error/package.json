@@ -1,5 +1,5 @@
 {
-  "name": "@nouvelles/libs",
+  "name": "@nouvelles/error",
   "version": "0.0.1",
   "private": true,
   "type": "module",

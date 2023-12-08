@@ -14,7 +14,7 @@
   "scripts": {
     "db:push": "turbo run db:push",
     "dev": "turbo run dev --concurrency 255",
-    "env:init": "turbo run env:init"
+    "clean": "turbo clean"
   },
   "devDependencies": {
     "@nouvelles/lintconfig": "workspace:*",
