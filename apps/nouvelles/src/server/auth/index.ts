@@ -1,17 +1,17 @@
-"server-only";
-import type { NextAuthOptions as NextAuthConfig } from "next-auth";
-import { getServerSession } from "next-auth";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+'server-only';
+import type { NextAuthOptions as NextAuthConfig } from 'next-auth';
+import { getServerSession } from 'next-auth';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
 
-import Kakao from "next-auth/providers/kakao";
+import Kakao from 'next-auth/providers/kakao';
 
-import { db } from "@nouvelles/database";
-import { env } from "../../../env.mjs";
+import { db } from '@nouvelles/database';
+import { env } from 'env.mjs';
 
 // Define a role enum
 export enum Role {
-  user = "user",
-  admin = "admin",
+  user = 'user',
+  admin = 'admin',
 }
 
 export type SessionUser = {
@@ -26,7 +26,7 @@ export type SessionData = {
   user: SessionUser;
 };
 
-declare module "next-auth" {
+declare module 'next-auth' {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
@@ -46,15 +46,15 @@ export const authOptions = {
           name: profile.kakao_account?.profile?.nickname,
           email: profile.kakao_account?.email,
           image: profile.kakao_account?.profile?.profile_image_url,
-          role: "admin",
+          role: 'admin',
         };
       },
     }),
   ],
   pages: {
-    signIn: "/admin/signin",
-    verifyRequest: "/admin/signin",
-    error: "/admin/signin", // Error code passed in query string as ?error=
+    signIn: '/admin/signin',
+    verifyRequest: '/admin/signin',
+    error: '/admin/signin', // Error code passed in query string as ?error=
   },
   adapter: PrismaAdapter(db),
   callbacks: {
@@ -79,7 +79,7 @@ export function getSession() {
 
 export const isAuthorized = <T extends SessionData>(
   session: T | null,
-  role?: Role
+  role?: Role,
 ): session is T => {
   if (!session) {
     return false;

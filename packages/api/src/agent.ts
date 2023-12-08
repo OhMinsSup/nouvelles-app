@@ -1,6 +1,6 @@
 import { NouvellesError, ErrorType } from '@nouvelles/error';
 import { defaultFetchHandler } from './fetch';
-
+import { BaseClient, ServiceClient } from './client';
 import type { FetchHandlerOptions } from './fetch/types';
 import type {
   AgentConfigureOptions,
@@ -10,6 +10,9 @@ import type {
 
 export class Agent {
   service: URL;
+  api: ServiceClient;
+
+  private _baseClient: BaseClient;
 
   static fetch: AgentFetchHandler | undefined = defaultFetchHandler;
 
@@ -20,6 +23,10 @@ export class Agent {
   constructor(opts: AgentOpts) {
     this.service =
       opts.service instanceof URL ? opts.service : new URL(opts.service);
+
+    this._baseClient = new BaseClient();
+    this._baseClient.fetch = this._fetch.bind(this); // patch its fetch implementation
+    this.api = this._baseClient.service(opts.service);
   }
 
   private async _fetch(opts: FetchHandlerOptions) {

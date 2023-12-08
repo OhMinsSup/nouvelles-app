@@ -7,8 +7,8 @@ export interface AgentFetchHandlerResponse {
 export type AgentFetchHandlerOptions = {
   uri: string;
   method: string;
-  headers: Headers | Record<string, string>;
-  reqBody: any;
+  headers: Headers | Record<string, string> | undefined;
+  reqBody: any | undefined;
 };
 
 export type AgentFetchHandler = (

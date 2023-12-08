@@ -1,5 +1,5 @@
 'server-only';
-import { env } from '../../../env.mjs';
+import { env } from 'env.mjs';
 import { getDateFormatted } from '@nouvelles/libs';
 import type { ItemSchema } from '~/server/items/items.model';
 import dayjs from 'dayjs';

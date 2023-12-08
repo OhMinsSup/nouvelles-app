@@ -1,14 +1,14 @@
 export interface FetchHandlerResponse {
   status: number;
   headers: Record<string, string>;
-  body: Promise<any>;
+  body: any;
 }
 
 export interface FetchHandlerOptions {
   uri: string;
   method: string;
-  headers: Headers | Record<string, string>;
-  reqBody: unknown;
+  headers: Headers | Record<string, string> | undefined;
+  reqBody: unknown | undefined;
 }
 
 export enum ResponseType {
@@ -27,3 +27,5 @@ export enum ResponseType {
   NotEnoughResources = 503,
   UpstreamTimeout = 504,
 }
+
+export type QueryParams = Record<string, any> | URLSearchParams;

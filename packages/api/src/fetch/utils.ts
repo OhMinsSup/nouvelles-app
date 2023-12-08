@@ -1,5 +1,6 @@
-import { isString, isUndefined, isFunction } from '@nouvelles/libs';
+import { isString, isUndefined, isFunction, isNull } from '@nouvelles/libs';
 import { NouvellesError, ErrorType } from '@nouvelles/error';
+import { QueryParams } from './types';
 
 export const getSearchParams = (
   url: URL | string,
@@ -17,9 +18,14 @@ export const getSearchParams = (
 };
 
 export function normalizeHeaders(
-  headers: Headers | Record<string, string>,
-): Headers {
+  headers: Headers | Record<string, string> | undefined,
+): Headers | undefined {
+  if (isUndefined(headers)) {
+    return undefined;
+  }
+
   const normalized: Headers = new Headers();
+
   for (const [header, value] of Object.entries(headers)) {
     normalized.set(header.toLowerCase(), value);
   }
@@ -27,9 +33,13 @@ export function normalizeHeaders(
 }
 
 export function encodeMethodCallBody(
-  headers: Headers,
+  headers: Headers | undefined,
   data?: any,
 ): ArrayBuffer | undefined {
+  if (isUndefined(headers)) {
+    return undefined;
+  }
+
   const contentType = headers.get('content-type');
   if (!contentType || isUndefined(data)) {
     return undefined;
@@ -49,7 +59,6 @@ export function encodeMethodCallBody(
   return data;
 }
 
-// fetch response headers to Object.fromEntries format
 export function normalizeResponseHeaders(
   headers: Headers,
 ): Record<string, string> {
@@ -105,4 +114,71 @@ export async function httpResponseBodyParse(
   }
 
   return res;
+}
+
+export function constructMethodCallUri(
+  pathname: string,
+  serviceUri: URL,
+  params?: QueryParams,
+): string {
+  const uri = new URL(serviceUri);
+  uri.pathname = pathname;
+
+  if (params) {
+    for (const [key, value] of Object.entries(params)) {
+      if (!isNull(value) || !isUndefined(value)) {
+        if (Array.isArray(value)) {
+          uri.searchParams.append(
+            key,
+            value.map((v) => encodeQueryParam('unknown', v)).join(','),
+          );
+        } else {
+          const hasToString = Object.prototype.hasOwnProperty.call(
+            value,
+            'toString',
+          );
+
+          if (hasToString) {
+            uri.searchParams.append(
+              key,
+              encodeQueryParam('unknown', value.toString()),
+            );
+          } else {
+            uri.searchParams.append(key, encodeQueryParam('unknown', value));
+          }
+        }
+      }
+    }
+  }
+
+  return uri.toString();
+}
+
+export function encodeQueryParam(
+  type:
+    | 'string'
+    | 'float'
+    | 'integer'
+    | 'boolean'
+    | 'datetime'
+    | 'array'
+    | 'unknown',
+  value: any,
+): string {
+  if (type === 'string' || type === 'unknown') {
+    return String(value);
+  }
+  if (type === 'float') {
+    return String(Number(value));
+  } else if (type === 'integer') {
+    return String(Number(value) | 0);
+  } else if (type === 'boolean') {
+    return value ? 'true' : 'false';
+  } else if (type === 'datetime') {
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
+    return String(value);
+  }
+  throw new Error(`Unsupported query param type: ${type}`);
 }
