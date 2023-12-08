@@ -52,9 +52,9 @@ export const authOptions = {
     }),
   ],
   pages: {
-    signIn: '/admin/signin',
-    verifyRequest: '/admin/signin',
-    error: '/admin/signin', // Error code passed in query string as ?error=
+    signIn: '/signin',
+    verifyRequest: '/signin',
+    error: '/signin', // Error code passed in query string as ?error=
   },
   adapter: PrismaAdapter(db),
   callbacks: {

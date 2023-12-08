@@ -1,5 +1,5 @@
 {
-  "name": "nouvelles-app",
+  "name": "nouvelles-admin",
   "version": "0.0.1-beta.0",
   "description": "nextjs sst template project",
   "keywords": [
@@ -24,8 +24,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:ci": "run-s test:*",
     "test:unit": "vitest run",
-    "test:e2e": "playwright test",
-    "db:dev": "prisma migrate dev"
+    "test:e2e": "playwright test"
   },
   "browserslist": [
     "extends @anansi/browserslist-config"
@@ -35,7 +34,7 @@
     "@dicebear/collection": "^7.0.1",
     "@dicebear/core": "^7.0.1",
     "@hookform/resolvers": "^3.3.2",
-    "@nouvelles/api": "workspace:*",
+    "@next-auth/prisma-adapter": "^1.0.7",
     "@nouvelles/database": "workspace:*",
     "@nouvelles/error": "workspace:*",
     "@nouvelles/hook": "workspace:*",
@@ -66,6 +65,7 @@
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.294.0",
     "next": "^14.0.3",
+    "next-auth": "^4.24.5",
     "next-themes": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

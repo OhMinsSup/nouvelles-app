@@ -47,12 +47,208 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.3.2
         version: 3.3.2(react-hook-form@7.48.2)
-      '@next-auth/prisma-adapter':
-        specifier: ^1.0.7
-        version: 1.0.7(@prisma/client@5.7.0)(next-auth@4.24.5)
       '@nouvelles/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@nouvelles/database':
+        specifier: workspace:*
+        version: link:../../packages/database
+      '@nouvelles/error':
+        specifier: workspace:*
+        version: link:../../packages/error
+      '@nouvelles/hook':
+        specifier: workspace:*
+        version: link:../../packages/hook
+      '@nouvelles/libs':
+        specifier: workspace:*
+        version: link:../../packages/libs
+      '@prisma/client':
+        specifier: ^5.6.0
+        version: 5.7.0(prisma@5.7.0)
+      '@radix-ui/react-avatar':
+        specifier: ^1.0.4
+        version: 1.0.4(@types/react-dom@18.2.17)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-dialog':
+        specifier: ^1.0.5
+        version: 1.0.5(@types/react-dom@18.2.17)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-dropdown-menu':
+        specifier: ^2.0.6
+        version: 2.0.6(@types/react-dom@18.2.17)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-label':
+        specifier: ^2.0.2
+        version: 2.0.2(@types/react-dom@18.2.17)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-popover':
+        specifier: ^1.0.7
+        version: 1.0.7(@types/react-dom@18.2.17)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-scroll-area':
+        specifier: ^1.0.5
+        version: 1.0.5(@types/react-dom@18.2.17)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-slot':
+        specifier: ^1.0.2
+        version: 1.0.2(@types/react@18.2.42)(react@18.2.0)
+      '@radix-ui/react-tabs':
+        specifier: ^1.0.4
+        version: 1.0.4(@types/react-dom@18.2.17)(@types/react@18.2.42)(react-dom@18.2.0)(react@18.2.0)
+      '@sentry/nextjs':
+        specifier: ^7.84.0
+        version: 7.86.0(next@14.0.4)(react@18.2.0)
+      '@t3-oss/env-nextjs':
+        specifier: ^0.7.1
+        version: 0.7.1(typescript@5.3.3)(zod@3.22.4)
+      '@tanstack/react-query':
+        specifier: ^5.12.2
+        version: 5.12.2(react@18.2.0)
+      '@tanstack/react-query-devtools':
+        specifier: ^5.12.2
+        version: 5.13.3(@tanstack/react-query@5.12.2)(react@18.2.0)
+      '@tanstack/react-table':
+        specifier: ^8.10.7
+        version: 8.10.7(react-dom@18.2.0)(react@18.2.0)
+      '@tiptap/extension-character-count':
+        specifier: ^2.1.13
+        version: 2.1.13(@tiptap/core@2.1.13)(@tiptap/pm@2.1.13)
+      '@tiptap/extension-placeholder':
+        specifier: ^2.1.13
+        version: 2.1.13(@tiptap/core@2.1.13)(@tiptap/pm@2.1.13)
+      '@tiptap/html':
+        specifier: ^2.1.13
+        version: 2.1.13(@tiptap/core@2.1.13)(@tiptap/pm@2.1.13)
+      '@tiptap/pm':
+        specifier: ^2.1.13
+        version: 2.1.13
+      '@tiptap/react':
+        specifier: ^2.1.13
+        version: 2.1.13(@tiptap/core@2.1.13)(@tiptap/pm@2.1.13)(react-dom@18.2.0)(react@18.2.0)
+      '@tiptap/starter-kit':
+        specifier: ^2.1.13
+        version: 2.1.13(@tiptap/pm@2.1.13)
+      class-variance-authority:
+        specifier: ^0.7.0
+        version: 0.7.0
+      clsx:
+        specifier: ^2.0.0
+        version: 2.0.0
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
+      lucide-react:
+        specifier: ^0.294.0
+        version: 0.294.0(react@18.2.0)
+      next:
+        specifier: ^14.0.3
+        version: 14.0.4(react-dom@18.2.0)(react@18.2.0)
+      next-themes:
+        specifier: ^0.2.1
+        version: 0.2.1(next@14.0.4)(react-dom@18.2.0)(react@18.2.0)
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      react-hook-form:
+        specifier: ^7.48.2
+        version: 7.48.2(react@18.2.0)
+      react-virtuoso:
+        specifier: ^4.6.2
+        version: 4.6.2(react-dom@18.2.0)(react@18.2.0)
+      server-only:
+        specifier: ^0.0.1
+        version: 0.0.1
+      tailwind-merge:
+        specifier: ^2.1.0
+        version: 2.1.0
+      use-debounce:
+        specifier: ^10.0.0
+        version: 10.0.0(react@18.2.0)
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+      zustand:
+        specifier: ^4.4.7
+        version: 4.4.7(@types/react@18.2.42)(react@18.2.0)
+    devDependencies:
+      '@anansi/browserslist-config':
+        specifier: ^1.4.3
+        version: 1.4.3
+      '@nouvelles/eli':
+        specifier: workspace:*
+        version: link:../../packages/eli/dist
+      '@nouvelles/lintconfig':
+        specifier: workspace:*
+        version: link:../../packages/lintconfig
+      '@nouvelles/tailwind':
+        specifier: workspace:*
+        version: link:../../packages/tailwind
+      '@nouvelles/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      '@playwright/test':
+        specifier: ^1.40.1
+        version: 1.40.1
+      '@tailwindcss/forms':
+        specifier: ^0.5.7
+        version: 0.5.7(tailwindcss@3.3.6)
+      '@testing-library/react':
+        specifier: ^14.1.2
+        version: 14.1.2(react-dom@18.2.0)(react@18.2.0)
+      '@types/cookie':
+        specifier: ^0.6.0
+        version: 0.6.0
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
+      '@types/node':
+        specifier: ^20.10.3
+        version: 20.10.4
+      '@types/react':
+        specifier: ^18.2.41
+        version: 18.2.42
+      '@types/react-dom':
+        specifier: ^18.2.17
+        version: 18.2.17
+      autoprefixer:
+        specifier: ^10.4.16
+        version: 10.4.16(postcss@8.4.32)
+      jsdom:
+        specifier: ^23.0.1
+        version: 23.0.1
+      npm-run-all:
+        specifier: ^4.1.5
+        version: 4.1.5
+      postcss:
+        specifier: ^8.4.32
+        version: 8.4.32
+      prisma:
+        specifier: ^5.6.0
+        version: 5.7.0
+      tailwindcss:
+        specifier: ^3.3.5
+        version: 3.3.6
+      typescript:
+        specifier: ^5.3.2
+        version: 5.3.3
+
+  apps/nouvelles-admin:
+    dependencies:
+      '@builder.io/partytown':
+        specifier: ^0.8.1
+        version: 0.8.1
+      '@dicebear/collection':
+        specifier: ^7.0.1
+        version: 7.0.1(@dicebear/core@7.0.1)
+      '@dicebear/core':
+        specifier: ^7.0.1
+        version: 7.0.1
+      '@hookform/resolvers':
+        specifier: ^3.3.2
+        version: 3.3.2(react-hook-form@7.48.2)
+      '@next-auth/prisma-adapter':
+        specifier: ^1.0.7
+        version: 1.0.7(@prisma/client@5.7.0)(next-auth@4.24.5)
       '@nouvelles/database':
         specifier: workspace:*
         version: link:../../packages/database
