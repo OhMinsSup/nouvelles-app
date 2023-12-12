@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { itemService } from '~/server/items/items.server';
 import * as z from 'zod';
-import { PrismaClientValidationError } from '@prisma/client/runtime/library';
 
 const searchParamsSchema = z.object({
   cursor: z.string().optional(),
@@ -48,24 +47,7 @@ export async function GET(request: Request) {
         { status: 400 },
       );
     }
-
-    if (error instanceof PrismaClientValidationError) {
-      const err = {
-        code: 'database_validation_error',
-        message: 'Database validation error',
-        errors: [],
-      };
-
-      const defaultValues = itemService.getDefaultItems();
-      return NextResponse.json(
-        {
-          ...defaultValues,
-          error: err,
-        },
-        { status: 400 },
-      );
-    }
-
+    
     return new Response(null, { status: 500 });
   }
 }

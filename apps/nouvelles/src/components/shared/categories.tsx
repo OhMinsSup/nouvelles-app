@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
 import { buttonVariants } from '~/components/ui/button';
-import type { Category } from '@prisma/client';
+import type { Category } from "@nouvelles/database";
 import Link from 'next/link';
 import { cn } from '~/utils/utils';
 import { usePathname, useSearchParams } from 'next/navigation';

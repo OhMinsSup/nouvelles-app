@@ -13,17 +13,13 @@
   "scripts": {
     "dev": "next",
     "start": "next start",
-    "build": "run-s build:*",
-    "build:next": "next build",
+    "build": "next build",
     "export": "next export",
     "fix": "run-p fix:*",
     "fix:types": "tsc --noEmit",
     "fix:eslint-fix": "next lint --fix",
     "fix:prettier-fix": "prettier --write '**/*.{js,jsx,md,ts,tsx}'",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test:ci": "run-s test:*",
-    "test:unit": "vitest run",
-    "test:e2e": "playwright test",
     "db:dev": "prisma migrate dev"
   },
   "browserslist": [
@@ -35,7 +31,6 @@
     "@dicebear/core": "^7.0.1",
     "@hookform/resolvers": "^3.3.2",
     "@nouvelles/api": "workspace:*",
-    "@nouvelles/database": "workspace:*",
     "@nouvelles/error": "workspace:*",
     "@nouvelles/hook": "workspace:*",
     "@nouvelles/libs": "workspace:*",
@@ -79,6 +74,7 @@
   "devDependencies": {
     "@anansi/browserslist-config": "^1.4.3",
     "@nouvelles/eli": "workspace:*",
+    "@nouvelles/database": "workspace:*",
     "@nouvelles/lintconfig": "workspace:*",
     "@nouvelles/tailwind": "workspace:*",
     "@nouvelles/tsconfig": "workspace:*",

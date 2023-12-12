@@ -1,4 +1,4 @@
-import type { Category, Item, Tag } from "@prisma/client";
+import type { Category, Item, Tag } from "@nouvelles/database";
 
 type PaginationSchema = {
   totalCount: number;
