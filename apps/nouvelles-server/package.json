@@ -1,0 +1,37 @@
+{
+  "name": "nouvelles-server",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist",
+    "dev": "tsx watch src/main.ts"
+  },
+  "dependencies": {
+    "@fastify/autoload": "^5.8.0",
+    "@fastify/cookie": "^9.2.0",
+    "@fastify/cors": "^8.4.2",
+    "@fastify/formbody": "^7.4.0",
+    "@nouvelles/model": "workspace:*",
+    "date-fns": "2.30.0",
+    "pino-pretty": "^10.2.3",
+    "tsyringe": "4.8.0"
+  },
+  "devDependencies": {
+    "@nouvelles/database": "workspace:*",
+    "@nouvelles/eli": "workspace:*",
+    "@nouvelles/lintconfig": "workspace:*",
+    "@nouvelles/tailwind": "workspace:*",
+    "@nouvelles/tsconfig": "workspace:*",
+    "@types/node": "^20.10.3",
+    "fastify": "^4.24.3",
+    "tsup": "^8.0.1",
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.2"
+  },
+  "engines": {
+    "bun": "1.x",
+    "node": "18.x || 20.x"
+  }
+}

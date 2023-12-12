@@ -1,0 +1,7 @@
+{
+  "extends": "@nouvelles/tsconfig/base.json",
+  "compilerOptions": {
+    "lib": ["esnext", "dom"],
+    "target": "ES2018"
+  }
+}
