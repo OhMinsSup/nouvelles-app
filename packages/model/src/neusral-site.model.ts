@@ -9,16 +9,15 @@ export class NeusralSite {
   async run() {
     // make sure to pass the `--no-sandbox` option
     this._browser = await puppeteer.launch({
-      args: ['--no-sandbox'],
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      ignoreDefaultArgs: ['--disable-extensions'],
       headless: 'new',
       timeout: 0,
     });
 
     try {
       this._page = new NeusralPage();
-
       const items = await this._page.run(this._browser);
-      console.log(items);
       return items;
     } catch (error) {
       console.error(error);

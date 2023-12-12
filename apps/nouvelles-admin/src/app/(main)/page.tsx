@@ -1,11 +1,7 @@
 'use client';
 import React from 'react';
 
-interface Props {
-  children: React.ReactNode;
-}
-
-export default function Page({ children }: Props) {
+export default function Page() {
   return (
     <div
       onClick={() => {

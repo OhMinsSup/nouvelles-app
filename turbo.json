@@ -5,8 +5,7 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "env": ["PRIVATE_*", "PUBLIC_*"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "env": ["PRIVATE_*", "PUBLIC_*"]
     },
     "db:migrate:deploy": {},
     "db:push": {},

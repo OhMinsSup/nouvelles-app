@@ -1,10 +1,9 @@
 'server-only';
 import { env } from 'env.mjs';
 import { getDateFormatted } from '@nouvelles/libs';
-import type { ItemSchema } from '~/server/items/items.model';
 import dayjs from 'dayjs';
 
-export default function createTemplateMessage(items: ItemSchema[]) {
+export default function createTemplateMessage(items: any[]) {
   const currentDate = dayjs().format('YYYY년 MM월 DD일');
   const template_object = {
     object_type: 'list',

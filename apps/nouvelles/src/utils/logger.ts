@@ -1,14 +1,14 @@
-import { isBrowser } from "~/libs/browser/dom";
+import { isBrowser } from '@nouvelles/react';
 
 type LogCategory =
-  | "client"
-  | "server"
-  | "api"
-  | "db"
-  | "middleware"
-  | "pages"
-  | "components"
-  | "logging";
+  | 'client'
+  | 'server'
+  | 'api'
+  | 'db'
+  | 'middleware'
+  | 'pages'
+  | 'components'
+  | 'logging';
 
 type Extra = Record<string, any>;
 
@@ -23,8 +23,8 @@ class Logger {
     if (isBrowser) {
       console.info(
         `%c[${label}]:${message}`,
-        "color: #fff; background-color: #28a745; padding: 2px 4px; border-radius: 4px;",
-        extra
+        'color: #fff; background-color: #28a745; padding: 2px 4px; border-radius: 4px;',
+        extra,
       );
     } else {
       console.info(`[${label}]:${message}`, extra);
@@ -41,8 +41,8 @@ class Logger {
     if (isBrowser) {
       console.debug(
         `%c[${label}]${message}`,
-        "color: #fff; background-color: #17a2b8; padding: 2px 4px; border-radius: 4px;",
-        extra
+        'color: #fff; background-color: #17a2b8; padding: 2px 4px; border-radius: 4px;',
+        extra,
       );
     } else {
       console.debug(`[${label}]:${message}`, extra);
@@ -59,8 +59,8 @@ class Logger {
     if (isBrowser) {
       console.log(
         `%c[${label}]:${message}`,
-        "color: #fff; background-color: #17a2b8; padding: 2px 4px; border-radius: 4px;",
-        extra
+        'color: #fff; background-color: #17a2b8; padding: 2px 4px; border-radius: 4px;',
+        extra,
       );
     } else {
       console.log(`[${label}]:${message}`, extra);
@@ -100,8 +100,8 @@ class Logger {
     if (isBrowser) {
       console.warn(
         `%c[warning]:${message}`,
-        "color: #fff; background-color: #ffc107; padding: 2px 4px; border-radius: 4px;",
-        extra
+        'color: #fff; background-color: #ffc107; padding: 2px 4px; border-radius: 4px;',
+        extra,
       );
     } else {
       console.warn(`[warning]:${message}`, extra);

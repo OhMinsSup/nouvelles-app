@@ -20,6 +20,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "clean": "rm -rf dist",
     "postinstall": "tsup",
     "watch": "tsup --watch"
   },
