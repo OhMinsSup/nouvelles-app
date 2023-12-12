@@ -1,42 +1,8 @@
 import { createId } from '@paralleldrive/cuid2';
-import puppeteer, {
-  type Browser,
-  type Page,
-  type ElementHandle,
-} from 'puppeteer';
-
-export type Nouvelle = {
-  id: string;
-  neusralId: string | undefined;
-  category: string | undefined;
-  tag: string | undefined;
-  reporter: string | undefined;
-  title: string | undefined;
-  link: string | undefined;
-  realLink: string | undefined;
-  date: string | undefined;
-  image: string | undefined;
-  description: string | undefined;
-};
-
-type PageCloseOptions =
-  | {
-      runBeforeUnload?: boolean | undefined;
-    }
-  | undefined;
-
-const NEUSRAL_URL = 'https://www.neusral.com/briefing_subscriptions';
-
-const DESCRIPTION_REGEX =
-  /<meta[^>]*name="description"[^>]*content="([^"]*)"[^>]*>/;
-
-const OG_DESCRIPTION_REGEX =
-  /<meta[^>]*property="og:description"[^>]*content="([^"]*)"[^>]*>/;
-
-const OG_IMAGE_REGEX =
-  /<meta[^>]*property="og:image"[^>]*content="([^"]*)"[^>]*>/;
-
-const HANGUL_BREAK_REGEX = /�/;
+import { agent } from './agent';
+import { getDescription, getOgImage } from './utils';
+import type { Browser, Page, ElementHandle } from 'puppeteer';
+import type { NeusralItem, PageCloseOptions } from './neusral.types';
 
 // 'https://www.neusral.com/r?n=YKCRY7Lyem' => 'YKCRY7Lyem'
 const NEUSRAL_N_ID_REGEX = /r\?n=(.*)/;
@@ -59,78 +25,18 @@ const ELE_ITEM_NEWS_DATE = ".news-date span[class='news-date-text']";
 
 const ELE_ITEM_NEWS_REPORTER = '.news-media-date';
 
-const replaceDescription = (html: string, isOgDescription?: boolean) => {
-  return html.replace(
-    isOgDescription ? OG_DESCRIPTION_REGEX : DESCRIPTION_REGEX,
-    '$1',
-  );
-};
-
-const replaceImage = (html: string) => {
-  return html.replace(OG_IMAGE_REGEX, '$1');
-};
-
-const matchDescription = (html: string) => {
-  const description_html = html.match(DESCRIPTION_REGEX);
-  const og_description_html = html.match(OG_DESCRIPTION_REGEX);
-
-  const description = description_html?.at(0);
-  const og_description = og_description_html?.at(0);
-
-  // 값을 비교 할 때 값이 존재하는 것을 선택한다.
-  if (description && og_description) {
-    // 둘을 비교 할 떄 더 긴 것을 선택한다.
-    if (description.length > og_description.length) {
-      return replaceDescription(description);
-    } else {
-      return replaceDescription(og_description, true);
-    }
-  } else if (og_description) {
-    return replaceDescription(og_description, true);
-  } else if (description) {
-    return replaceDescription(description);
-  }
-
-  return undefined;
-};
-
-const matchImage = (html: string) => {
-  const og_image_html = html.match(OG_IMAGE_REGEX);
-  const og_image = og_image_html?.at(0);
-
-  if (og_image) {
-    return replaceImage(og_image);
-  }
-
-  return undefined;
-};
-
-const getDescription = (html: string) => {
-  let description = html ? matchDescription(html) : undefined;
-  if (description && HANGUL_BREAK_REGEX.test(description)) {
-    description = undefined;
-  }
-  return description;
-};
-
-const getOgImage = (html: string) => {
-  let image = html ? matchImage(html) : undefined;
-  if (image && HANGUL_BREAK_REGEX.test(image)) {
-    image = undefined;
-  }
-  return image;
-};
-
-class NouvellePage {
+export class NeusralPage {
   private _page: Page | undefined;
 
-  private _items: Map<string, Nouvelle> = new Map();
+  private _items: Map<string, NeusralItem> = new Map();
 
   async run(browser: Browser) {
     try {
       this._page = await browser.newPage();
 
-      await this._page.goto(NEUSRAL_URL, { waitUntil: 'networkidle0' });
+      await this._page.goto(agent.neusral.toString(), {
+        waitUntil: 'networkidle0',
+      });
 
       const $ele1 = await this.$findTargetContainer();
 
@@ -272,7 +178,7 @@ class NouvellePage {
             title,
             link,
             date,
-          } as Nouvelle;
+          } as NeusralItem;
 
           if (input.link) {
             const neusralId = input.link?.match(NEUSRAL_N_ID_REGEX)?.at(1);
@@ -325,47 +231,3 @@ class NouvellePage {
     }
   }
 }
-
-class NouvellesSite {
-  private _browser: Browser | undefined;
-
-  private _nouvellaPage: NouvellePage | undefined;
-
-  async run() {
-    // make sure to pass the `--no-sandbox` option
-    this._browser = await puppeteer.launch({
-      args: ['--no-sandbox'],
-      headless: 'new',
-      timeout: 0,
-    });
-
-    try {
-      this._nouvellaPage = new NouvellePage();
-
-      const items = await this._nouvellaPage.run(this._browser);
-      console.log(items);
-      return items;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
-  }
-
-  async close() {
-    if (this._nouvellaPage) await this._nouvellaPage.close();
-    if (this._browser) await this._browser.close();
-  }
-
-  cleanup() {
-    if (this._nouvellaPage) {
-      this._nouvellaPage.cleanup();
-      this._nouvellaPage = undefined;
-    }
-
-    if (this._browser) {
-      this._browser = undefined;
-    }
-  }
-}
-
-export const nouvellesSite = new NouvellesSite();

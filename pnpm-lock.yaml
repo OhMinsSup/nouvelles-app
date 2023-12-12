@@ -539,37 +539,6 @@ importers:
         specifier: ^5.3.2
         version: 5.3.3
 
-  packages/defer:
-    dependencies:
-      '@defer/client':
-        specifier: ^1.14.0
-        version: 1.14.0
-      '@nouvelles/api':
-        specifier: workspace:*
-        version: link:../api
-      '@nouvelles/error':
-        specifier: workspace:*
-        version: link:../error
-      '@nouvelles/libs':
-        specifier: workspace:*
-        version: link:../libs
-      '@paralleldrive/cuid2':
-        specifier: ^2.2.2
-        version: 2.2.2
-      puppeteer:
-        specifier: ^21.5.2
-        version: 21.6.0(typescript@5.3.3)
-    devDependencies:
-      '@nouvelles/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      tsup:
-        specifier: ^8.0.1
-        version: 8.0.1(typescript@5.3.3)
-      typescript:
-        specifier: ^5.3.2
-        version: 5.3.3
-
   packages/eli:
     devDependencies:
       chalk:
@@ -633,6 +602,31 @@ importers:
       prettier-plugin-prisma:
         specifier: ^5.0.0
         version: 5.0.0(prettier@3.1.1)
+
+  packages/model:
+    dependencies:
+      '@nouvelles/error':
+        specifier: workspace:*
+        version: link:../error
+      '@nouvelles/libs':
+        specifier: workspace:*
+        version: link:../libs
+      '@paralleldrive/cuid2':
+        specifier: ^2.2.2
+        version: 2.2.2
+      puppeteer:
+        specifier: ^21.5.2
+        version: 21.6.0(typescript@5.3.3)
+    devDependencies:
+      '@nouvelles/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsup:
+        specifier: ^8.0.1
+        version: 8.0.1(typescript@5.3.3)
+      typescript:
+        specifier: ^5.3.2
+        version: 5.3.3
 
   packages/react:
     dependencies:
@@ -1210,13 +1204,6 @@ packages:
     resolution: {integrity: sha512-GhWyximzk8tumo0zhrDV3+nFYiETYefiTBWAEVbXJMibuvitFocVZwddqN85J0UdZ2M7q6tvBleEaI9ME/16gA==}
     engines: {node: '>=18'}
     dev: true
-
-  /@defer/client@1.14.0:
-    resolution: {integrity: sha512-+VIgTys3lIMxdjKllCMNRWQrxjw1N0wwbaCH6957uBBn6KaVOFk7969SU8iEZShjgWBl3P0Q2mUl2ojjMbIstg==}
-    engines: {node: '>=18'}
-    dependencies:
-      parse-duration: 1.1.0
-    dev: false
 
   /@dicebear/adventurer-neutral@7.0.1(@dicebear/core@7.0.1):
     resolution: {integrity: sha512-dZfyaUFS8qQv7Lv+OXNTHVkercDCh+VqGSJU8jIf3FFbtFbFF79FXZJwJ8V3+pr0xKcZWa8i+8hXLtU3gqZ18g==}
@@ -7717,10 +7704,6 @@ packages:
     dependencies:
       callsites: 3.1.0
     dev: true
-
-  /parse-duration@1.1.0:
-    resolution: {integrity: sha512-z6t9dvSJYaPoQq7quMzdEagSFtpGu+utzHqqxmpVWNNZRIXnvqyCvn9XsTdh7c/w0Bqmdz3RB3YnRaKtpRtEXQ==}
-    dev: false
 
   /parse-json@4.0.0:
     resolution: {integrity: sha512-aOIos8bujGN93/8Ox/jPLh7RwVnPEysynVFE+fQZyg6jKELEHwzgKdLRFHUgXJL6kylijVSBC4BvN9OmsB48Rw==}

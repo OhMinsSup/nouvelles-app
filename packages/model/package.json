@@ -1,5 +1,5 @@
 {
-  "name": "@nouvelles/defer",
+  "name": "@nouvelles/model",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -23,8 +23,6 @@
     "watch": "tsup --watch"
   },
   "dependencies": {
-    "@defer/client": "^1.14.0",
-    "@nouvelles/api": "workspace:*",
     "@nouvelles/error": "workspace:*",
     "@nouvelles/libs": "workspace:*",
     "@paralleldrive/cuid2": "^2.2.2",

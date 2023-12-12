@@ -1,7 +1,7 @@
 import app from './app';
 
-async function main() {
-  await app.listen({ port: 8002, host: '::' });
+async function bootstrap() {
+  app.listen({ port: 8002, host: '::' });
 
   process.send?.('ready');
   process.on('SIGINT', function () {
@@ -9,4 +9,4 @@ async function main() {
   });
 }
 
-main();
+bootstrap();
