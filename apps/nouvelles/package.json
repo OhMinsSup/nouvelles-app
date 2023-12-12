@@ -97,6 +97,6 @@
   "packageManager": "pnpm@8.6.0",
   "engines": {
     "bun": "1.x",
-    "node": "18.17.x || 20.x"
+    "node": "18.x || 20.x"
   }
 }
