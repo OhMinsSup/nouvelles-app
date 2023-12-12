@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
-import SkipRenderOnClient from './skip-render-on-client';
+import { SkipRenderOnClient } from '@nouvelles/react';
 import { useTheme } from 'next-themes';
 
 export default function MainNav() {

@@ -1,16 +1,5 @@
 import * as React from 'react';
-
-const useIsFirstRender = (): boolean => {
-  const isFirst = React.useRef(true);
-
-  if (isFirst.current) {
-    isFirst.current = false;
-
-    return true;
-  } else {
-    return false;
-  }
-};
+import { useIsFirstRender } from '../hooks/useIsFirstRender';
 
 /**
  * `SkipRenderOnClient` is a SSR performance hack that allows you to
@@ -47,7 +36,7 @@ interface SkipRenderOnClientProps {
   style?: React.CSSProperties;
 }
 
-export default function SkipRenderOnClient({
+export function SkipRenderOnClient({
   children,
   shouldRenderOnClient,
   className,

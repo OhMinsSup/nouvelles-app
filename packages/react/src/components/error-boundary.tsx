@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import { isFunction } from '@nouvelles/libs';
 
 export type FallbackRender = (errorData: {
   error: Error;
@@ -103,7 +102,7 @@ export class ErrorBoundary extends React.Component<
 
     if (error) {
       let element: React.ReactElement | undefined = undefined;
-      if (isFunction(fallback)) {
+      if (typeof fallback === 'function') {
         element = fallback({
           error,
           componentStack,
