@@ -53,12 +53,12 @@ importers:
       '@nouvelles/error':
         specifier: workspace:*
         version: link:../../packages/error
-      '@nouvelles/hook':
-        specifier: workspace:*
-        version: link:../../packages/hook
       '@nouvelles/libs':
         specifier: workspace:*
         version: link:../../packages/libs
+      '@nouvelles/react':
+        specifier: workspace:*
+        version: link:../../packages/react
       '@prisma/client':
         specifier: ^5.6.0
         version: 5.7.0(prisma@5.7.0)
@@ -252,12 +252,12 @@ importers:
       '@nouvelles/error':
         specifier: workspace:*
         version: link:../../packages/error
-      '@nouvelles/hook':
-        specifier: workspace:*
-        version: link:../../packages/hook
       '@nouvelles/libs':
         specifier: workspace:*
         version: link:../../packages/libs
+      '@nouvelles/react':
+        specifier: workspace:*
+        version: link:../../packages/react
       '@prisma/client':
         specifier: ^5.6.0
         version: 5.7.0(prisma@5.7.0)
@@ -598,34 +598,6 @@ importers:
         specifier: ^5.3.2
         version: 5.3.3
 
-  packages/hook:
-    dependencies:
-      react:
-        specifier: ^16.8 || ^17 || ^18
-        version: 18.2.0
-      react-dom:
-        specifier: ^16.8 || ^17 || ^18
-        version: 18.2.0(react@18.2.0)
-    devDependencies:
-      '@nouvelles/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@types/node':
-        specifier: ^20.10.3
-        version: 20.10.4
-      '@types/react':
-        specifier: ^18.2.41
-        version: 18.2.43
-      '@types/react-dom':
-        specifier: ^18.2.17
-        version: 18.2.17
-      tsup:
-        specifier: ^8.0.1
-        version: 8.0.1(typescript@5.3.3)
-      typescript:
-        specifier: ^5.3.2
-        version: 5.3.3
-
   packages/libs:
     devDependencies:
       '@nouvelles/tsconfig':
@@ -661,6 +633,34 @@ importers:
       prettier-plugin-prisma:
         specifier: ^5.0.0
         version: 5.0.0(prettier@3.1.1)
+
+  packages/react:
+    dependencies:
+      react:
+        specifier: ^16.8 || ^17 || ^18
+        version: 18.2.0
+      react-dom:
+        specifier: ^16.8 || ^17 || ^18
+        version: 18.2.0(react@18.2.0)
+    devDependencies:
+      '@nouvelles/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: ^20.10.3
+        version: 20.10.4
+      '@types/react':
+        specifier: ^18.2.41
+        version: 18.2.43
+      '@types/react-dom':
+        specifier: ^18.2.17
+        version: 18.2.17
+      tsup:
+        specifier: ^8.0.1
+        version: 8.0.1(typescript@5.3.3)
+      typescript:
+        specifier: ^5.3.2
+        version: 5.3.3
 
   packages/tailwind:
     devDependencies:

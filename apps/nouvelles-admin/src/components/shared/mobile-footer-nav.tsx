@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { cn } from '~/utils/utils';
 import { NAV_CONFIG, NavItem } from '~/constants/nav';
 import SkipRenderOnClient from './skip-render-on-client';
-import { useMediaQuery } from '@nouvelles/hook';
+import { useMediaQuery } from '@nouvelles/react';
 
 export default function MobileFooterNav() {
   const isMobile = useMediaQuery('(max-width: 768px)', false);

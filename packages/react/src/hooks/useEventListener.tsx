@@ -1,7 +1,7 @@
 'use client';
-import { type BasicTarget, getTargetElement } from '../browser/utils';
-import { useEffectWithTarget } from '../browser/createEffectWithTarget';
-import { useLatest } from '../useLatest';
+import { type BasicTarget, getTargetElement } from '../utils';
+import { useEffectWithTarget } from '../libs/createEffectWithTarget';
+import { useLatest } from './useLatest';
 
 type noop = (...p: any) => void;
 

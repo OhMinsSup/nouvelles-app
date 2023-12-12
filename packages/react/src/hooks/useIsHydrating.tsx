@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { isBrowser } from '../browser/assertion';
+import { isBrowser } from '../utils/assertion';
 
 export function useIsHydrating(queryString: string) {
   const [isHydrating] = React.useState(

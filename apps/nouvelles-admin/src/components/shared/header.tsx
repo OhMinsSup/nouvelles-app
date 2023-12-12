@@ -4,7 +4,7 @@ import {
   useEventListener,
   getTargetElement,
   getWindowScrollTop,
-} from '@nouvelles/hook';
+} from '@nouvelles/react';
 import { optimizeAnimation } from '~/utils/utils';
 
 interface HeaderProps {

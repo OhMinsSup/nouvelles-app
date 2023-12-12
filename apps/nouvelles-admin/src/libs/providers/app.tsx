@@ -1,5 +1,5 @@
 import { useMemo, useReducer } from 'react';
-import { createContext } from '@nouvelles/hook';
+import { createContext } from '@nouvelles/react';
 
 enum Action {
   FORCED_UPDATE = 'FORCED_UPDATE',

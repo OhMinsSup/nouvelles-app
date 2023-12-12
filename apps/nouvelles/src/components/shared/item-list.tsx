@@ -6,7 +6,7 @@ import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
 import Item from '~/components/shared/item';
 import { QUERIES_KEY } from '~/constants/constants';
 import { getItemsApi } from '~/server/items/items.api';
-import { useBeforeUnload, useIsHydrating, isBrowser } from '@nouvelles/hook';
+import { useBeforeUnload, useIsHydrating, isBrowser } from '@nouvelles/react';
 import { isEmpty } from '@nouvelles/libs';
 import { KeyProvider } from '~/libs/providers/key';
 
