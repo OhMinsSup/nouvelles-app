@@ -137,3 +137,4 @@ env/.env.development
 env/.env.production
 
 .turbo
+.cache

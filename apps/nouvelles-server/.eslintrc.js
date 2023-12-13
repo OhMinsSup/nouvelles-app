@@ -1,3 +1,3 @@
-module.exports = {
-  extends: ['@nouvelles/lintconfig/eslint-node.js'],
-};
+const config = require('@nouvelles/lintconfig/eslint-node.js');
+
+module.exports = config;

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsup",
     "clean": "rimraf dist",
-    "watch": "tsx watch src/main.ts"
+    "start:dev": "tsx watch src/main.ts"
   },
   "dependencies": {
     "@fastify/autoload": "^5.8.0",
