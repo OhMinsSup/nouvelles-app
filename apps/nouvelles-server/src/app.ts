@@ -4,7 +4,22 @@ import formbody from '@fastify/formbody';
 import cookie from '@fastify/cookie';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { SimpleIntervalJob, AsyncTask } from 'toad-scheduler';
 import routes from './routes';
+
+const task = new AsyncTask(
+  'simple task',
+  () => {
+    return new Promise((resolve) => {
+      console.log('Hello, world!');
+      resolve(true);
+    });
+  },
+  (err) => {
+    /* handle errors here */
+  },
+);
+const job = new SimpleIntervalJob({ seconds: 20 }, task);
 
 const app = Fastify({
   logger: true,
@@ -25,5 +40,11 @@ app.register(autoload, {
 });
 
 app.register(routes);
+
+// `fastify.scheduler` becomes available after initialization.
+// Therefore, you need to call `ready` method.
+app.ready().then(() => {
+  app.scheduler.addSimpleIntervalJob(job);
+});
 
 export default app;
