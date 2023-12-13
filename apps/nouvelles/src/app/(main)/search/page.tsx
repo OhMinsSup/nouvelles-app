@@ -5,20 +5,20 @@ import { QUERIES_KEY } from '~/constants/constants';
 import { itemService } from '~/server/items/items.server';
 import getQueryClient from '~/services/query/get-query-client';
 
-interface Props {
+interface PagesProps {
   searchParams: { q: string | undefined };
 }
 
-export default async function Pages({ searchParams }: Props) {
+export default async function Pages({ searchParams }: PagesProps) {
   const queryClient = getQueryClient();
 
-  const q = searchParams?.q ?? undefined;
+  const q = searchParams.q ?? undefined;
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: QUERIES_KEY.items.search(q),
     initialPageParam: null,
-    queryFn: async () => {
-      return await itemService.getItems({
+    queryFn: () => {
+      return itemService.getItems({
         limit: 10,
         category: 'search',
         q,
@@ -43,7 +43,7 @@ export default async function Pages({ searchParams }: Props) {
         {isEmptyData ? (
           <>Empty</>
         ) : (
-          <ItemList type="search" category="search" q={q} />
+          <ItemList category="search" q={q} type="search" />
         )}
       </SearchWapper>
     </>

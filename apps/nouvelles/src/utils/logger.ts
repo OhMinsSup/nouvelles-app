@@ -13,12 +13,6 @@ type LogCategory =
 type Extra = Record<string, any>;
 
 class Logger {
-  /**
-   * Log information
-   *
-   * @param category A log message category that will be prepended
-   * @param extra Arbitrary data to be logged that will appear in prod logs
-   */
   info(label: LogCategory, message: string, extra?: Extra) {
     if (isBrowser) {
       console.info(
@@ -31,12 +25,6 @@ class Logger {
     }
   }
 
-  /**
-   * Debug information
-   *
-   * @param category A log message category that will be prepended
-   * @param extra Arbitrary data to be logged
-   */
   debug(label: LogCategory, message: string, extra?: Extra) {
     if (isBrowser) {
       console.debug(
@@ -49,12 +37,6 @@ class Logger {
     }
   }
 
-  /**
-   * Logging information
-   * @param message A log message
-   * @param extra Arbitrary data to be logged
-   * @param category A log message category that will be prepended
-   */
   log(label: LogCategory, message: string, extra?: Extra) {
     if (isBrowser) {
       console.log(
@@ -65,7 +47,6 @@ class Logger {
     } else {
       console.log(`[${label}]:${message}`, extra);
     }
-    return;
 
     // if (sentryDSN) {
     //   Sentry.withScope(function (scope) {
@@ -78,12 +59,6 @@ class Logger {
     // }
   }
 
-  /**
-   * Log a warning
-   *
-   * @param message A warning message
-   * @param extra Arbitrary data to be logged that will appear in prod logs
-   */
   warn(message: string, extra?: Extra) {
     // if (sentryDSN) {
     //   Sentry.withScope(function (scope) {
@@ -108,13 +83,6 @@ class Logger {
     }
   }
 
-  /**
-   * Report a runtime error
-   *
-   * @param message A description of the error
-   * @param error The error that occurred
-   * @param extra Arbitrary data to be logged that will appear in prod logs
-   */
   error(error: Error, message?: string, extra?: Extra) {
     // if (sentryDSN) {
     //   Sentry.withScope(function (scope) {

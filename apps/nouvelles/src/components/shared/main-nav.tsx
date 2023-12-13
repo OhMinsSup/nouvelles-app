@@ -2,9 +2,12 @@
 import React, { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { SkipRenderOnClient } from '@nouvelles/react';
+import { useTheme } from 'next-themes';
 import { Icons } from '~/components/icons';
 import { cn } from '~/utils/utils';
-import { NAV_CONFIG, NavItem } from '~/constants/nav';
+import type { NavItem } from '~/constants/nav';
+import { NAV_CONFIG } from '~/constants/nav';
 import { PAGE_ENDPOINTS } from '~/constants/constants';
 import {
   DropdownMenu,
@@ -12,8 +15,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
-import { SkipRenderOnClient } from '@nouvelles/react';
-import { useTheme } from 'next-themes';
 
 export default function MainNav() {
   return (
@@ -22,7 +23,7 @@ export default function MainNav() {
       <div className="flex gap-6 md:gap-10">
         <nav className="hidden gap-6 md:flex">
           {NAV_CONFIG.mainNav.map((item, index) => (
-            <MainNav.Item key={index} item={item} />
+            <MainNav.Item item={item} key={index} />
           ))}
         </nav>
       </div>
@@ -56,12 +57,12 @@ MainNav.Link = function Item({ item }: ItemProps) {
 
   return (
     <Link
-      href={item.disabled ? '#' : href}
       className={cn(
         'px-8 py-5 mx-[2px] my-1 flex items-center text-lg font-medium transition-colors hover:bg-foreground/5 hover:rounded-md sm:text-sm',
         isActive ? 'text-foreground' : 'text-foreground/60',
         item.disabled && 'cursor-not-allowed opacity-80',
       )}
+      href={item.disabled ? '#' : href}
     >
       <item.icon />
     </Link>
@@ -77,7 +78,7 @@ MainNav.Menu = function Item() {
   }, [setTheme, theme]);
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
+    <DropdownMenu onOpenChange={setOpen} open={open}>
       <DropdownMenuTrigger
         className={cn(
           'hover:text-foreground leading-tight',
@@ -97,7 +98,7 @@ MainNav.Logo = function Item() {
   const { systemTheme } = useTheme();
 
   return (
-    <Link href={PAGE_ENDPOINTS.ROOT} className="items-center space-x-2 md:flex">
+    <Link className="items-center space-x-2 md:flex" href={PAGE_ENDPOINTS.ROOT}>
       <SkipRenderOnClient shouldRenderOnClient={() => systemTheme === 'dark'}>
         <Icons.logo className="hidden h-8 w-8 dark:block" />
       </SkipRenderOnClient>

@@ -59,7 +59,7 @@ export const delayPromise = (ms: number) => {
     promise,
     cancel: () => {
       clearTimeout(timer);
-      rejectFn?.(new Error('Cancelled'));
+      rejectFn(new Error('Cancelled'));
     },
     close: () => {
       clearTimeout(timer);

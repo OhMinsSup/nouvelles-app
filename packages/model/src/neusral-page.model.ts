@@ -28,7 +28,7 @@ const ELE_ITEM_NEWS_REPORTER = '.news-media-date';
 export class NeusralPage {
   private _page: Page | undefined;
 
-  private _items: Map<string, NeusralItem> = new Map();
+  private _items = new Map<string, NeusralItem>();
 
   async run(browser: Browser) {
     try {
@@ -42,7 +42,7 @@ export class NeusralPage {
 
       await this.$findItems($ele1);
 
-      return await this.$getRealItems();
+      return this.$getRealItems();
     } catch (error) {
       console.error(error);
       return [];
@@ -55,14 +55,11 @@ export class NeusralPage {
     }
 
     const $ele = await this._page.$$(ELE_ITEM_CONTAINER);
-    if (!$ele) {
-      throw new Error('No container found');
-    }
 
     return $ele;
   }
 
-  private async $findByCategory($ele: ElementHandle<Element>) {
+  private async $findByCategory($ele: ElementHandle) {
     const text = await $ele.$eval(ELE_CATEGORY, (el) => el.textContent);
 
     if (!text) {
@@ -72,7 +69,7 @@ export class NeusralPage {
     return text.trim();
   }
 
-  private async $findByTag($ele: ElementHandle<Element>) {
+  private async $findByTag($ele: ElementHandle) {
     const text = await $ele.$eval(ELE_TAG, (el) => el.textContent);
 
     if (!text) {
@@ -82,23 +79,17 @@ export class NeusralPage {
     return text.trim();
   }
 
-  private async $findByEachTab($ele: ElementHandle<Element>) {
+  private async $findByEachTab($ele: ElementHandle) {
     const $tabs = await $ele.$$(ELE_TAB);
-    if (!$tabs) {
-      return [];
-    }
     return $tabs;
   }
 
-  private async $findByNews($ele: ElementHandle<Element>) {
+  private async $findByNews($ele: ElementHandle) {
     const $tabs = await $ele.$$(ELE_ITEM_NEWS);
-    if (!$tabs) {
-      return [];
-    }
     return $tabs;
   }
 
-  private async $findByTitle($ele: ElementHandle<Element>) {
+  private async $findByTitle($ele: ElementHandle) {
     const text = await $ele.$eval(ELE_ITEM_NEWS_TITLE, (el) => el.textContent);
 
     if (!text) {
@@ -108,7 +99,7 @@ export class NeusralPage {
     return text.trim();
   }
 
-  private async $findByLink($ele: ElementHandle<Element>) {
+  private async $findByLink($ele: ElementHandle) {
     const text = await $ele.$eval(ELE_ITEM_NEWS_LINK, (e) => {
       return e.parentElement?.getAttribute('href');
     });
@@ -120,7 +111,7 @@ export class NeusralPage {
     return text.trim();
   }
 
-  private async $findByDate($ele: ElementHandle<Element>) {
+  private async $findByDate($ele: ElementHandle) {
     const text = await $ele.$eval(ELE_ITEM_NEWS_DATE, (el) => el.textContent);
 
     if (!text) {
@@ -130,7 +121,7 @@ export class NeusralPage {
     return text.trim();
   }
 
-  private async $findByReporter($ele: ElementHandle<Element>) {
+  private async $findByReporter($ele: ElementHandle) {
     const text = await $ele.$eval(
       ELE_ITEM_NEWS_REPORTER,
       (el) => el.textContent,
@@ -141,11 +132,11 @@ export class NeusralPage {
     }
 
     const text_next = text.trim().replace(/\s/g, '');
-    const reporter = text_next?.split('|')?.at(0)?.trim();
+    const reporter = text_next.split('|').at(0)?.trim();
     return reporter;
   }
 
-  private async $findItems($eles: ElementHandle<Element>[]) {
+  private async $findItems($eles: ElementHandle[]) {
     for (const $item of $eles) {
       const [category, $tabs] = await Promise.all([
         this.$findByCategory($item),
@@ -181,7 +172,7 @@ export class NeusralPage {
           } as NeusralItem;
 
           if (input.link) {
-            const neusralId = input.link?.match(NEUSRAL_N_ID_REGEX)?.at(1);
+            const neusralId = NEUSRAL_N_ID_REGEX.exec(input.link)?.at(1);
             Object.assign(input, { neusralId });
           }
 
@@ -195,16 +186,16 @@ export class NeusralPage {
 
   private async $getRealItems() {
     for (const item of this._items.values()) {
-      if (item.link) {
-        const response = await fetch(item.link).catch((error) => {
-          console.error(error);
+      const data = item as NeusralItem;
+      if (data.link) {
+        const response = await fetch(data.link).catch(() => {
           return undefined;
         });
 
-        if (response && this._items.has(item.id)) {
+        if (response && this._items.has(data.id)) {
           const html = await response.text();
-          this._items.set(item.id, {
-            ...item,
+          this._items.set(data.id, {
+            ...data,
             realLink: response.url,
             image: getOgImage(html),
             description: getDescription(html),
@@ -217,7 +208,7 @@ export class NeusralPage {
       }
     }
 
-    return [...this._items.values()];
+    return [...this._items.values()] as NeusralItem[];
   }
 
   async close(options?: PageCloseOptions) {

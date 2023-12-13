@@ -1,15 +1,21 @@
 'use client';
-import React from 'react';
+import type React from 'react';
 import { isBrowser, isElement } from './assertion';
 
 export function getOwnerWindow(node?: Element | null): typeof globalThis {
   return isElement(node)
-    ? getOwnerDocument(node)?.defaultView ?? window
+    ? getOwnerDocument(node).defaultView ?? window
     : window;
 }
 
 export function getOwnerDocument(node?: Element | null): Document {
-  return isElement(node) ? node?.ownerDocument ?? document : document;
+  if (isElement(node)) {
+    if ('ownerDocument' in node) {
+      return node.ownerDocument;
+    }
+    return document;
+  }
+  return document;
 }
 
 export const IS_APPLE: boolean = isBrowser
@@ -40,12 +46,20 @@ export const getClientHeight = (el: Document | Element) => {
     Math.max(document.documentElement.clientHeight, document.body.clientHeight)
   );
 };
+
 export const getWindowScrollTop = () => {
-  if (!document.body) return 0;
-  const scrollTop = document.documentElement
-    ? document.documentElement.scrollTop || document.body.scrollTop
-    : document.body.scrollTop;
-  return scrollTop;
+  if (!isBrowser) {
+    return 0;
+  }
+
+  if ('documentElement' in document) {
+    return (
+      window.document.documentElement.scrollTop ||
+      window.document.body.scrollTop
+    );
+  }
+
+  return window.document.body.scrollTop;
 };
 
 type TargetValue<T> = T | undefined | null;

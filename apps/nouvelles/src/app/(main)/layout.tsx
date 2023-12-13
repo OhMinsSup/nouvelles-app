@@ -1,9 +1,9 @@
 import React from 'react';
 import MainLayout from '~/components/layout/main-layout';
 
-interface Props {
+interface LayoutProps {
   children: React.ReactNode;
 }
-export default async function Layout({ children }: Props) {
+export default function Layout({ children }: LayoutProps) {
   return <MainLayout>{children}</MainLayout>;
 }

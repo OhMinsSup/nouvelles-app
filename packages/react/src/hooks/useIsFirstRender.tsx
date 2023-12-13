@@ -7,7 +7,6 @@ export const useIsFirstRender = (): boolean => {
     isFirst.current = false;
 
     return true;
-  } else {
-    return false;
   }
+  return false;
 };

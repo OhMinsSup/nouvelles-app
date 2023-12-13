@@ -1,6 +1,8 @@
 import { NouvellesError, ErrorType } from '@nouvelles/error';
 import { defaultFetchHandler } from './fetch';
-import { BaseClient, ServiceClient } from './client';
+import { BaseClient } from './client';
+
+import type { ServiceClient } from './client';
 import type { FetchHandlerOptions } from './fetch/types';
 import type {
   AgentConfigureOptions,

@@ -1,12 +1,12 @@
 import '~/assets/css/globals.css';
 import { env } from 'env.mjs';
-import { PreloadResources } from '~/libs/react/preload';
 import { Inter as FontSans } from 'next/font/google';
 import localFont from 'next/font/local';
+import type { Metadata } from 'next';
 import { Providers } from './providers';
+import { PreloadResources } from '~/libs/react/preload';
 import { cn } from '~/utils/utils';
 import { SITE_CONFIG } from '~/constants/constants';
-import type { Metadata } from 'next';
 
 const url = new URL(env.NEXT_PUBLIC_SITE_URL);
 
@@ -55,20 +55,20 @@ interface RoutesProps {
 
 export default function Layout(props: RoutesProps) {
   return (
-    <html lang="ko" dir="ltr" suppressHydrationWarning>
+    <html dir="ltr" lang="ko" suppressHydrationWarning>
       <PreloadResources />
       <head>
         <meta
-          name="viewport"
           content="width=device-width,initial-scale=1,maximum-scale=2,shrink-to-fit=no"
+          name="viewport"
         />
         <meta
-          name="referrer"
           content="origin-when-cross-origin"
           id="meta_referrer"
+          name="referrer"
         />
-        <meta name="color-scheme" content="light" />
-        <meta name="theme-color" content="#FFFFFF" />
+        <meta content="light" name="color-scheme" />
+        <meta content="#FFFFFF" name="theme-color" />
       </head>
 
       <body

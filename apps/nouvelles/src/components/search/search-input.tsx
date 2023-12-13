@@ -11,7 +11,7 @@ interface SearchInputProps {
 export default function SearchInput({ defaultValue }: SearchInputProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [isPending, startTransition] = useTransition();
+  const [_, startTransition] = useTransition();
 
   const onChange = useDebouncedCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,10 +33,10 @@ export default function SearchInput({ defaultValue }: SearchInputProps) {
   return (
     <div className="flex w-full flex-col">
       <Input
-        type="search"
         defaultValue={defaultValue}
-        placeholder="검색"
         onChange={onChange}
+        placeholder="검색"
+        type="search"
       />
     </div>
   );

@@ -30,6 +30,7 @@
     "puppeteer": "^21.5.2"
   },
   "devDependencies": {
+    "@nouvelles/lintconfig": "workspace:*",
     "@nouvelles/tsconfig": "workspace:*",
     "tsup": "^8.0.1",
     "typescript": "^5.3.2"

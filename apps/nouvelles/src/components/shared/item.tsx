@@ -1,15 +1,14 @@
 'use client';
 import { useMemo } from 'react';
+import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { getDateFormatted } from '@nouvelles/libs';
 import { Card } from '~/components/ui/card';
 import Avatars from '~/components/shared/avatars';
 import { Button, buttonVariants } from '~/components/ui/button';
 import { TipTapEditor } from '~/components/editor/tiptap-editor';
 import { cn } from '~/utils/utils';
-
 import type { ItemSchema } from '~/server/items/items.model';
-import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { getDateFormatted } from '@nouvelles/libs';
 
 interface ItemProps {
   item: ItemSchema;
@@ -19,8 +18,7 @@ export default function Item({ item }: ItemProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const date =
-    item && item.pulbishedAt ? getDateFormatted(item.pulbishedAt) : null;
+  const date = item?.pulbishedAt ? getDateFormatted(item.pulbishedAt) : null;
 
   const link = useMemo(() => {
     const _link = item.realLink ?? item.link ?? '#';
@@ -45,9 +43,7 @@ export default function Item({ item }: ItemProps) {
     const _searchParams = new URLSearchParams(searchParams);
     if (_searchParams.has('category')) {
       _searchParams.delete('category');
-    } else {
-      if (item.Category) _searchParams.set('category', item.Category.name);
-    }
+    } else if (item.Category) _searchParams.set('category', item.Category.name);
     return `${pathname}?${_searchParams.toString()}`;
   }, [searchParams, pathname]);
 
@@ -57,7 +53,7 @@ export default function Item({ item }: ItemProps) {
       _searchParams.delete('tag');
     } else {
       const firstTag = item.ItemTag.at(0);
-      if (firstTag && firstTag.tag) _searchParams.set('tag', firstTag.tag.name);
+      if (firstTag?.tag) _searchParams.set('tag', firstTag.tag.name);
     }
     return `${pathname}?${_searchParams.toString()}`;
   }, [searchParams, pathname]);
@@ -72,9 +68,9 @@ export default function Item({ item }: ItemProps) {
           <div className="flex items-center justify-between">
             <div className="flex w-full items-center">
               <Avatars
-                src={undefined}
                 alt={`${item?.reporter} profile picture`}
                 fallback="T"
+                src={undefined}
               />
               <div className="ml-4 flex w-full flex-row items-center">
                 <div className="text-base font-semibold tracking-wide text-black dark:text-white">
@@ -93,15 +89,15 @@ export default function Item({ item }: ItemProps) {
           </div>
           <div className="py-4">
             <Button
-              variant="link"
-              className="p-0 text-2xl font-semibold"
               asChild
+              className="p-0 text-2xl font-semibold"
+              variant="link"
             >
               <a
-                target="_blank"
-                rel="noopener"
                 aria-label={link.label}
                 href={link.href}
+                rel="noopener"
+                target="_blank"
               >
                 {item.title}
               </a>
@@ -109,43 +105,43 @@ export default function Item({ item }: ItemProps) {
           </div>
           <div className="py-4">
             <TipTapEditor
-              editable={false}
-              debouncedUpdatesEnabled={false}
-              name={`thraed-text-${item?.id}`}
-              value={item.description ? item.description : ''}
-              noBorder
               className={cn(
                 'prose prose-brand prose-headings:font-display font-default focus:outline-none',
               )}
               customClassName="p-0 mt-4"
+              debouncedUpdatesEnabled={false}
+              editable={false}
+              name={`thraed-text-${item?.id}`}
+              noBorder
+              value={item.description ? item.description : ''}
             />
           </div>
           <div className="flex items-center justify-end space-x-4 py-4">
             <div className="flex items-center space-x-1">
               {item.Category ? (
                 <Link
-                  href={categoryUrl}
-                  replace
-                  prefetch={false}
                   className={buttonVariants({
                     variant: 'secondary',
                     size: 'xxs',
                     className: 'text-xs',
                   })}
+                  href={categoryUrl}
+                  prefetch={false}
+                  replace
                 >
                   {item.Category.name}
                 </Link>
               ) : null}
               {item.ItemTag.map((data) => (
                 <Link
-                  href={tagUrl}
-                  replace
-                  prefetch={false}
-                  key={data.tag.id}
                   className={buttonVariants({
                     variant: 'secondary',
                     size: 'xxs',
                   })}
+                  href={tagUrl}
+                  key={data.tag.id}
+                  prefetch={false}
+                  replace
                 >
                   {data.tag.name}
                 </Link>

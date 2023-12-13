@@ -1,0 +1,24 @@
+# nodejs
+node_modules
+
+# nextjs
+out
+.next
+public
+
+# vscode
+.vscode
+
+# pc
+.DS_Store
+
+# config
+next.config.*
+tailwind.config.*
+postcss.config.*
+
+# eslint & prettier
+.eslintrc.*
+eslint-*.*
+prettier.config.*
+prettier.*

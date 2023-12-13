@@ -1,8 +1,8 @@
-export type BaseItemQuery = {
-  limit?: number | string;
-  pageNo?: number | string;
+export interface BaseItemQuery {
+  limit?: number;
+  pageNo?: number;
   cursor?: string;
-};
+}
 
 export type ItemQuery = BaseItemQuery & {
   q?: string;

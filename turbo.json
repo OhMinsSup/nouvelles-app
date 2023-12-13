@@ -21,7 +21,9 @@
     "generate": {
       "dependsOn": ["^generate"]
     },
-    "lint": {},
+    "lint": {
+      "dependsOn": ["^build"]
+    },
     "clean": {
       "cache": false
     }

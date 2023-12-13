@@ -10,11 +10,11 @@ export function isNotNumber(value: any) {
 }
 
 export function isNumeric(value: any) {
-  return value != null && value - parseFloat(value) + 1 >= 0;
+  return value != null && value - parseFloat(value as string) + 1 >= 0;
 }
 
 // Array assertions
-export function isArray<T>(value: any): value is Array<T> {
+export function isArray<T>(value: any): value is T[] {
   return Array.isArray(value);
 }
 
@@ -53,7 +53,7 @@ export function isEmptyObject(value: any) {
 }
 
 export function isNotEmptyObject(value: any): value is object {
-  return value && !isEmptyObject(value);
+  return !!value && !isEmptyObject(value);
 }
 
 export function isNull(value: any): value is null {

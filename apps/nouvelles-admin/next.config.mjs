@@ -1,11 +1,12 @@
-import { load } from '@nouvelles/eli';
-
-load({
-  envType: process.env.NODE_ENV,
-  loadPath: '../../env',
-  savePath: '../../',
-  onSuccess: async () => await import('./env.mjs'),
-});
+if (process.env.SKIP_ENV_VALIDATE !== 'true') {
+  const mod = await import('@nouvelles/eli');
+  mod.load({
+    envType: process.env.NODE_ENV,
+    loadPath: '../../env',
+    savePath: '../../',
+    onSuccess: async () => await import('./env.mjs'),
+  });
+}
 
 const isProduction = process.env.NODE_ENV === 'production';
 

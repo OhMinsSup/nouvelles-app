@@ -1,6 +1,6 @@
-"server-only";
-import { db } from "@nouvelles/database";
-import type { Category } from "@nouvelles/database";
+'server-only';
+import { db } from '@nouvelles/database';
+import type { Category } from '@nouvelles/database';
 
 export class CategoriesService {
   async findMany(): Promise<Category[]> {

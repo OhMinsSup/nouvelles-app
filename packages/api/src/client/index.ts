@@ -1,8 +1,9 @@
 import { defaultFetchHandler } from '../fetch';
 import { isString } from '@nouvelles/libs';
+import { constructMethodCallUri } from '../fetch/utils';
 import type { AgentFetchHandler } from '../types';
 import type { CallOptions } from './types';
-import { constructMethodCallUri } from '../fetch/utils';
+import type { QueryParams } from '../fetch/types';
 
 export class BaseClient {
   fetch: AgentFetchHandler = defaultFetchHandler;
@@ -45,17 +46,16 @@ export class ItemNamespace {
   createItems(body: any, opts?: CallOptions | undefined) {
     const httpUri = constructMethodCallUri('/items', this._service.uri);
     const httpHeaders = opts?.headers;
-    const httpReqBody = body;
 
     return this._service._baseClient.fetch({
       uri: httpUri,
       method: 'POST',
       headers: httpHeaders,
-      reqBody: httpReqBody,
+      reqBody: body as unknown,
     });
   }
 
-  getItems(params: any, opts?: CallOptions | undefined) {
+  getItems(params: QueryParams, opts?: CallOptions | undefined) {
     const httpUri = constructMethodCallUri('/items', this._service.uri, params);
     const httpHeaders = opts?.headers;
     const httpReqBody = undefined;

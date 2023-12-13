@@ -2,16 +2,16 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useState } from 'react';
-import { AppProvider } from '~/libs/providers/app';
 import { ThemeProvider } from 'next-themes';
 import { type ThemeProviderProps } from 'next-themes/dist/types';
+import { AppProvider } from '~/libs/providers/app';
 
-interface Props {
+interface ProvidersProps {
   children: React.ReactNode;
   theme?: ThemeProviderProps;
 }
 
-export function Providers({ children, theme }: Props) {
+export function Providers({ children, theme }: ProvidersProps) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (

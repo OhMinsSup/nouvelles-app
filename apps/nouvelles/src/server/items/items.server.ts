@@ -1,16 +1,16 @@
 'server-only';
-import dayjs from 'dayjs';
+import dayjs, { extend } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { db } from '@nouvelles/database';
-import { isEmpty, isInvaliDate, isString } from '@nouvelles/libs';
+import { isEmpty, isInvaliDate } from '@nouvelles/libs';
 import type { ItemQuery } from '~/server/items/items.query';
 import type { ItemSchema } from '~/server/items/items.model';
 import { tagsService } from '~/server/tags/tags.server';
 import { categoriesService } from '~/server/categories/categories.server';
 
-dayjs.extend(customParseFormat);
+extend(customParseFormat);
 
-type InputCreate = {
+interface InputCreate {
   id: string;
   neusralId: string | undefined;
   category: string | undefined;
@@ -22,7 +22,7 @@ type InputCreate = {
   date: string | undefined;
   image: string | undefined;
   description: string | undefined;
-};
+}
 
 export class ItemService {
   async createItemsByCrawler(items: InputCreate[]) {
@@ -38,7 +38,7 @@ export class ItemService {
         const tags = [...unionTags];
         await Promise.all(tags.map((tag) => tagsService.findOrCreate(tag)));
       } catch (error) {
-        console.error(error);
+        // empty
       }
 
       try {
@@ -47,10 +47,10 @@ export class ItemService {
           categories.map((item) => categoriesService.findOrCreate(item)),
         );
       } catch (error) {
-        console.error(error);
+        // empty
       }
 
-      return await this.createItems(items);
+      return this.createItems(items);
     }
 
     return [];
@@ -173,16 +173,9 @@ export class ItemService {
   }
 
   private async _getItemsByMessage({
-    limit,
     category,
     tag,
   }: Omit<ItemQuery, 'q' | 'pageNo' | 'cursor'>) {
-    if (isString(limit)) {
-      limit = Number(limit);
-    } else {
-      limit = limit ?? 25;
-    }
-
     const categoryItem = category
       ? await db.category.findFirst({
           where: {
@@ -284,20 +277,7 @@ export class ItemService {
     }
   }
 
-  private async _getItemsByCursor(
-    { cursor, limit, category, tag }: ItemQuery,
-    currentUserId?: string,
-  ) {
-    if (isString(cursor)) {
-      cursor = cursor;
-    }
-
-    if (isString(limit)) {
-      limit = Number(limit);
-    } else {
-      limit = limit ?? 25;
-    }
-
+  private async _getItemsByCursor({ category, tag }: ItemQuery, _?: string) {
     const categoryItem = category
       ? await db.category.findFirst({
           where: {
@@ -428,20 +408,7 @@ export class ItemService {
     }
   }
 
-  private async _getItemsBySearch(
-    { cursor, limit, q, tag, category }: ItemQuery,
-    currentUserId?: string,
-  ) {
-    if (isString(cursor)) {
-      cursor = cursor;
-    }
-
-    if (isString(limit)) {
-      limit = Number(limit);
-    } else {
-      limit = limit ?? 25;
-    }
-
+  private async _getItemsBySearch({ q, tag, category }: ItemQuery, _?: string) {
     try {
       const [totalCount, list] = await Promise.all([
         db.item.count({
@@ -591,20 +558,7 @@ export class ItemService {
     }
   }
 
-  private async _getItemsByToDay(
-    { cursor, limit, category, tag }: ItemQuery,
-    currentUserId?: string,
-  ) {
-    if (isString(cursor)) {
-      cursor = cursor;
-    }
-
-    if (isString(limit)) {
-      limit = Number(limit);
-    } else {
-      limit = limit ?? 25;
-    }
-
+  private async _getItemsByToDay({ category, tag }: ItemQuery, _?: string) {
     const start = dayjs().startOf('day').toDate();
     const end = dayjs().endOf('day').toDate();
 

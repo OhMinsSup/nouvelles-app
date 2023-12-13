@@ -50,6 +50,7 @@ Header.Internal = function Item({ children }: HeaderProps) {
     const $ele = getTargetElement(ref);
     if (!$ele) return;
     const bounding = $ele.getBoundingClientRect();
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     const height = bounding.height + 10;
     setHeight(height);
   }, []);
@@ -57,10 +58,10 @@ Header.Internal = function Item({ children }: HeaderProps) {
   return (
     <header
       className="sticky top-0 z-40 backdrop-blur-md"
+      ref={ref}
       style={{
         transform: `translateY(${translateY}px)`,
       }}
-      ref={ref}
     >
       <div className="container">
         <div className="flex h-16 items-center justify-between sm:h-20 sm:py-6">

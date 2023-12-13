@@ -1,4 +1,4 @@
-export type NeusralItem = {
+export interface NeusralItem {
   id: string;
   neusralId: string | undefined;
   category: string | undefined;
@@ -10,7 +10,7 @@ export type NeusralItem = {
   date: string | undefined;
   image: string | undefined;
   description: string | undefined;
-};
+}
 
 export type PageCloseOptions =
   | {

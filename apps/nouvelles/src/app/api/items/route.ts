@@ -1,10 +1,24 @@
 import { NextResponse } from 'next/server';
-import { itemService } from '~/server/items/items.server';
 import * as z from 'zod';
+import { itemService } from '~/server/items/items.server';
 
 const searchParamsSchema = z.object({
   cursor: z.string().optional(),
-  limit: z.string().optional(),
+  limit: z
+    .string()
+    .optional()
+    .default('25')
+    .transform((val) => {
+      if (val === 'undefined') {
+        return undefined;
+      }
+
+      if (typeof val === 'string') {
+        return parseInt(val, 10);
+      }
+
+      return val as unknown as number;
+    }),
   category: z.string().optional(),
   tag: z.string().optional(),
   type: z.enum(['root', 'search', 'today']).optional(),
@@ -30,7 +44,6 @@ export async function GET(request: Request) {
       error: null,
     });
   } catch (error) {
-    console.log('error', error);
     if (error instanceof z.ZodError) {
       const err = {
         code: 'invalid_query_params',
@@ -47,9 +60,7 @@ export async function GET(request: Request) {
         { status: 400 },
       );
     }
-    
+
     return new Response(null, { status: 500 });
   }
 }
-
-export async function POST(request: Request) {}

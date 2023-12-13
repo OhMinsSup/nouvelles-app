@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useMemo, useReducer } from 'react';
 import { createContext } from '@nouvelles/react';
 
@@ -6,12 +7,12 @@ enum Action {
   SET_QUERY_KEY = 'SET_QUERY_KEY',
 }
 
-type SetQueryKeyAction = {
+interface SetQueryKeyAction {
   type: Action.SET_QUERY_KEY;
   payload: {
     queryKey: string[];
   };
-};
+}
 
 type KeyAction = SetQueryKeyAction;
 
@@ -31,7 +32,7 @@ const initialState: KeyState = {
 const [Provider, useKeyContext] = createContext<keyContext>({
   name: 'useKeyContext',
   errorMessage: 'useKeyContext: `context` is undefined.',
-  defaultValue: initialState,
+  defaultValue: initialState as keyContext,
 });
 
 interface Props {
@@ -39,6 +40,7 @@ interface Props {
   queryKey?: string[];
 }
 
+// eslint-disable-next-line @typescript-eslint/default-param-last
 function reducer(state = initialState, action: KeyAction) {
   switch (action.type) {
     case Action.SET_QUERY_KEY:
@@ -52,10 +54,7 @@ function reducer(state = initialState, action: KeyAction) {
 }
 
 function KeyProvider({ children, queryKey = [] }: Props) {
-  const [state, dispatch] = useReducer(
-    reducer,
-    Object.assign({}, initialState, { queryKey }),
-  );
+  const [state, dispatch] = useReducer(reducer, { ...initialState, queryKey });
 
   const setQueryKey = (payload: SetQueryKeyAction['payload']) => {
     dispatch({

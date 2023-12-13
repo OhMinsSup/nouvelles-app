@@ -10,7 +10,7 @@ interface AvatarsProps {
 export default function Avatars({ src, alt, fallback }: AvatarsProps) {
   return (
     <Avatar>
-      <AvatarImage src={src} alt={alt} loading="lazy" />
+      <AvatarImage alt={alt} loading="lazy" src={src} />
       <AvatarFallback>{fallback}</AvatarFallback>
     </Avatar>
   );

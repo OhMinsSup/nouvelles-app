@@ -1,7 +1,11 @@
-import type { FetchHandlerOptions, FetchHandlerResponse } from '../fetch/types';
+import type {
+  FetchHandlerOptions,
+  FetchHandlerResponse,
+  QueryParams,
+} from '../fetch/types';
 
 export type CallOptions = Partial<
-  Pick<FetchHandlerOptions, 'headers' | 'reqBody'> & {}
+  Pick<FetchHandlerOptions, 'headers' | 'reqBody'>
 >;
 
 export type CreateItemsHandler = (
@@ -10,7 +14,7 @@ export type CreateItemsHandler = (
 ) => Promise<FetchHandlerResponse>;
 
 export type GetItemsHandler = (
-  params: any,
+  params: QueryParams,
   opts?: CallOptions | undefined,
 ) => Promise<FetchHandlerResponse>;
 

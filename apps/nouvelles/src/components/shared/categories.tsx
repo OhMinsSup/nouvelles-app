@@ -1,11 +1,11 @@
 'use client';
 import React, { useMemo } from 'react';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
-import { buttonVariants } from '~/components/ui/button';
-import type { Category } from "@nouvelles/database";
+import type { Category } from '@nouvelles/database';
 import Link from 'next/link';
-import { cn } from '~/utils/utils';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { cn } from '~/utils/utils';
+import { buttonVariants } from '~/components/ui/button';
 
 interface CategoriesProps {
   categories: Category[];
@@ -17,8 +17,8 @@ export default function Categories({ categories }: CategoriesProps) {
       <ScrollArea.Viewport>
         {categories.map((category) => (
           <Categories.Category
-            key={`category-${category.id}`}
             category={category}
+            key={`category-${category.id}`}
           />
         ))}
       </ScrollArea.Viewport>
@@ -59,9 +59,6 @@ Categories.Category = function Item({ category }: CategoryProps) {
 
   return (
     <Link
-      replace
-      href={url}
-      prefetch={false}
       className={buttonVariants({
         variant: 'ghost',
         className: cn({
@@ -69,6 +66,9 @@ Categories.Category = function Item({ category }: CategoryProps) {
             isEquals,
         }),
       })}
+      href={url}
+      prefetch={false}
+      replace
     >
       {category.name}
     </Link>

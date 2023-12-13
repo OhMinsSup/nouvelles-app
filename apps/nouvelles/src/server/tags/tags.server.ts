@@ -1,6 +1,6 @@
-"server-only";
-import { db } from "@nouvelles/database";
-import type { Tag } from "@nouvelles/database";
+'server-only';
+import { db } from '@nouvelles/database';
+import type { Tag } from '@nouvelles/database';
 
 export class TagsService {
   async findOrCreate(text: string): Promise<Tag> {
