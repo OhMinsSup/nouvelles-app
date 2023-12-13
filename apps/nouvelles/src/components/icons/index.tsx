@@ -26,6 +26,7 @@ import {
   Search,
   Heart,
   PenSquare,
+  Github,
   AlignLeft,
   MoreHorizontal,
   Repeat,
@@ -282,7 +283,7 @@ export const Icons = {
   unlink: Link2Off,
   viewing: Eye,
   today: CalendarCheck2,
-
+  github: Github,
   kakao,
 };
 

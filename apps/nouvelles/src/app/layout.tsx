@@ -70,7 +70,6 @@ export default function Layout(props: RoutesProps) {
         <meta content="light" name="color-scheme" />
         <meta content="#FFFFFF" name="theme-color" />
       </head>
-
       <body
         className={cn(
           'font-sans antialiased',
