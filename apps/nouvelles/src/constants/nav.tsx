@@ -1,6 +1,6 @@
 'use client';
 import type { LucideIcon } from 'lucide-react';
-import { PAGE_ENDPOINTS } from './constants';
+import { PAGE_ENDPOINTS } from '~/constants/constants';
 import { Icons } from '~/components/icons';
 
 export interface NavItem {

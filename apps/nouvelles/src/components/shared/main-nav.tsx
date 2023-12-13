@@ -23,6 +23,7 @@ export default function MainNav() {
       <div className="flex gap-6 md:gap-10">
         <nav className="hidden gap-6 md:flex">
           {NAV_CONFIG.mainNav.map((item, index) => (
+            // eslint-disable-next-line react/no-array-index-key
             <MainNav.Item item={item} key={index} />
           ))}
         </nav>
@@ -51,7 +52,7 @@ MainNav.Item = function Item({ item }: ItemProps) {
 
 MainNav.Link = function Item({ item }: ItemProps) {
   const pathname = usePathname();
-  const href = item.href as string;
+  const href = item.href as unknown as string;
   const isActive =
     href === '/' ? pathname === '/' : pathname.startsWith(href) && href !== '/';
 

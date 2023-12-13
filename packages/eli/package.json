@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "clean": "rm -rf dist",
+    "clean": "rimraf dist",
     "postinstall": "tsup",
     "watch": "tsup --watch"
   },
@@ -29,6 +29,7 @@
     "chalk": "^5.3.0",
     "commander": "^11.1.0",
     "dotenv": "^16.3.1",
+    "rimraf": "^5.0.5",
     "tsup": "^8.0.1"
   },
   "publishConfig": {

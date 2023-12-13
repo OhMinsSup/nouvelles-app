@@ -45,6 +45,7 @@ export default function Item({ item }: ItemProps) {
       _searchParams.delete('category');
     } else if (item.Category) _searchParams.set('category', item.Category.name);
     return `${pathname}?${_searchParams.toString()}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, pathname]);
 
   const tagUrl = useMemo(() => {
@@ -56,6 +57,7 @@ export default function Item({ item }: ItemProps) {
       if (firstTag?.tag) _searchParams.set('tag', firstTag.tag.name);
     }
     return `${pathname}?${_searchParams.toString()}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, pathname]);
 
   return (

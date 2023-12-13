@@ -6,8 +6,8 @@ import { useImperativeHandle, useRef, forwardRef } from 'react';
 import type { Editor } from '@tiptap/react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import { useDebouncedCallback } from 'use-debounce';
-import { TiptapExtensions } from './extensions';
-import { TiptapEditorProps } from './props';
+import { TiptapEditorProps } from '~/components/editor/props';
+import { TiptapExtensions } from '~/components/editor/extensions';
 import { cn } from '~/utils/utils';
 
 export interface TipTapRichTextEditorProps {

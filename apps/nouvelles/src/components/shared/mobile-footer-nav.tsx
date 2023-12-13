@@ -13,7 +13,8 @@ export default function MobileFooterNav() {
     <SkipRenderOnClient shouldRenderOnClient={() => isMobile}>
       <nav className="fixed bottom-0 z-40 flex w-full items-center justify-around border-t bg-white py-2 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 md:hidden">
         {NAV_CONFIG.mainNav.map((item, index) => (
-          <div className="relative w-max" key={index}>
+          // eslint-disable-next-line react/no-array-index-key
+          <div className="relative w-max" key={`navigation-${index}`}>
             <MobileFooterNav.Item item={item} />
           </div>
         ))}
@@ -39,7 +40,7 @@ MobileFooterNav.Item = function Item({ item }: ItemProps) {
 
 MobileFooterNav.Link = function Item({ item }: ItemProps) {
   const pathname = usePathname();
-  const href = item.href as string;
+  const href = item.href as unknown as string;
   const isActive =
     href === '/' ? pathname === '/' : pathname.startsWith(href) && href !== '/';
 

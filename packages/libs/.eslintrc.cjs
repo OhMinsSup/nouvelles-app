@@ -7,5 +7,6 @@ module.exports = {
     ...config.rules,
     'eslint-comments/require-description': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
   },
 };

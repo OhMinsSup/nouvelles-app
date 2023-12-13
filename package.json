@@ -14,8 +14,9 @@
   "scripts": {
     "build": "turbo run build",
     "clean": "turbo clean",
-    "db:push": "turbo run db:push",
-    "dev": "turbo run dev --concurrency 255",
+    "db:migrate:dev": "dotenv -- turbo run db:migrate:dev",
+    "db:push": "dotenv -- turbo run db:push",
+    "dev": "dotenv -- turbo run dev --concurrency 255",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "watch": "turbo run watch --concurrency 50%"
@@ -24,6 +25,7 @@
     "@nouvelles/lintconfig": "workspace:*",
     "@nouvelles/tsconfig": "workspace:*",
     "cspell": "^8.1.3",
+    "dotenv-cli": "^7.3.0 ",
     "eslint": "^8.55.0",
     "prettier": "^3.1.0",
     "syncpack": "^11.2.1",

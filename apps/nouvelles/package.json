@@ -69,6 +69,7 @@
   },
   "devDependencies": {
     "@anansi/browserslist-config": "^1.4.3",
+    "@next/eslint-plugin-next": "^14.0.3",
     "@nouvelles/database": "workspace:*",
     "@nouvelles/eli": "workspace:*",
     "@nouvelles/lintconfig": "workspace:*",

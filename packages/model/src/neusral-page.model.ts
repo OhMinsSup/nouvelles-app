@@ -186,7 +186,7 @@ export class NeusralPage {
 
   private async $getRealItems() {
     for (const item of this._items.values()) {
-      const data = item as NeusralItem;
+      const data = item as unknown as NeusralItem;
       if (data.link) {
         const response = await fetch(data.link).catch(() => {
           return undefined;

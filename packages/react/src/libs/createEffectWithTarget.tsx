@@ -11,6 +11,7 @@ const createEffectWithTarget = (
   const useEffectWithTarget = (
     effect: React.EffectCallback,
     deps: React.DependencyList,
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     target: BasicTarget<any> | BasicTarget<any>[],
   ) => {
     const hasInitRef = React.useRef(false);

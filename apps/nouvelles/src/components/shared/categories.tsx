@@ -49,13 +49,13 @@ Categories.Category = function Item({ category }: CategoryProps) {
       _searchParams.set('category', category.name);
     }
     return `${pathname}?${_searchParams.toString()}`;
-  }, [category, pathname]);
+  }, [category.name, pathname, searchParams]);
 
   const isEquals = useMemo(() => {
     const _category = searchParams.get('category');
     if (!_category) return false;
     return decodeURIComponent(_category) === category.name;
-  }, [searchParams]);
+  }, [category.name, searchParams]);
 
   return (
     <Link

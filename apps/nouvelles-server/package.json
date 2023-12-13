@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "tsup",
-    "clean": "rm -rf dist",
-    "dev": "tsx watch src/main.ts"
+    "clean": "rimraf dist",
+    "watch": "tsx watch src/main.ts"
   },
   "dependencies": {
     "@fastify/autoload": "^5.8.0",
@@ -26,6 +26,7 @@
     "@nouvelles/tsconfig": "workspace:*",
     "@types/node": "^20.10.3",
     "fastify": "^4.24.3",
+    "rimraf": "^5.0.5",
     "tsup": "^8.0.1",
     "tsx": "^4.6.2",
     "typescript": "^5.3.2"

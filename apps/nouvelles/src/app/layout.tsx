@@ -1,12 +1,12 @@
 import '~/assets/css/globals.css';
-import { env } from 'env.mjs';
 import { Inter as FontSans } from 'next/font/google';
 import localFont from 'next/font/local';
 import type { Metadata } from 'next';
-import { Providers } from './providers';
+import { env } from 'env.mjs';
+import { SITE_CONFIG } from '~/constants/constants';
+import { Providers } from '~/app/providers';
 import { PreloadResources } from '~/libs/react/preload';
 import { cn } from '~/utils/utils';
-import { SITE_CONFIG } from '~/constants/constants';
 
 const url = new URL(env.NEXT_PUBLIC_SITE_URL);
 

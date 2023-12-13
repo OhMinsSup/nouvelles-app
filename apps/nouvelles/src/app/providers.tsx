@@ -12,6 +12,7 @@ interface ProvidersProps {
 }
 
 export function Providers({ children, theme }: ProvidersProps) {
+  // eslint-disable-next-line react/hook-use-state
   const [queryClient] = useState(() => new QueryClient());
 
   return (

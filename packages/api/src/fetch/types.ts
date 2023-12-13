@@ -8,7 +8,7 @@ export interface FetchHandlerOptions {
   uri: string;
   method: string;
   headers: Headers | Record<string, string> | undefined;
-  reqBody: unknown | undefined;
+  reqBody: unknown;
 }
 
 export enum ResponseType {
