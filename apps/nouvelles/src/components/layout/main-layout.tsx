@@ -1,3 +1,5 @@
+'use client';
+import { useMediaQuery } from '@nouvelles/react';
 import React from 'react';
 
 interface MainLayoutProps {
@@ -6,9 +8,11 @@ interface MainLayoutProps {
 }
 
 export default function MainLayout({ children, sidebar }: MainLayoutProps) {
+  const isMobile = useMediaQuery('(max-width: 768px)', false);
+  console.log('isMobile', isMobile);
   return (
     <div className="flex h-screen bg-[#f7f9fc]">
-      {sidebar}
+      {isMobile ? null : sidebar}
       {children}
     </div>
   );

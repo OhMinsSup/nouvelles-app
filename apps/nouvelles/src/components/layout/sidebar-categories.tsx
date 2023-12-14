@@ -14,7 +14,7 @@ export default function SidebarCategories() {
     <>
       {data.map((category) => (
         <Button
-          className="pl-0 justify-start text-left w-full"
+          className="justify-start text-left w-full"
           key={category.id}
           variant="link"
         >

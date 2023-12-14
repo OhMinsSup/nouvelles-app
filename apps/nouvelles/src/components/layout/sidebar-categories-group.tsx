@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from '../ui/button';
-import { Icons } from '../icons';
+import { Button } from '~/components/ui/button';
+import { Icons } from '~/components/icons';
 import {
   Collapsible,
   CollapsibleContent,
@@ -26,6 +26,7 @@ export default function SidebarCategoriesGroup({
         </CollapsibleTrigger>
       </div>
       <CollapsibleContent className="flex flex-col space-y-3">
+        <div className="sr-only">공백 영역</div>
         {children}
       </CollapsibleContent>
     </Collapsible>

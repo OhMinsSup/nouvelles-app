@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation';
 import { cn } from '~/utils/utils';
 import type { NavItem } from '~/constants/nav';
 import { NAV_CONFIG } from '~/constants/nav';
+import { buttonVariants } from '~/components/ui/button';
+import { useLayoutStore } from '~/store/useLayoutStore';
 
 export default function MainNav() {
   return (
@@ -36,18 +38,28 @@ MainNav.Link = function Item({ item }: ItemProps) {
   const href = item.href as unknown as string;
   const isActive =
     href === '/' ? pathname === '/' : pathname.startsWith(href) && href !== '/';
+  const sidebarOpen = useLayoutStore.use.sidebarOpen();
 
   return (
     <Link
       className={cn(
-        'flex items-center space-x-3',
-        isActive ? 'text-foreground' : 'text-foreground/60',
-        item.disabled && 'cursor-not-allowed opacity-80',
+        buttonVariants({
+          variant: 'ghost',
+          className: isActive
+            ? 'text-foreground font-semibold'
+            : 'text-foreground/60 hover:text-foreground',
+        }),
+        'justify-start space-x-2 w-full',
+        {
+          'px-3 py-2': !sidebarOpen,
+        },
       )}
       href={item.disabled ? '#' : href}
     >
       <item.icon />
-      {item.title ? <span>{item.title}</span> : null}
+      {sidebarOpen ? (
+        <>{item.title ? <span>{item.title}</span> : null}</>
+      ) : null}
     </Link>
   );
 };

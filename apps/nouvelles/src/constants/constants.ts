@@ -31,14 +31,10 @@ export const API_ENDPOINTS = {
 export const ASSET_URL = {};
 
 export const PAGE_ENDPOINTS = {
-  ROOT: '/',
-  TODAY: '/today',
-  SEARCH: '/search',
-  ADMIN: {
-    ROOT: '/admin',
-    AUTH: {
-      SIGNIN: '/admin/signin',
-    },
+  NEWS: {
+    ROOT: '/news',
+    TODAY: '/news/today',
+    SEARCH: '/news/search',
   },
 } as const;
 
