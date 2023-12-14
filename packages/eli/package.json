@@ -22,6 +22,7 @@
   "scripts": {
     "build": "tsup",
     "clean": "rimraf dist",
+    "clean:all": "rimraf dist node_modules",
     "postinstall": "tsup",
     "watch": "tsup --watch"
   },

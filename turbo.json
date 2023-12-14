@@ -23,6 +23,9 @@
     "lint": {},
     "clean": {
       "cache": false
+    },
+    "clean:all": {
+      "cache": false
     }
   }
 }

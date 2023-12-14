@@ -16,6 +16,7 @@ public
 next.config.*
 tailwind.config.*
 postcss.config.*
+tsup.config.*
 
 # eslint & prettier
 .eslintrc.*

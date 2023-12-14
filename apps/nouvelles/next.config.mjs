@@ -32,6 +32,15 @@ const nextConfig = {
         }
       : false,
   },
+  redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/news',
+        permanent: true,
+      },
+    ];
+  },
   headers() {
     return [
       {

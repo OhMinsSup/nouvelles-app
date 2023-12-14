@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import dayjs from 'dayjs';
 import { FastifyPluginCallback } from 'fastify';
 import items from './items';
 
@@ -7,13 +7,17 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
 
   fastify.get('/ping', (request, reply) => {
     const now = new Date();
-    const serverTime = format(now, 'yyyy-MM-dd HH:mm:ss');
+    const serverTime = dayjs(now).format('yyyy-MM-DD HH:mm:ss');
     reply.send({ serverTime });
   });
   done();
 };
 
 const routes: FastifyPluginCallback = (fastify, opts, done) => {
+  fastify.get('/', (request, reply) => {
+    reply.send({ ok: true });
+  });
+
   fastify.register(api, {
     prefix: '/api',
   });
