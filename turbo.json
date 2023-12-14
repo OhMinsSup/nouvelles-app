@@ -8,7 +8,13 @@
     "db:migrate:dev": {},
     "db:migrate:deploy": {},
     "db:push": {},
-    "db:seed": {},
+    "db:studio": {
+      "cache": false
+    },
+    "db:seed": {
+      "dependsOn": ["^generate"],
+      "cache": false
+    },
     "dev": {
       "cache": false,
       "persistent": true

@@ -17,6 +17,8 @@
     "clean:all": "turbo clean:all",
     "db:migrate:dev": "dotenv -- turbo run db:migrate:dev",
     "db:push": "dotenv -- turbo run db:push",
+    "db:seed": "dotenv -- turbo run db:seed",
+    "db:studio": "dotenv -- turbo run db:studio",
     "dev": "dotenv -- turbo run dev --concurrency 255",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",

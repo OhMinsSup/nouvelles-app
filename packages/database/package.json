@@ -22,15 +22,16 @@
     "build": "tsup",
     "clean": "rimraf dist",
     "clean:all": "rimraf dist node_modules",
+    "db:format": "prisma format",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx src/seed.ts",
-    "format": "prisma format",
+    "db:studio": "prisma studio",
+    "generate": "prisma generate && tsup",
     "postinstall": "prisma generate && tsup",
     "lint": "eslint --max-warnings 0 .",
     "predev": "prisma generate",
-    "studio": "prisma studio",
     "watch": "tsup --watch"
   },
   "dependencies": {
