@@ -12,6 +12,7 @@ import type {
 
 export class Agent {
   service: URL;
+  prefix?: string;
   api: ServiceClient;
 
   private _baseClient: BaseClient;
@@ -25,10 +26,11 @@ export class Agent {
   constructor(opts: AgentOpts) {
     this.service =
       opts.service instanceof URL ? opts.service : new URL(opts.service);
+    this.prefix = opts.prefix;
 
     this._baseClient = new BaseClient();
     this._baseClient.fetch = this._fetch.bind(this); // patch its fetch implementation
-    this.api = this._baseClient.service(opts.service);
+    this.api = this._baseClient.service(opts.service, opts.prefix);
   }
 
   private async _fetch(opts: FetchHandlerOptions) {

@@ -22,3 +22,18 @@ export type GetItemHandler = (
   id: string,
   opts?: CallOptions | undefined,
 ) => Promise<FetchHandlerResponse>;
+
+export type GetCategoriesHandler = (
+  params?: QueryParams,
+  opts?: CallOptions | undefined,
+) => Promise<FetchHandlerResponse>;
+
+export type GetTagsHandler = (
+  params?: QueryParams,
+  opts?: CallOptions | undefined,
+) => Promise<FetchHandlerResponse>;
+
+export type GetNewspapersHandler = (
+  params?: QueryParams,
+  opts?: CallOptions | undefined,
+) => Promise<FetchHandlerResponse>;

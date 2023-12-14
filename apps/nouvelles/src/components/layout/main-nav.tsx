@@ -1,27 +1,16 @@
 'use client';
-import React, { useId } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-// import { SkipRenderOnClient } from '@nouvelles/react';
-// import { useTheme } from 'next-themes';
-// import { Icons } from '~/components/icons';
 import { cn } from '~/utils/utils';
 import type { NavItem } from '~/constants/nav';
 import { NAV_CONFIG } from '~/constants/nav';
-// import { PAGE_ENDPOINTS } from '~/constants/constants';
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuTrigger,
-// } from '~/components/ui/dropdown-menu';
 
 export default function MainNav() {
-  const id = useId();
   return (
     <>
       {NAV_CONFIG.mainNav.map((item) => (
-        <MainNav.Item item={item} key={id} />
+        <MainNav.Item item={item} key={item.id} />
       ))}
     </>
   );

@@ -21,4 +21,5 @@ export interface AgentConfigureOptions {
 
 export interface AgentOpts {
   service: string | URL;
+  prefix?: string;
 }

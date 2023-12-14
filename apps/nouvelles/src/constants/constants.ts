@@ -7,6 +7,12 @@ export const QUERIES_KEY = {
       return ['items', 'search', searchParams.toString()];
     },
   },
+  categories: {
+    root: ['categories'],
+  },
+  tags: {
+    root: ['tags'],
+  },
 };
 
 export const MUTATIONS_KEY = {};

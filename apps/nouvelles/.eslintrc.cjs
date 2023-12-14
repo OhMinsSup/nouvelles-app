@@ -6,6 +6,7 @@ module.exports = {
     ...config.rules,
     'func-names': 'off',
     'unicorn/filename-case': 'off',
+    'no-console': 'off',
     'import/no-unresolved': 'off',
     'import/named': 'off',
     'react/jsx-pascal-case': 'off',
