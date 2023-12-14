@@ -15,7 +15,7 @@ export default function SidebarCategoriesGroup({
   children,
 }: SidebarCategoriesGroupProps) {
   return (
-    <Collapsible className="px-3 py-2">
+    <Collapsible className="px-3 py-2" defaultOpen>
       <div className="flex items-center justify-between space-x-4">
         <h2 className="text-lg font-semibold tracking-tight">카테고리</h2>
         <CollapsibleTrigger asChild>

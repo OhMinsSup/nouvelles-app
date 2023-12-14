@@ -6,15 +6,13 @@ import { ScrollArea, ScrollBar } from '~/components/ui/scroll-area';
 import MainNav from '~/components/layout/main-nav';
 import { Button, buttonVariants } from '~/components/ui/button';
 import SidebarCategoriesGroup from '~/components/layout/sidebar-categories-group';
-import SidebarTagsGroup from '~/components/layout/sidebar-tags-group';
 import { cn } from '~/utils/utils';
 
 interface SidebarProps {
   categories?: React.ReactNode;
-  tags?: React.ReactNode;
 }
 
-export default function Sidebar({ categories, tags }: SidebarProps) {
+export default function Sidebar({ categories }: SidebarProps) {
   return (
     <div className="flex flex-col w-64 h-full bg-white p-5 border-r">
       <div className="flex items-center space-x-2 mb-5">
@@ -38,7 +36,6 @@ export default function Sidebar({ categories, tags }: SidebarProps) {
         {categories ? (
           <SidebarCategoriesGroup>{categories}</SidebarCategoriesGroup>
         ) : null}
-        {tags ? <SidebarTagsGroup>{tags}</SidebarTagsGroup> : null}
         <ScrollBar orientation="vertical" />
       </ScrollArea>
       <div className="mt-auto">
