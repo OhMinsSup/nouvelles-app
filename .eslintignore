@@ -18,6 +18,9 @@ tailwind.config.*
 postcss.config.*
 tsup.config.*
 
+# env
+env.mjs
+
 # eslint & prettier
 .eslintrc.*
 eslint-*.*

@@ -17,3 +17,4 @@ next.config.mjs
 tailwind.config.ts
 postcss.config.cjs
 .eslintrc.js
+

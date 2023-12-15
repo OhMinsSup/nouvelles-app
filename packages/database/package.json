@@ -21,7 +21,6 @@
     "prebuild": "prisma generate",
     "build": "tsup",
     "clean": "rimraf dist",
-    "clean:all": "rimraf dist node_modules",
     "db:format": "prisma format",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",

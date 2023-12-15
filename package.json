@@ -1,8 +1,8 @@
 {
-  "name": "nouvelles-app",
+  "name": "nouvelles",
   "version": "0.0.1-beta.0",
   "private": true,
-  "description": "nouvelles-app",
+  "description": "nouvelles",
   "keywords": [
     "nextjs",
     "vercel",
@@ -14,7 +14,6 @@
   "scripts": {
     "build": "turbo run build",
     "clean": "turbo clean",
-    "clean:all": "turbo clean:all",
     "db:migrate:dev": "dotenv -- turbo run db:migrate:dev",
     "db:push": "dotenv -- turbo run db:push",
     "db:seed": "dotenv -- turbo run db:seed",

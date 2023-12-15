@@ -9,9 +9,6 @@
     "./eslint-library": "./eslint-library.js",
     "./prettier": "./prettier.js"
   },
-  "scripts": {
-    "clean:all": "rimraf node_modules"
-  },
   "devDependencies": {
     "@vercel/style-guide": "^5.1.0",
     "eslint-config-prettier": "^9.1.0",
