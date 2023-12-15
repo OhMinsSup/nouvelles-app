@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { FastifyPluginCallback } from 'fastify';
+import type { FastifyPluginCallback } from 'fastify';
 import items from './items';
 
 const api: FastifyPluginCallback = (fastify, opts, done) => {

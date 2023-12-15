@@ -1,6 +1,6 @@
 import { NeusralSite } from '@nouvelles/model';
 import { container } from 'tsyringe';
-import { FastifyPluginCallback, FastifyRequest } from 'fastify';
+import type { FastifyPluginCallback, FastifyRequest } from 'fastify';
 import { ItemsService } from '../../services/items.service';
 
 const items: FastifyPluginCallback = (fastify, opts, done) => {
@@ -11,11 +11,10 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
 
     try {
       const data = await site.run();
-      const items = await itemsService.generateItems(data);
-      console.log(items);
+      const result = await itemsService.generateItems(data);
       reply.status(200).send({
         ok: true,
-        items,
+        items: result,
       });
     } catch (error) {
       console.error(error);

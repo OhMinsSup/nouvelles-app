@@ -1,14 +1,14 @@
-import { ItemsJob } from '../../../jobs/items.jobs';
-import { FastifyPluginCallback } from 'fastify';
+import type { FastifyPluginCallback } from 'fastify';
 import { container } from 'tsyringe';
+import { ItemsJob } from '../../../jobs/items.jobs';
 
-type JobInfo = {
+interface JobInfo {
   name: string;
   cronTime: string;
   jobService: ItemsJob;
-};
+}
 
-const schedulePlugin: FastifyPluginCallback = async (fastfiy, opts, done) => {
+const schedulePlugin: FastifyPluginCallback = async (fastfiy, _opts, done) => {
   const job = container.resolve(ItemsJob);
 
   const jobInfo: JobInfo = {

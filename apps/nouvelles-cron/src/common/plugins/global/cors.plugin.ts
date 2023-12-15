@@ -1,4 +1,4 @@
-import { FastifyPluginAsync } from 'fastify';
+import type { FastifyPluginAsync } from 'fastify';
 import cors from '@fastify/cors';
 
 const corsPlugin: FastifyPluginAsync = async (fastify) => {

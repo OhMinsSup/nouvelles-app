@@ -4,7 +4,7 @@ import { injectable, singleton } from 'tsyringe';
 import type { Category } from '@nouvelles/database';
 
 interface Service {
-  findOrCreate(text: string): Promise<Category>;
+  findOrCreate: (text: string) => Promise<Category>;
 }
 
 @singleton()

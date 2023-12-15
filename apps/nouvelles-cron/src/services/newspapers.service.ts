@@ -4,7 +4,7 @@ import { injectable, singleton } from 'tsyringe';
 import type { Newspaper } from '@nouvelles/database';
 
 interface Service {
-  findOrCreate(text: string): Promise<Newspaper>;
+  findOrCreate: (text: string) => Promise<Newspaper>;
 }
 
 @singleton()

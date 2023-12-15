@@ -1,10 +1,10 @@
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import autoload from '@fastify/autoload';
 import Fastify from 'fastify';
 import formbody from '@fastify/formbody';
 import fastifyCron from 'fastify-cron';
 import cookie from '@fastify/cookie';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 import { extend } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import routes from './routes';

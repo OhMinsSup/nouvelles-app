@@ -1,8 +1,9 @@
 import { NeusralSite } from '@nouvelles/model';
-import { ItemsService } from '../services/items.service';
 import { injectable, singleton } from 'tsyringe';
+import { ItemsService } from '../services/items.service';
 
 abstract class Job {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public async runner(): Promise<void> {}
 }
 

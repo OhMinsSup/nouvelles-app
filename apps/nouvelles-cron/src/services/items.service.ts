@@ -21,8 +21,8 @@ export interface InputCreate {
 }
 
 interface Service {
-  generateItems(data: InputCreate[]): Promise<any[]>;
-  create(input: InputCreate): Promise<any>;
+  generateItems: (data: InputCreate[]) => Promise<any[]>;
+  create: (input: InputCreate) => Promise<any>;
 }
 
 @singleton()
@@ -51,7 +51,7 @@ export class ItemsService implements Service {
           tags.map((tag) => this.tagsService.findOrCreate(tag)),
         );
       } catch (error) {
-        console.error(error);
+        // Empty
       }
 
       try {
@@ -60,7 +60,7 @@ export class ItemsService implements Service {
           categories.map((item) => this.categoriesService.findOrCreate(item)),
         );
       } catch (error) {
-        console.error(error);
+        // Empty
       }
 
       try {
@@ -69,7 +69,7 @@ export class ItemsService implements Service {
           newspapers.map((item) => this.newspapersService.findOrCreate(item)),
         );
       } catch (error) {
-        console.error(error);
+        // Empty
       }
 
       const items = await Promise.all(input.map((item) => this.create(item)));

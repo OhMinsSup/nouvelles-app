@@ -4,7 +4,7 @@ async function bootstrap() {
   app.listen({ port: 8002, host: '::' });
 
   process.send?.('ready');
-  process.on('SIGINT', function () {
+  process.on('SIGINT', () => {
     process.exit(0);
   });
 }
