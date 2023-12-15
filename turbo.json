@@ -3,7 +3,8 @@
   "globalDotEnv": [".env"],
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "db:migrate:dev": {},
     "db:migrate:deploy": {},
@@ -27,6 +28,8 @@
       "dependsOn": ["^generate"]
     },
     "lint": {},
-    "clean": {}
+    "clean": {
+      "cache": false
+    }
   }
 }
