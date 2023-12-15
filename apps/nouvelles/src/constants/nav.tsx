@@ -4,7 +4,7 @@ import { PAGE_ENDPOINTS } from '~/constants/constants';
 import { Icons } from '~/components/icons';
 
 export interface NavItem {
-  id: 'home' | 'search' | 'thread' | 'activity' | 'myPage';
+  id: 'home' | 'search' | 'recent' | 'setting';
   type: 'link' | 'myPage';
   title: string;
   href?: string;
@@ -34,6 +34,13 @@ export const NAV_CONFIG = {
       title: '검색',
       href: PAGE_ENDPOINTS.NEWS.SEARCH,
       icon: Icons.search,
+    },
+    {
+      id: 'setting',
+      type: 'link',
+      title: '설정',
+      href: PAGE_ENDPOINTS.NEWS.SETTING,
+      icon: Icons.settings,
     },
   ] as NavItem[],
 };

@@ -35,6 +35,7 @@ export const PAGE_ENDPOINTS = {
     ROOT: '/news',
     TODAY: '/news/today',
     SEARCH: '/news/search',
+    SETTING: '/news/setting',
   },
 } as const;
 

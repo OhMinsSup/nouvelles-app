@@ -90,18 +90,12 @@
   }
 }
 
-.scrollbar-hidden {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+.left-desktop-sidebar {
+  width: 220px;
+  right: calc(50vw + 312px);
 }
 
-.scrollbar-default {
-  scrollbar-width: auto;
-  -ms-overflow-style: auto;
-  &::-webkit-scrollbar {
-    display: auto;
-  }
+.right-desktop-sidebar {
+  width: 304px;
+  left: calc(50vw + 320px);
 }

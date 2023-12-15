@@ -1,21 +1,21 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  useEventListener,
   getTargetElement,
   getWindowScrollTop,
+  useEventListener,
 } from '@nouvelles/react';
 import { optimizeAnimation } from '~/utils/utils';
 
-interface HeaderProps {
+interface HeaderMobileProps {
   children: React.ReactNode;
 }
 
-export default function Header({ children }: HeaderProps) {
-  return <Header.Internal>{children}</Header.Internal>;
+export default function HeaderMobile({ children }: HeaderMobileProps) {
+  return <HeaderMobile.Internal>{children}</HeaderMobile.Internal>;
 }
 
-Header.Internal = function Item({ children }: HeaderProps) {
+HeaderMobile.Internal = function Item({ children }: HeaderMobileProps) {
   const ref = useRef<HTMLElement>(null);
   const [translateY, setTranslateY] = useState(0);
   const [height, setHeight] = useState(0);
@@ -50,14 +50,13 @@ Header.Internal = function Item({ children }: HeaderProps) {
     const $ele = getTargetElement(ref);
     if (!$ele) return;
     const bounding = $ele.getBoundingClientRect();
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    const height = bounding.height + 10;
-    setHeight(height);
+    setHeight(bounding.height + 10);
   }, []);
 
   return (
     <header
-      className="sticky top-0 z-40 backdrop-blur-md"
+      className="sticky top-0 z-40 block md:hidden"
+      data-name="mobile-header"
       ref={ref}
       style={{
         transform: `translateY(${translateY}px)`,
