@@ -21,14 +21,14 @@ export interface InputCreate {
 }
 
 interface Service {
-  generateItems: (data: InputCreate[]) => Promise<any[]>;
+  generateItems: (data: InputCreate[], date: Date) => Promise<any[]>;
   create: (input: InputCreate) => Promise<any>;
 }
 
 @injectable()
 @singleton()
 export class ItemsService implements Service {
-  public async generateItems(input: InputCreate[]) {
+  public async generateItems(input: InputCreate[], date: Date) {
     if (!isEmpty(input)) {
       console.log('generateItemsasdasdas =>>>', input.length);
       const unionTags = new Set<string>();
@@ -74,6 +74,14 @@ export class ItemsService implements Service {
       console.log('generateItems~!!!!! =>>>', input.length);
 
       const items = await Promise.all(input.map((item) => this.create(item)));
+
+      console.log('generateItems~!!!!! =>>>', items.length);
+      await db.crawlerDateCollected.create({
+        data: {
+          collectingDate: date,
+        },
+      });
+
       return items;
     }
 
@@ -177,20 +185,15 @@ export class ItemsService implements Service {
     return data;
   }
 
-  public async hasTodayItem() {
-    const today = dayjs().startOf('day').toDate();
-    const data = await db.item.findFirst({
+  public async hasCrawlerCollectedToday(date: Date) {
+    const data = await db.crawlerDateCollected.findUnique({
       select: {
         id: true,
-        pulbishedAt: true,
       },
       where: {
-        pulbishedAt: {
-          gte: today,
-        },
+        collectingDate: date,
       },
     });
-
     return Boolean(data);
   }
 }
