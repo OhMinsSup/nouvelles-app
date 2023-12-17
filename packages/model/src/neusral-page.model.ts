@@ -177,8 +177,6 @@ export class NeusralPage {
           }
 
           this._items.set(input.id, input);
-
-          console.log(input);
         }
       }
     }

@@ -1,46 +1,43 @@
 import { NeusralSite } from '@nouvelles/model';
-import { injectable, singleton } from 'tsyringe';
-import { ItemsService } from '../services/items.service';
+import { injectable, singleton, container } from 'tsyringe';
+import { ItemsService } from '~/services/items.service';
+import { type Job, JobProgress } from '~/jobs/job';
 
-abstract class Job {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public async runner(): Promise<void> {}
-}
-
-class JobProgress {
-  private isProgress = false;
-  public get isProgressing() {
-    return this.isProgress;
-  }
-  public start() {
-    this.isProgress = true;
-  }
-  public stop() {
-    this.isProgress = false;
-  }
-}
-
-@singleton()
 @injectable()
+@singleton()
 export class ItemsJob extends JobProgress implements Job {
-  constructor(private readonly itemsService: ItemsService) {
-    super();
-  }
-
   public async runner() {
+    const itemsService = container.resolve(ItemsService);
     console.log('Starting items job');
-    console.time('items job');
+
+    const has = await itemsService.hasTodayItem();
+    if (has) {
+      console.log('Already has today item');
+      return;
+    }
+
     const site = new NeusralSite();
+
+    const result: Awaited<ReturnType<typeof site.run>> = [];
 
     try {
       const data = await site.run();
-      await this.itemsService.generateItems(data);
+      result.push(...data);
+      console.log('items job =>>>', data.length);
     } catch (error) {
       console.error(error);
     } finally {
       site.close();
-      console.timeEnd('items job');
       console.log('Completed items job');
+    }
+
+    try {
+      console.log('generateItems =>>>', result.length);
+      await itemsService.generateItems(result);
+      console.log('Completed generateItems');
+    } catch (error) {
+      console.error(error);
+      console.log('Failed generateItems');
     }
   }
 }

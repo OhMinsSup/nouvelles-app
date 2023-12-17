@@ -16,24 +16,24 @@
     "@nouvelles/libs": "workspace:*",
     "@nouvelles/model": "workspace:*",
     "dayjs": "^1.11.10",
+    "fastify": "^4.25.0",
     "fastify-cron": "^1.3.1",
     "pino-pretty": "^10.2.3",
+    "reflect-metadata": "^0.2.1",
     "tsyringe": "4.8.0"
   },
   "devDependencies": {
     "@nouvelles/database": "workspace:*",
     "@nouvelles/eli": "workspace:*",
     "@nouvelles/lintconfig": "workspace:*",
-    "@nouvelles/tailwind": "workspace:*",
     "@nouvelles/tsconfig": "workspace:*",
     "@types/node": "^20.10.4",
-    "fastify": "^4.25.0",
     "rimraf": "^5.0.5",
     "tsup": "^8.0.1",
     "tsx": "^4.6.2",
     "typescript": "^5.3.3"
   },
-  "packageManager": "pnpm@8.6.0",
+  "packageManager": "pnpm@8.12.1",
   "engines": {
     "bun": "1.x",
     "node": "18.x || 20.x"

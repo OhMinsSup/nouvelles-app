@@ -1,0 +1,13 @@
+# nodejs
+node_modules
+
+# vscode
+.vscode
+
+# pc
+.DS_Store
+
+#config
+tsup.config.ts
+.eslintrc.cjs
+

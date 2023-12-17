@@ -1,6 +1,6 @@
 import type { FastifyPluginCallback } from 'fastify';
 import { container } from 'tsyringe';
-import { ItemsJob } from '../../../jobs/items.jobs';
+import { ItemsJob } from '~/jobs/items.jobs';
 
 interface JobInfo {
   name: string;
@@ -8,7 +8,7 @@ interface JobInfo {
   jobService: ItemsJob;
 }
 
-const schedulePlugin: FastifyPluginCallback = async (fastfiy, _opts, done) => {
+const schedulePlugin: FastifyPluginCallback = (fastfiy, _opts, done) => {
   const job = container.resolve(ItemsJob);
 
   const jobInfo: JobInfo = {
@@ -20,24 +20,22 @@ const schedulePlugin: FastifyPluginCallback = async (fastfiy, _opts, done) => {
     jobService: job,
   };
 
-  const createJob = (info: JobInfo) => {
-    const { name, cronTime, jobService } = info;
-    return fastfiy.cron.createJob({
-      name,
-      cronTime,
-      onTick: async () => {
-        if (jobService.isProgressing) return;
+  const { name, cronTime, jobService } = jobInfo;
 
-        jobService.start();
+  const cron = fastfiy.cron.createJob({
+    name,
+    cronTime,
+    onTick: async () => {
+      if (jobService.isProgressing) return;
 
-        await info.jobService.runner();
+      jobService.start();
 
-        jobService.stop();
-      },
-    });
-  };
+      await jobService.runner();
 
-  const cron = createJob(jobInfo);
+      jobService.stop();
+    },
+  });
+
   cron.start();
 
   done();

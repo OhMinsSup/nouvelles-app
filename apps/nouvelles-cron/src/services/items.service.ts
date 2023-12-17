@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
 import { db } from '@nouvelles/database';
 import { isEmpty, isInvaliDate } from '@nouvelles/libs';
-import { injectable, singleton } from 'tsyringe';
-import { TagsService } from './tags.service';
-import { CategoriesService } from './categories.service';
-import { NewspapersService } from './newspapers.service';
+import { injectable, singleton, container } from 'tsyringe';
+import { TagsService } from '~/services/tags.service';
+import { CategoriesService } from '~/services/categories.service';
+import { NewspapersService } from '~/services/newspapers.service';
 
 export interface InputCreate {
   id: string;
@@ -25,17 +25,12 @@ interface Service {
   create: (input: InputCreate) => Promise<any>;
 }
 
-@singleton()
 @injectable()
+@singleton()
 export class ItemsService implements Service {
-  constructor(
-    private readonly tagsService: TagsService,
-    private readonly categoriesService: CategoriesService,
-    private readonly newspapersService: NewspapersService,
-  ) {}
-
   public async generateItems(input: InputCreate[]) {
     if (!isEmpty(input)) {
+      console.log('generateItemsasdasdas =>>>', input.length);
       const unionTags = new Set<string>();
       const unionCategories = new Set<string>();
       const unionNewspapers = new Set<string>();
@@ -47,34 +42,42 @@ export class ItemsService implements Service {
 
       try {
         const tags = [...unionTags];
-        await Promise.all(
-          tags.map((tag) => this.tagsService.findOrCreate(tag)),
-        );
+        const tagsService = container.resolve(TagsService);
+
+        await Promise.all(tags.map((tag) => tagsService.findOrCreate(tag)));
       } catch (error) {
-        // Empty
+        console.error(error);
       }
 
       try {
         const categories = [...unionCategories];
+        const categoriesService = container.resolve(CategoriesService);
+
         await Promise.all(
-          categories.map((item) => this.categoriesService.findOrCreate(item)),
+          categories.map((item) => categoriesService.findOrCreate(item)),
         );
       } catch (error) {
-        // Empty
+        console.error(error);
       }
 
       try {
         const newspapers = [...unionNewspapers];
+        const newspapersService = container.resolve(NewspapersService);
+
         await Promise.all(
-          newspapers.map((item) => this.newspapersService.findOrCreate(item)),
+          newspapers.map((item) => newspapersService.findOrCreate(item)),
         );
       } catch (error) {
-        // Empty
+        console.error(error);
       }
+
+      console.log('generateItems~!!!!! =>>>', input.length);
 
       const items = await Promise.all(input.map((item) => this.create(item)));
       return items;
     }
+
+    console.log('generateItems  empty =>>>', input.length);
 
     return [];
   }
@@ -101,6 +104,8 @@ export class ItemsService implements Service {
       },
     });
 
+    console.log('exists =>>>', exists);
+
     if (exists) {
       return exists;
     }
@@ -121,6 +126,8 @@ export class ItemsService implements Service {
         name: reporter,
       },
     });
+
+    console.log('newspaperItem =>>>', newspaperItem);
 
     const dateString = dayjs(input.date, 'YY.MM.DD').format(
       'YYYY-MM-DD HH:mm:ss',
@@ -168,5 +175,22 @@ export class ItemsService implements Service {
     });
 
     return data;
+  }
+
+  public async hasTodayItem() {
+    const today = dayjs().startOf('day').toDate();
+    const data = await db.item.findFirst({
+      select: {
+        id: true,
+        pulbishedAt: true,
+      },
+      where: {
+        pulbishedAt: {
+          gte: today,
+        },
+      },
+    });
+
+    return Boolean(data);
   }
 }

@@ -5,21 +5,21 @@ import Fastify from 'fastify';
 import formbody from '@fastify/formbody';
 import fastifyCron from 'fastify-cron';
 import cookie from '@fastify/cookie';
-import { extend } from 'dayjs';
+import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import routes from './routes';
-
-extend(customParseFormat);
+import routes from '~/routes';
 
 const app = Fastify({
   logger: true,
-  trustProxy: true,
 });
 
-app.register(fastifyCron);
+// eslint-disable-next-line import/no-named-as-default-member
+dayjs.extend(customParseFormat);
 
 app.register(cookie, { secret: 'test' });
 app.register(formbody);
+
+app.register(fastifyCron);
 
 const __filename = fileURLToPath(import.meta.url);
 const splited = dirname(__filename).split('/src');

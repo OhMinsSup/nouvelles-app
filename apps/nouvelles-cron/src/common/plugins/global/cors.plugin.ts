@@ -2,9 +2,9 @@ import type { FastifyPluginAsync } from 'fastify';
 import cors from '@fastify/cors';
 
 const corsPlugin: FastifyPluginAsync = async (fastify) => {
-  const corsWhitelist: RegExp[] = [];
+  const corsWhitelist: RegExp[] = [/^http:\/\/localhost/];
 
-  corsWhitelist.push(/^http:\/\/localhost/);
+  // corsWhitelist.push(/^http:\/\/localhost/);
 
   fastify.register(cors, {
     credentials: true,
