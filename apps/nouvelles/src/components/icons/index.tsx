@@ -22,6 +22,7 @@ import {
   Twitter,
   User,
   X,
+  Settings2,
   Home,
   Search,
   Heart,
@@ -284,6 +285,7 @@ export const Icons = {
   viewing: Eye,
   today: CalendarCheck2,
   github: Github,
+  setting: Settings2,
   kakao,
 };
 

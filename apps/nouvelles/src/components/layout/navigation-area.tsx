@@ -14,28 +14,28 @@ import {
   TooltipTrigger,
 } from '~/components/ui/tooltip';
 
-interface MainNavProps {
+interface NavigationAreaProps {
   type?: 'desktop' | 'tablet' | 'mobile' | 'all';
 }
 
-export default function MainNav({ type = 'all' }: MainNavProps) {
+export default function NavigationArea({ type = 'all' }: NavigationAreaProps) {
   return (
     <>
       {NAV_CONFIG.mainNav.map((item) => (
-        <MainNav.Item item={item} key={`type-${item.id}`} type={type} />
+        <NavigationArea.Item item={item} key={`type-${item.id}`} type={type} />
       ))}
     </>
   );
 }
 
-interface ItemProps extends MainNavProps {
+interface ItemProps extends NavigationAreaProps {
   item: NavItem;
 }
 
-MainNav.Item = function Item({ item, type }: ItemProps) {
+NavigationArea.Item = function Item({ item, type }: ItemProps) {
   switch (item.type) {
     case 'link': {
-      return <MainNav.Link item={item} type={type} />;
+      return <NavigationArea.Link item={item} type={type} />;
     }
     default: {
       return null;
@@ -43,7 +43,7 @@ MainNav.Item = function Item({ item, type }: ItemProps) {
   }
 };
 
-MainNav.Link = function Item({ item, type }: ItemProps) {
+NavigationArea.Link = function Item({ item, type }: ItemProps) {
   const pathname = usePathname();
   const href = item.href as unknown as string;
   const isActive =
@@ -83,9 +83,9 @@ MainNav.Link = function Item({ item, type }: ItemProps) {
   );
 };
 
-type GithubLinkProps = MainNavProps;
+type GithubLinkProps = NavigationAreaProps;
 
-MainNav.GithubLink = function Item({ type }: GithubLinkProps) {
+NavigationArea.GithubLink = function Item({ type }: GithubLinkProps) {
   return (
     <a
       className={cn(
