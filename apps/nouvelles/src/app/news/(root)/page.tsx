@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Icons } from '~/components/icons';
 import { Button } from '~/components/ui/button';
 import { PAGE_ENDPOINTS } from '~/constants/constants';
+import Card from '~/components/shared/card';
 
 export default function Page() {
   return (
@@ -19,13 +20,7 @@ export default function Page() {
           </Button>
         </div>
       </div>
-      sdasdassadsadasdsa
+      <Card />
     </div>
   );
 }
-
-// background-color: rgb(255, 255, 255);
-// flex-direction: row;
-// align-items: center;
-// justify-content: space-between;
-// padding: 12px 18px;
