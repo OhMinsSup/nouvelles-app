@@ -276,6 +276,9 @@ importers:
       '@nouvelles/model':
         specifier: workspace:*
         version: link:../../packages/model
+      cjk-slug:
+        specifier: ^0.3.1
+        version: 0.3.1
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
@@ -291,6 +294,9 @@ importers:
       reflect-metadata:
         specifier: ^0.2.1
         version: 0.2.1
+      slugify:
+        specifier: ^1.6.6
+        version: 1.6.6
       tsyringe:
         specifier: 4.8.0
         version: 4.8.0
@@ -4869,6 +4875,12 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /cjk-slug@0.3.1:
+    resolution: {integrity: sha512-MyFKeZZeJU+IK/f4J+Y70ssmzlY8opG4CMUbbBJx6O2G0KBNx4XfrDGrrz/EQo8359VrDpwLBM8fokQ2jj3siA==}
+    dependencies:
+      normalize-cjk: 0.4.0
+    dev: false
+
   /class-variance-authority@0.7.0:
     resolution: {integrity: sha512-jFI8IQw4hczaL4ALINxqLEXQbWcNjoSkloa4IaufXCJr6QawJyw7tuRysRsrE8w2p/4gGaxKIt/hX3qz/IbD1A==}
     dependencies:
@@ -7748,6 +7760,10 @@ packages:
   /node-releases@2.0.14:
     resolution: {integrity: sha512-y10wOWt8yZpqXmOgRo77WaHEmhYQYGNA6y421PKsKYWEK8aW+cqAphborZDhqfyKrbZEN92CN1X2KbafY2s7Yw==}
 
+  /normalize-cjk@0.4.0:
+    resolution: {integrity: sha512-3BgD5wO0/0vrEYEoPdlkxhjnrK+nNo3arosd5PBH1Ywq/TcuO+QSg2wf2LP7Zc2cvKuGIrywmq64tuKwyR3znQ==}
+    dev: false
+
   /normalize-package-data@2.5.0:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
     dependencies:
@@ -9139,6 +9155,11 @@ packages:
     resolution: {integrity: sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==}
     engines: {node: '>=12'}
     dev: true
+
+  /slugify@1.6.6:
+    resolution: {integrity: sha512-h+z7HKHYXj6wJU+AnS/+IH8Uh9fdcX1Lrhg1/VMdf9PwoBQXFcXiAdsy2tSK0P6gKwJLXp02r90ahUCqHk9rrw==}
+    engines: {node: '>=8.0.0'}
+    dev: false
 
   /smart-buffer@4.2.0:
     resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}

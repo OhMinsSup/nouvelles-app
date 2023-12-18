@@ -10,20 +10,19 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
   fastify.post('/collect/neusral', async (request: FastifyRequest, reply) => {
     const today = dayjs().startOf('day').toDate();
 
+    const has = await itemsService.hasCrawlerCollectedToday(today);
+    if (has) {
+      reply.status(200).send({
+        ok: true,
+        items: [],
+        message: 'Already has today item',
+      });
+      return;
+    }
+
     const site = new NeusralSite();
 
     try {
-      const has = await itemsService.hasCrawlerCollectedToday(today);
-      if (has) {
-        console.log('Already has today item');
-        reply.status(200).send({
-          ok: true,
-          items: [],
-          message: 'Already has today item',
-        });
-        return;
-      }
-
       const data = await site.run();
       const result = await itemsService.generateItems(data, today);
       reply.status(200).send({
@@ -33,13 +32,13 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
       });
     } catch (error) {
       console.error(error);
-    } finally {
-      site.close();
       reply.status(500).send({
         ok: false,
         items: [],
         message: 'Failed items job',
       });
+    } finally {
+      site.close();
     }
   });
   done();

@@ -2,28 +2,44 @@ import { db } from '@nouvelles/database';
 import { injectable, singleton } from 'tsyringe';
 // types
 import type { Newspaper } from '@nouvelles/database';
+import { getSlug } from '~/common/utils';
 
 interface Service {
-  findOrCreate: (text: string) => Promise<Newspaper>;
+  findOrCreate: (name: string) => Promise<Newspaper>;
+  findByName: (name: string) => Promise<Newspaper | null>;
 }
 
 @singleton()
 @injectable()
 export class NewspapersService implements Service {
-  public async findOrCreate(text: string): Promise<Newspaper> {
+  public async findOrCreate(name: string) {
+    const slug = getSlug(name);
     const data = await db.newspaper.findUnique({
       where: {
-        name: text,
+        name,
+        slug,
       },
     });
     if (!data) {
       const newspaper = await db.newspaper.create({
         data: {
-          name: text,
+          name,
+          slug,
         },
       });
       return newspaper;
     }
+    return data;
+  }
+
+  public async findByName(name: string) {
+    const slug = getSlug(name);
+    const data = await db.newspaper.findUnique({
+      where: {
+        name,
+        slug,
+      },
+    });
     return data;
   }
 }

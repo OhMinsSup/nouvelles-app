@@ -113,6 +113,7 @@ model Item {
 model Newspaper {
     id        Int       @id @default(autoincrement())
     name      String    @unique
+    slug      String    @unique
     createdAt DateTime  @default(now())
     updatedAt DateTime  @default(now()) @updatedAt
     deletedAt DateTime? // 삭제일 (soft delete)
@@ -125,6 +126,7 @@ model Newspaper {
 model Category {
     id        Int       @id @default(autoincrement())
     name      String    @unique
+    slug      String    @unique
     createdAt DateTime  @default(now())
     updatedAt DateTime  @default(now()) @updatedAt
     deletedAt DateTime? // 삭제일 (soft delete)
@@ -137,6 +139,7 @@ model Category {
 model Tag {
     id        Int       @id @default(autoincrement())
     name      String    @unique
+    slug      String    @unique
     createdAt DateTime  @default(now())
     updatedAt DateTime  @default(now()) @updatedAt
     deletedAt DateTime? // 삭제일 (soft delete)

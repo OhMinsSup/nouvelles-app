@@ -25,7 +25,7 @@ export class ItemsJob extends JobProgress implements Job {
     try {
       const data = await site.run();
       result.push(...data);
-      console.log('items job =>>>', data.length);
+      console.log('Completed items job');
     } catch (error) {
       console.error(error);
     } finally {
@@ -34,7 +34,6 @@ export class ItemsJob extends JobProgress implements Job {
     }
 
     try {
-      console.log('generateItems =>>>', result.length);
       await itemsService.generateItems(result, today);
       console.log('Completed generateItems');
     } catch (error) {

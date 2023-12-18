@@ -1,10 +1,10 @@
-import dayjs from 'dayjs';
 import { db } from '@nouvelles/database';
-import { isEmpty, isInvaliDate } from '@nouvelles/libs';
+import { isEmpty } from '@nouvelles/libs';
 import { injectable, singleton, container } from 'tsyringe';
 import { TagsService } from '~/services/tags.service';
 import { CategoriesService } from '~/services/categories.service';
 import { NewspapersService } from '~/services/newspapers.service';
+import { generateImageURL, generateDate } from '~/common/utils';
 
 export interface InputCreate {
   id: string;
@@ -20,9 +20,17 @@ export interface InputCreate {
   description: string | undefined;
 }
 
+export interface InputFindByEtc {
+  tag?: string;
+  category?: string;
+  newspaper?: string;
+}
+
 interface Service {
   generateItems: (data: InputCreate[], date: Date) => Promise<any[]>;
   create: (input: InputCreate) => Promise<any>;
+  hasCrawlerCollectedToday: (date: Date) => Promise<boolean>;
+  findByEtc: (input: InputFindByEtc) => Promise<any>;
 }
 
 @injectable()
@@ -30,7 +38,6 @@ interface Service {
 export class ItemsService implements Service {
   public async generateItems(input: InputCreate[], date: Date) {
     if (!isEmpty(input)) {
-      console.log('generateItemsasdasdas =>>>', input.length);
       const unionTags = new Set<string>();
       const unionCategories = new Set<string>();
       const unionNewspapers = new Set<string>();
@@ -71,26 +78,23 @@ export class ItemsService implements Service {
         console.error(error);
       }
 
-      console.log('generateItems~!!!!! =>>>', input.length);
-
-      const items = await Promise.all(input.map((item) => this.create(item)));
-
-      console.log('generateItems~!!!!! =>>>', items.length);
-      await db.crawlerDateCollected.create({
+      const collectedData = await db.crawlerDateCollected.create({
         data: {
           collectingDate: date,
         },
       });
 
+      const items = await Promise.all(
+        input.map((item) => this.create(item, collectedData.id)),
+      );
+
       return items;
     }
-
-    console.log('generateItems  empty =>>>', input.length);
 
     return [];
   }
 
-  public async create(input: InputCreate) {
+  public async create(input: InputCreate, collectedId?: number) {
     const {
       tag,
       category,
@@ -112,36 +116,22 @@ export class ItemsService implements Service {
       },
     });
 
-    console.log('exists =>>>', exists);
-
     if (exists) {
       return exists;
     }
 
-    const tagItem = await db.tag.findFirst({
-      where: {
-        name: tag,
-      },
-    });
-    const categoryItem = await db.category.findFirst({
-      where: {
-        name: category,
-      },
+    const { tagItem, categoryItem, newspaperItem } = await this.findByEtc({
+      tag,
+      category,
+      newspaper: reporter,
     });
 
-    const newspaperItem = await db.newspaper.findFirst({
-      where: {
-        name: reporter,
-      },
+    const pulbishedAt = generateDate(input.date);
+
+    const imageURL = generateImageURL({
+      realLink,
+      image,
     });
-
-    console.log('newspaperItem =>>>', newspaperItem);
-
-    const dateString = dayjs(input.date, 'YY.MM.DD').format(
-      'YYYY-MM-DD HH:mm:ss',
-    );
-    const dateTime = dayjs(dateString).toDate();
-    const pulbishedAt = isInvaliDate(dateTime) ? undefined : dateTime;
 
     const data = await db.item.create({
       data: {
@@ -151,7 +141,14 @@ export class ItemsService implements Service {
         realLink,
         description,
         pulbishedAt,
-        image,
+        image: imageURL || null,
+        ...(collectedId && {
+          CrawlerDateCollected: {
+            connect: {
+              id: collectedId,
+            },
+          },
+        }),
         ...(newspaperItem && {
           Newspaper: {
             connect: {
@@ -195,5 +192,25 @@ export class ItemsService implements Service {
       },
     });
     return Boolean(data);
+  }
+
+  public async findByEtc({ tag, category, newspaper }: InputFindByEtc) {
+    const tagsService = container.resolve(TagsService);
+    const categoriesService = container.resolve(CategoriesService);
+    const newspapersService = container.resolve(NewspapersService);
+
+    const tagItem = tag ? await tagsService.findByName(tag) : null;
+    const categoryItem = category
+      ? await categoriesService.findByName(category)
+      : null;
+    const newspaperItem = newspaper
+      ? await newspapersService.findByName(newspaper)
+      : null;
+
+    return {
+      tagItem,
+      categoryItem,
+      newspaperItem,
+    };
   }
 }

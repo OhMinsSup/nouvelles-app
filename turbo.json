@@ -6,14 +6,12 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
-    "db:migrate:dev": {},
+    "db:migrate:dev": {
+      "cache": false
+    },
     "db:migrate:deploy": {},
     "db:push": {},
     "db:studio": {
-      "cache": false
-    },
-    "db:seed": {
-      "dependsOn": ["^generate"],
       "cache": false
     },
     "dev": {
