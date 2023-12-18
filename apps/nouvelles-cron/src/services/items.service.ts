@@ -126,7 +126,7 @@ export class ItemsService implements Service {
       newspaper: reporter,
     });
 
-    const pulbishedAt = generateDate(input.date);
+    const publishedAt = generateDate(input.date);
 
     const imageURL = generateImageURL({
       realLink,
@@ -140,7 +140,7 @@ export class ItemsService implements Service {
         link,
         realLink,
         description,
-        pulbishedAt,
+        publishedAt,
         image: imageURL || null,
         ...(collectedId && {
           CrawlerDateCollected: {

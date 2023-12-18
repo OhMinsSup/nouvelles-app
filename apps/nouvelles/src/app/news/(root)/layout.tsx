@@ -11,6 +11,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   return (
     <MainLayout
+      className="overflow-hidden"
       desktopSidebar={<SidebarDesktop />}
       mobileFooter={<NavigationArea />}
       mobileHeader={<MobileHeaderArea />}

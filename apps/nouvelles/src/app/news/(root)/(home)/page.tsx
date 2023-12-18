@@ -37,13 +37,13 @@ export default async function Pages({ searchParams }: PageProps) {
 
   const isEmptyData = totalCount === 0;
 
+  if (isEmptyData) {
+    return <>Empty</>;
+  }
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      {isEmptyData ? (
-        <>Empty</>
-      ) : (
-        <CardList category={category} tag={tag} type="root" />
-      )}
+      <CardList category={category} tag={tag} type="root" />
     </HydrationBoundary>
   );
 }

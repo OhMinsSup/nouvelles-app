@@ -8,7 +8,7 @@ export const selectByItem = Prisma.validator<Prisma.ItemSelect>()({
   link: true,
   realLink: true,
   description: true,
-  pulbishedAt: true,
+  publishedAt: true,
   image: true,
   Newspaper: {
     select: {

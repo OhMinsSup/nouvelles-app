@@ -23,15 +23,16 @@ interface CardProps {
 
 export default function Card({ item }: CardProps) {
   const date = useMemo(() => {
-    if (!item.pulbishedAt) return null;
+    if (!item) return null;
+    if (!item.publishedAt) return null;
     return {
-      formatted: getDateFormatted(item.pulbishedAt),
-      relative: dayjs(item.pulbishedAt).format('YYYY-MM-DD HH:mm:ss'),
+      formatted: getDateFormatted(item.publishedAt),
+      relative: dayjs(item.publishedAt).format('YYYY-MM-DD HH:mm:ss'),
     };
   }, [item]);
 
   const url = useMemo(() => {
-    const _link = item.realLink ?? item.link ?? null;
+    const _link = item?.realLink ?? item?.link ?? null;
     if (!_link) return null;
     return new URL(_link);
   }, [item]);
@@ -135,7 +136,7 @@ export default function Card({ item }: CardProps) {
                   </a>
                 </div>
               </div>
-              {item.image ? (
+              {item?.image ? (
                 <div className="w-full rounded-xl md:rounded-lg bg-slate-100 dark:bg-slate-800 relative cursor-pointer md:basis-[180px] md:h-[108px] md:shrink-0">
                   <div className="md:hidden">
                     <AspectRatio ratio={16 / 9}>
@@ -148,10 +149,10 @@ export default function Card({ item }: CardProps) {
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          alt={item.title ?? undefined}
+                          alt={item?.title ?? undefined}
                           className="object-cover w-full h-full rounded-xl md:rounded-lg"
                           loading="lazy"
-                          src={item.image ?? undefined}
+                          src={item?.image ?? undefined}
                         />
                       </a>
                     </AspectRatio>
@@ -166,10 +167,10 @@ export default function Card({ item }: CardProps) {
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        alt={item.title ?? undefined}
+                        alt={item?.title ?? undefined}
                         className="object-cover w-full h-full rounded-xl md:rounded-lg"
                         loading="lazy"
-                        src={item.image ?? undefined}
+                        src={item?.image ?? undefined}
                       />
                     </a>
                   </div>
@@ -179,7 +180,7 @@ export default function Card({ item }: CardProps) {
           </div>
           <div className="flex items-center justify-end space-x-4 py-4">
             <div className="flex items-center space-x-1">
-              {item.Category ? (
+              {item?.Category ? (
                 <Link
                   className={buttonVariants({
                     variant: 'secondary',
@@ -191,7 +192,7 @@ export default function Card({ item }: CardProps) {
                   {item.Category.name}
                 </Link>
               ) : null}
-              {item.ItemTag.map((data) => (
+              {item?.ItemTag?.map((data) => (
                 <Link
                   className={buttonVariants({
                     variant: 'secondary',

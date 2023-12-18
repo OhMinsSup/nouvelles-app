@@ -47,25 +47,25 @@ export default async function Pages({ params }: PageProps) {
 
   const isEmptyData = totalCount === 0;
 
+  if (isEmptyData) {
+    return <>Empty</>;
+  }
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      {isEmptyData ? (
-        <>Empty</>
-      ) : (
-        <CardList
-          header={
-            <CategoryWithTagHeader
-              count={categoryInfo._count?.Item}
-              id={categoryInfo.id}
-              name={categoryInfo.name}
-              slug={categoryInfo.slug}
-              type="categories"
-            />
-          }
-          tag={name}
-          type="categories"
-        />
-      )}
+      <CardList
+        header={
+          <CategoryWithTagHeader
+            count={categoryInfo._count?.Item}
+            id={categoryInfo.id}
+            name={categoryInfo.name}
+            slug={categoryInfo.slug}
+            type="categories"
+          />
+        }
+        tag={name}
+        type="categories"
+      />
     </HydrationBoundary>
   );
 }

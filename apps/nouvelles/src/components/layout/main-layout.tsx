@@ -1,6 +1,7 @@
 import React from 'react';
 import HeaderMobile from '~/components/layout/mobile-header';
 import FooterMobile from '~/components/layout/mobile-footer';
+import { cn } from '~/utils/utils';
 
 interface MainLayoutProps {
   tabletSidebar?: React.ReactNode;
@@ -9,6 +10,7 @@ interface MainLayoutProps {
   rightSidebar?: React.ReactNode;
   mobileHeader?: React.ReactNode;
   mobileFooter?: React.ReactNode;
+  className?: string;
 }
 
 export default function MainLayout({
@@ -18,11 +20,12 @@ export default function MainLayout({
   rightSidebar,
   mobileFooter,
   mobileHeader,
+  className,
 }: MainLayoutProps) {
   return (
     <>
       {mobileHeader ? <HeaderMobile>{mobileHeader}</HeaderMobile> : null}
-      <div className="flex h-screen">
+      <div className={cn('flex h-screen', className)}>
         <div className="hidden md:block xl:hidden" data-name="tablet-sidebar">
           {tabletSidebar}
         </div>

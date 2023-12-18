@@ -13,7 +13,7 @@ export interface ItemSchema {
   link: Item['link'];
   realLink: Item['realLink'];
   description: Item['description'];
-  pulbishedAt: Item['pulbishedAt'];
+  publishedAt: Item['publishedAt'];
   image: Item['image'];
   Category: Pick<Category, 'id' | 'name' | 'slug'>;
   ItemTag: {

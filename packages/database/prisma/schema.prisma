@@ -91,7 +91,7 @@ model Item {
     realLink             String?
     description          String?
     image                String?
-    pulbishedAt          DateTime?
+    publishedAt          DateTime?
     categoryId           Int?
     newspaperId          Int?
     collectingDateId     Int?
