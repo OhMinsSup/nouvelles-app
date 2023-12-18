@@ -214,11 +214,6 @@ export class ItemService {
                 id: {
                   lt: endCursor,
                 },
-                ...(endItem.pulbishedAt && {
-                  pulbishedAt: {
-                    lt: endItem.pulbishedAt,
-                  },
-                }),
                 ...(category && {
                   Category: {
                     name: category,
@@ -261,8 +256,20 @@ export class ItemService {
   }
 
   private async _getItemsByToDay({ category, tag }: ItemQuery, _?: string) {
-    const start = dayjs().startOf('day').toDate();
-    const end = dayjs().endOf('day').toDate();
+    const collectingDate = dayjs().startOf('day').toDate();
+
+    const collectingData = await db.crawlerDateCollected.findFirst({
+      where: {
+        collectingDate,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+
+    if (!collectingData) {
+      return this.getDefaultItems<ItemSchema>();
+    }
 
     const { categoryItem, tagItem } = await this.findByTagWithCategory({
       tag,
@@ -283,11 +290,8 @@ export class ItemService {
             },
           },
         },
-        pulbishedAt: {
-          gte: start,
-          lte: end,
-        },
       }),
+      collectingDateId: collectingData.id,
     };
 
     try {
@@ -304,11 +308,29 @@ export class ItemService {
         }),
       ]);
 
+      const endItem = list.at(-1);
+
+      const endCursor = endItem?.id ?? null;
+      const hasNextPage =
+        endItem && endCursor
+          ? (await db.item.count({
+              orderBy: {
+                id: 'desc',
+              },
+              where: {
+                id: {
+                  lt: endCursor,
+                },
+                ...searchWhere,
+              },
+            })) > 0
+          : false;
+
       return {
         totalCount,
         list: list as unknown as ItemSchema[],
-        endCursor: null,
-        hasNextPage: false,
+        endCursor,
+        hasNextPage,
       };
     } catch (error) {
       return this.getDefaultItems<ItemSchema>();

@@ -111,7 +111,7 @@ export default function Card({ item }: CardProps) {
                     target="_blank"
                   >
                     <h1 className="font-heading text-base sm:text-xl font-semibold sm:font-bold  text-slate-700 dark:text-slate-200 hn-break-words cursor-pointer">
-                      {item.title}
+                      {item?.title}
                     </h1>
                   </a>
                 </div>
@@ -131,7 +131,7 @@ export default function Card({ item }: CardProps) {
                       editable={false}
                       name="thraed-text"
                       noBorder
-                      value={item.description ? item.description : ''}
+                      value={item?.description ? item?.description : ''}
                     />
                   </a>
                 </div>

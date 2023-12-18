@@ -12,6 +12,7 @@ export const QUERIES_KEY = {
       'categories',
       categoryId,
     ],
+    today: ['items', 'today'],
   },
   categories: {
     root: ['categories'],
