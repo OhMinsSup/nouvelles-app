@@ -4228,6 +4228,16 @@ async function bootstrap() {
     }
 
     await Promise.all(DEFAULT_ITEMS.map((item) => Create(item)));
+
+    const date = new Date();
+    // start of day
+    date.setHours(0, 0, 0, 0);
+
+    await db.crawlerDateCollected.create({
+      data: {
+        collectingDate: date,
+      },
+    });
   } catch (error) {
     console.error(error);
     process.exit(1);

@@ -85,7 +85,7 @@ export const load = (_options: Partial<Options>) => {
     saveName: _options.saveName || defaultOptions.saveName,
     envType,
     loadPath: _options.loadPath || defaultOptions.loadPath,
-    loadName: makeEnvFileName(envType),
+    loadName: _options.loadName || makeEnvFileName(envType),
     savePath: _options.savePath || defaultOptions.savePath,
   };
 

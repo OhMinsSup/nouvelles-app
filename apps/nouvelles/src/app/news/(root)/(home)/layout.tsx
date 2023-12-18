@@ -2,9 +2,12 @@ import Link from 'next/link';
 import { Icons } from '~/components/icons';
 import { Button } from '~/components/ui/button';
 import { PAGE_ENDPOINTS } from '~/constants/constants';
-import Card from '~/components/shared/card';
 
-export default function Page() {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+export default function Layout({ children }: LayoutProps) {
   return (
     <div className="mx-auto md:max-w-[600px] md:border-l md:border-r w-full">
       <div className="hidden md:block md:border-b">
@@ -20,7 +23,7 @@ export default function Page() {
           </Button>
         </div>
       </div>
-      <Card />
+      {children}
     </div>
   );
 }

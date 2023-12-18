@@ -1,7 +1,10 @@
 'use client';
 import Link from 'next/link';
-import React from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
+import React, { useMemo } from 'react';
+import dayjs from 'dayjs';
+import { getDateFormatted } from '@nouvelles/libs';
+import { usePathname, useSearchParams } from 'next/navigation';
+import Avatars from '~/components/shared/avatars';
 import {
   Tooltip,
   TooltipContent,
@@ -9,26 +12,95 @@ import {
   TooltipTrigger,
 } from '~/components/ui/tooltip';
 import { cn } from '~/utils/utils';
-import { TipTapEditor } from '../editor/tiptap-editor';
+import type { ItemSchema } from '~/server/items/items.model';
+import { TipTapEditor } from '~/components/editor/tiptap-editor';
+import { buttonVariants } from '~/components/ui/button';
+import { AspectRatio } from '~/components/ui/aspect-ratio';
 
-export default function Card() {
+interface CardProps {
+  item: ItemSchema;
+}
+
+export default function Card({ item }: CardProps) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const date = useMemo(() => {
+    if (!item.pulbishedAt) return null;
+    return {
+      formatted: getDateFormatted(item.pulbishedAt),
+      relative: dayjs(item.pulbishedAt).format('YYYY-MM-DD HH:mm:ss'),
+    };
+  }, [item]);
+
+  const url = useMemo(() => {
+    const _link = item.realLink ?? item.link ?? null;
+    if (!_link) return null;
+    return new URL(_link);
+  }, [item]);
+
+  const link = useMemo(() => {
+    if (!url) {
+      return {
+        label: 'No link',
+        href: '#',
+      };
+    }
+    return {
+      label: url.hostname,
+      href: url.href,
+    };
+  }, [url]);
+
+  const categoryUrl = useMemo(() => {
+    const _searchParams = new URLSearchParams(searchParams);
+    if (_searchParams.has('category')) {
+      _searchParams.delete('category');
+    } else if (item.Category) _searchParams.set('category', item.Category.name);
+    return `${pathname}?${_searchParams.toString()}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, pathname]);
+
+  const tagUrl = useMemo(() => {
+    const _searchParams = new URLSearchParams(searchParams);
+    if (_searchParams.has('tag')) {
+      _searchParams.delete('tag');
+    } else {
+      const firstTag = item.ItemTag.at(0);
+      if (firstTag?.tag) _searchParams.set('tag', firstTag.tag.name);
+    }
+    return `${pathname}?${_searchParams.toString()}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, pathname]);
+
   return (
     <div className=" pr-[15px] pl-[10px] border-b cursor-pointer overflow-hidden">
       <div className="my-2" />
       <div className="mt-[1px] gap-[10px] flex flex-row">
         <div className="pl-2">
-          <Avatar>
-            <AvatarImage />
-            <AvatarFallback>N</AvatarFallback>
-          </Avatar>
+          <Avatars
+            alt={`${item?.Newspaper?.name} profile picture`}
+            fallback="N"
+            src={undefined}
+          />
         </div>
         <div className="flex-1">
           <div className="z-[1] gap-1 flex-1 flex-row flex items-center pb-[2px]">
             <div className="max-w-[80%]">
-              123123 &nbsp;
-              <span className="truncate max-w-full text-sm font-normal text-muted-foreground">
-                asddas
-              </span>
+              <a
+                aria-label={link.label}
+                className="p-0 text-md font-semibold underline-offset-4 hover:underline"
+                href={link.href}
+                rel="noopener"
+                target="_blank"
+              >
+                {item?.Newspaper?.name} &nbsp;
+                {url?.hostname ? (
+                  <span className="truncate max-w-full text-sm font-normal text-muted-foreground">
+                    {url?.hostname}
+                  </span>
+                ) : null}
+              </a>
             </div>
             <div
               className="text-sm font-normal text-muted-foreground"
@@ -40,34 +112,96 @@ export default function Card() {
               <Tooltip>
                 <TooltipTrigger>
                   <Link
-                    className="truncate max-w-full text-sm font-normal text-muted-foreground"
-                    href={'/'}
-                    aria-label="Dec 14, 2023 at 오전 9:26"
+                    aria-label={date?.relative}
+                    className="truncate max-w-full text-sm font-normal text-muted-foreground underline-offset-4 hover:underline"
+                    href={link.href}
                   >
-                    3dy
+                    {date?.formatted}
                   </Link>
                 </TooltipTrigger>
-                <TooltipContent>Dec 14, 2023 at 오전 9:26</TooltipContent>
+                <TooltipContent>{date?.relative}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
-          <div>
-            <TipTapEditor
-              className={cn(
-                'prose prose-brand prose-headings:font-display font-default focus:outline-none',
-              )}
-              customClassName="p-0"
-              debouncedUpdatesEnabled={false}
-              editable={false}
-              name={`thraed-text`}
-              noBorder
-              value={'123123123'}
-            />
+          <div className="flex flex-col gap-4 md:gap-5 w-full">
+            <div className="w-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 justify-between">
+              <div className="flex flex-col gap-1 ">
+                <div>
+                  <a
+                    aria-label={link.label}
+                    href={link.href}
+                    rel="noopener"
+                    target="_blank"
+                  >
+                    <h1 className="font-heading text-base sm:text-xl font-semibold sm:font-bold  text-slate-700 dark:text-slate-200 hn-break-words cursor-pointer">
+                      {item.title}
+                    </h1>
+                  </a>
+                </div>
+                <div className="hidden md:block">
+                  <a
+                    aria-label={link.label}
+                    href={link.href}
+                    rel="noopener"
+                    target="_blank"
+                  >
+                    <TipTapEditor
+                      className={cn(
+                        'text-base hidden font-normal text-slate-500 dark:text-slate-400 hn-break-words cursor-pointer md:line-clamp-2',
+                      )}
+                      customClassName="p-0"
+                      debouncedUpdatesEnabled={false}
+                      editable={false}
+                      name="thraed-text"
+                      noBorder
+                      value={item.description ? item.description : ''}
+                    />
+                  </a>
+                </div>
+              </div>
+              <div className="w-full rounded-xl md:rounded-lg bg-slate-100 dark:bg-slate-800 relative cursor-pointer md:basis-[180px] md:h-[108px] md:shrink-0">
+                <div className="md:hidden">
+                  <AspectRatio ratio={16 / 9}>
+                    <a
+                      aria-label={link.label}
+                      className="block w-full h-full overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:dark:ring-offset-slate-800"
+                      href={link.href}
+                      rel="noopener"
+                      target="_blank"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        alt={item.title ?? undefined}
+                        className="object-cover w-full h-full rounded-xl md:rounded-lg"
+                        loading="lazy"
+                        src={item.image ?? undefined}
+                      />
+                    </a>
+                  </AspectRatio>
+                </div>
+                <div className="hidden md:block w-full h-full">
+                  <a
+                    aria-label={link.label}
+                    className="block w-full h-full overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:dark:ring-offset-slate-800"
+                    href={link.href}
+                    rel="noopener"
+                    target="_blank"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      alt={item.title ?? undefined}
+                      className="object-cover w-full h-full rounded-xl md:rounded-lg"
+                      loading="lazy"
+                      src={item.image ?? undefined}
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
-
           <div className="flex items-center justify-end space-x-4 py-4">
             <div className="flex items-center space-x-1">
-              {/* {item.Category ? (
+              {item.Category ? (
                 <Link
                   className={buttonVariants({
                     variant: 'secondary',
@@ -94,7 +228,7 @@ export default function Card() {
                 >
                   {data.tag.name}
                 </Link>
-              ))} */}
+              ))}
             </div>
           </div>
         </div>

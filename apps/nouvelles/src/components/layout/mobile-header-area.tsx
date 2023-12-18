@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icons } from '~/components/icons';
-import { Button } from '~/components/ui/button';
+import { Button, buttonVariants } from '~/components/ui/button';
 import {
   Sheet,
   SheetContent,
@@ -9,7 +9,9 @@ import {
   SheetTrigger,
 } from '~/components/ui/sheet';
 import Menu from '~/components/layout/menu';
-import NavigationArea from './navigation-area';
+import { cn } from '~/utils/utils';
+import { SITE_CONFIG } from '~/constants/constants';
+import NavigationArea from '~/components/layout/navigation-area';
 
 export default function MobileHeaderArea() {
   return (
@@ -29,10 +31,31 @@ export default function MobileHeaderArea() {
             </SheetTrigger>
             <SheetContent className="w-[250px]" side="left">
               <SheetHeader className="px-2 py-3">
-                <SheetTitle>메뉴</SheetTitle>
+                <SheetTitle className="text-left">메뉴</SheetTitle>
               </SheetHeader>
               <div className="flex flex-col space-y-4">
                 <NavigationArea type="desktop" />
+              </div>
+              <div
+                className="absolute bottom-6"
+                style={{
+                  width: 'calc(100% - 48px)',
+                }}
+              >
+                <a
+                  className={cn(
+                    buttonVariants({
+                      variant: 'ghost',
+                      className: 'rounded-md space-x-2 w-full justify-start',
+                    }),
+                  )}
+                  href={SITE_CONFIG.github}
+                  rel="noopener"
+                  target="_blank"
+                >
+                  <Icons.github />
+                  <span>GitHub</span>
+                </a>
               </div>
             </SheetContent>
           </Sheet>

@@ -3,5 +3,7 @@
   "compilerOptions": {
     "lib": ["esnext", "dom"],
     "target": "ES2018"
-  }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "tsup.config.ts"],
+  "exclude": ["node_modules"]
 }

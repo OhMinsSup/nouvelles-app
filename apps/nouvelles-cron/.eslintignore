@@ -8,6 +8,5 @@ node_modules
 .DS_Store
 
 #config
-tsup.config.ts
 .eslintrc.cjs
 

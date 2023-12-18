@@ -3,7 +3,20 @@ import * as z from 'zod';
 import { itemService } from '~/server/items/items.server';
 
 const searchParamsSchema = z.object({
-  cursor: z.string().optional(),
+  cursor: z
+    .string()
+    .optional()
+    .transform((val) => {
+      if (val === 'undefined') {
+        return undefined;
+      }
+
+      if (typeof val === 'string') {
+        return parseInt(val, 10);
+      }
+
+      return val as unknown as number;
+    }),
   limit: z
     .string()
     .optional()

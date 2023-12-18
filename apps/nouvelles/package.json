@@ -31,6 +31,7 @@
     "@nouvelles/libs": "workspace:*",
     "@nouvelles/react": "workspace:*",
     "@prisma/client": "^5.7.0",
+    "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",

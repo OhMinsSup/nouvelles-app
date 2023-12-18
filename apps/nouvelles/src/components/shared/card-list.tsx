@@ -5,14 +5,14 @@ import last from 'lodash-es/last';
 import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
 import { useBeforeUnload, useIsHydrating, isBrowser } from '@nouvelles/react';
 import { isEmpty } from '@nouvelles/libs';
-import Item from '~/components/shared/item';
+import Card from '~/components/shared/card';
 import { QUERIES_KEY } from '~/constants/constants';
 import { getItemsApi } from '~/server/items/items.api';
 import { KeyProvider } from '~/libs/providers/key';
 
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 
-interface ItemListProps {
+interface CardListProps {
   type: 'root' | 'search' | 'today';
   category?: string;
   tag?: string;
@@ -22,16 +22,16 @@ interface ItemListProps {
 
 interface Cache {
   top: number;
-  pages: string[];
+  pages: number[];
 }
 
-export default function ItemList({
+export default function CardList({
   userId,
   type = 'root',
   q,
   tag,
   category,
-}: ItemListProps) {
+}: CardListProps) {
   const $virtuoso = useRef<VirtuosoHandle>(null);
   const $cache = useRef<Cache | null>(null);
 
@@ -66,7 +66,7 @@ export default function ItemList({
         cursor: pageParam ? pageParam : undefined,
       });
     },
-    initialPageParam: null as string | null,
+    initialPageParam: null as number | null,
     getNextPageParam: (lastPage) => {
       return lastPage?.hasNextPage && lastPage?.endCursor
         ? lastPage?.endCursor
@@ -156,13 +156,12 @@ export default function ItemList({
         initialItemCount={list.length - 1}
         // eslint-disable-next-line react/no-unstable-nested-components
         itemContent={(_, item) => {
-          return <Item item={item} />;
+          return <Card item={item} />;
         }}
         overscan={10}
         ref={$virtuoso}
         style={{ height: '100%' }}
         totalCount={lastItem?.totalCount ?? 0}
-        useWindowScroll
       />
     </KeyProvider>
   );

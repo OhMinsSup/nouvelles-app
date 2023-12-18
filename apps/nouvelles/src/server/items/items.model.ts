@@ -1,15 +1,14 @@
-import type { Category, Item, Tag } from '@nouvelles/database';
+import type { Category, Item, Newspaper, Tag } from '@nouvelles/database';
 
 interface PaginationSchema {
   totalCount: number;
-  endCursor: string | null;
+  endCursor: number | null;
   hasNextPage: boolean;
 }
 
 export interface ItemSchema {
   id: Item['id'];
   neutralId: Item['neusralId'];
-  reporter: Item['reporter'];
   title: Item['title'];
   link: Item['link'];
   realLink: Item['realLink'];
@@ -20,6 +19,7 @@ export interface ItemSchema {
   ItemTag: {
     tag: Pick<Tag, 'id' | 'name'>;
   }[];
+  Newspaper: Pick<Newspaper, 'id' | 'name'>;
 }
 
 export type ItemListSchema = PaginationSchema & {

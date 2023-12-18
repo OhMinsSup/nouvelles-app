@@ -1,7 +1,7 @@
 export interface BaseItemQuery {
   limit?: number;
   pageNo?: number;
-  cursor?: string;
+  cursor?: number;
 }
 
 export type ItemQuery = BaseItemQuery & {

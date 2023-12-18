@@ -13,6 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '~/components/ui/tooltip';
+import { SITE_CONFIG } from '~/constants/constants';
 
 interface NavigationAreaProps {
   type?: 'desktop' | 'tablet' | 'mobile' | 'all';
@@ -94,7 +95,7 @@ NavigationArea.GithubLink = function Item({ type }: GithubLinkProps) {
           className: 'rounded-md space-x-2 w-full justify-start',
         }),
       )}
-      href="https://github.com/OhMinsSup/nouvelles-app"
+      href={SITE_CONFIG.github}
       rel="noopener"
       target="_blank"
     >

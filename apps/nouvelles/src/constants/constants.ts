@@ -49,6 +49,7 @@ export const SITE_CONFIG = {
   apple180x180: undefined,
   apple256x256: undefined,
   manifest: '/manifest.json',
+  github: 'https://github.com/OhMinsSup/nouvelles-app',
 };
 
 export const STATUS_CODE = {

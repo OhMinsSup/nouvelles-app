@@ -1,4 +1,3 @@
-/* eslint-disable no-var */
 import { PrismaClient } from '@prisma/client';
 
 declare global {
@@ -18,5 +17,3 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export const db: PrismaClient = prisma;
-
-export * from '@prisma/client';
