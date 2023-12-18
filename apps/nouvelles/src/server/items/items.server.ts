@@ -18,6 +18,10 @@ export class ItemService {
         return this._getItemsBySearch(query, currentUserId);
       case 'today':
         return this._getItemsByToDay(query);
+      case 'tags':
+        return this._getItemsByTag(query);
+      case 'categories':
+        return this._getItemsByCategory(query);
       default:
         return this._getItemsByCursor(query, currentUserId);
     }
@@ -109,6 +113,9 @@ export class ItemService {
       const hasNextPage =
         endItem && endCursor
           ? (await db.item.count({
+              orderBy: {
+                id: 'desc',
+              },
               where: {
                 id: {
                   lt: endCursor,
@@ -302,6 +309,149 @@ export class ItemService {
         list: list as unknown as ItemSchema[],
         endCursor: null,
         hasNextPage: false,
+      };
+    } catch (error) {
+      return this.getDefaultItems<ItemSchema>();
+    }
+  }
+
+  private async _getItemsByTag({ tag, limit, cursor }: ItemQuery, _?: string) {
+    try {
+      const tagItem = await db.tag.findFirst({
+        where: {
+          name: tag,
+        },
+      });
+
+      if (!tagItem) {
+        return this.getDefaultItems<ItemSchema>();
+      }
+
+      const [totalCount, list] = await Promise.all([
+        db.item.count({
+          where: {
+            ItemTag: {
+              some: {
+                tagId: tagItem.id,
+              },
+            },
+          },
+        }),
+        db.item.findMany({
+          orderBy: {
+            id: 'desc',
+          },
+          where: {
+            ItemTag: {
+              some: {
+                tagId: tagItem.id,
+              },
+            },
+            id: cursor
+              ? {
+                  lt: cursor,
+                }
+              : undefined,
+          },
+          select: selectByItem,
+          take: limit,
+        }),
+      ]);
+
+      const endItem = list.at(-1);
+
+      const endCursor = endItem?.id ?? null;
+      const hasNextPage =
+        endItem && endCursor
+          ? (await db.item.count({
+              orderBy: {
+                id: 'desc',
+              },
+              where: {
+                id: {
+                  lt: endCursor,
+                },
+                ItemTag: {
+                  some: {
+                    tagId: tagItem.id,
+                  },
+                },
+              },
+            })) > 0
+          : false;
+
+      return {
+        totalCount,
+        list: list as unknown as ItemSchema[],
+        endCursor,
+        hasNextPage,
+      };
+    } catch (error) {
+      return this.getDefaultItems<ItemSchema>();
+    }
+  }
+
+  private async _getItemsByCategory(
+    { category, limit, cursor }: ItemQuery,
+    _?: string,
+  ) {
+    try {
+      const categoryItem = await db.category.findFirst({
+        where: {
+          name: category,
+        },
+      });
+
+      if (!categoryItem) {
+        return this.getDefaultItems<ItemSchema>();
+      }
+
+      const [totalCount, list] = await Promise.all([
+        db.item.count({
+          where: {
+            categoryId: categoryItem.id,
+          },
+        }),
+        db.item.findMany({
+          orderBy: {
+            id: 'desc',
+          },
+          where: {
+            categoryId: categoryItem.id,
+            id: cursor
+              ? {
+                  lt: cursor,
+                }
+              : undefined,
+          },
+          take: limit,
+          select: selectByItem,
+        }),
+      ]);
+
+      const endItem = list.at(-1);
+
+      const endCursor = endItem?.id ?? null;
+      const hasNextPage =
+        endItem && endCursor
+          ? (await db.item.count({
+              orderBy: {
+                id: 'desc',
+              },
+              where: {
+                id: {
+                  lt: endCursor,
+                },
+                categoryId: categoryItem.id,
+              },
+            })) > 0
+          : false;
+
+      return {
+        totalCount,
+        list: list as unknown as ItemSchema[],
+        endCursor,
+        hasNextPage,
       };
     } catch (error) {
       return this.getDefaultItems<ItemSchema>();

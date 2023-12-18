@@ -34,7 +34,7 @@ const searchParamsSchema = z.object({
     }),
   category: z.string().optional(),
   tag: z.string().optional(),
-  type: z.enum(['root', 'search', 'today']).optional(),
+  type: z.enum(['root', 'search', 'today', 'tags', 'categories']).optional(),
   q: z.string().optional(),
 });
 

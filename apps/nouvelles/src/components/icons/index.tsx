@@ -76,6 +76,7 @@ import {
   Underline,
   WrapText,
   CalendarCheck2,
+  Rss,
 } from 'lucide-react';
 import { cva } from 'class-variance-authority';
 
@@ -286,6 +287,7 @@ export const Icons = {
   today: CalendarCheck2,
   github: Github,
   setting: Settings2,
+  rss: Rss,
   kakao,
 };
 

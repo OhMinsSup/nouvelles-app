@@ -6,6 +6,12 @@ export const QUERIES_KEY = {
       if (q) searchParams.append('q', q);
       return ['items', 'search', searchParams.toString()];
     },
+    tags: (tagId: string | number) => ['items', 'tags', tagId],
+    categories: (categoryId: string | number) => [
+      'items',
+      'categories',
+      categoryId,
+    ],
   },
   categories: {
     root: ['categories'],
@@ -35,7 +41,12 @@ export const PAGE_ENDPOINTS = {
     ROOT: '/news',
     TODAY: '/news/today',
     SEARCH: '/news/search',
-    SETTING: '/news/setting',
+    TAGS: {
+      ID: (tagId: string | number) => `/news/tags/${tagId}`,
+    },
+    CATEGORIES: {
+      ID: (categoryId: string | number) => `/news/categories/${categoryId}`,
+    },
   },
 } as const;
 

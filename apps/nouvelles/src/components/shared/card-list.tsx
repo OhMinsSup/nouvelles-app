@@ -13,11 +13,12 @@ import { KeyProvider } from '~/libs/providers/key';
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 
 interface CardListProps {
-  type: 'root' | 'search' | 'today';
+  type: 'root' | 'search' | 'today' | 'tags' | 'categories';
   category?: string;
   tag?: string;
   q?: string;
   userId?: string;
+  header?: React.ReactNode;
 }
 
 interface Cache {
@@ -31,6 +32,7 @@ export default function CardList({
   q,
   tag,
   category,
+  header,
 }: CardListProps) {
   const $virtuoso = useRef<VirtuosoHandle>(null);
   const $cache = useRef<Cache | null>(null);
@@ -50,16 +52,22 @@ export default function CardList({
   const hydrating = useIsHydrating('[data-hydrating-signal]');
 
   const queryKey = useMemo(() => {
+    if (type === 'categories' && category) {
+      return QUERIES_KEY.items.categories(category);
+    }
+    if (type === 'tags' && tag) {
+      return QUERIES_KEY.items.tags(tag);
+    }
     return QUERIES_KEY.items.root;
-  }, []);
+  }, [type, category, tag]);
 
   const { data, fetchNextPage } = useInfiniteQuery({
     queryKey,
     queryFn: ({ pageParam }) => {
       return getItemsApi({
         type,
-        ...(category ? { category } : {}),
-        ...(tag ? { tag } : {}),
+        ...(category ? { category: decodeURIComponent(category) } : {}),
+        ...(tag ? { tag: decodeURIComponent(tag) } : {}),
         ...(type === 'search' ? { q } : {}),
         ...(userId ? { userId } : {}),
         limit: 10,
@@ -141,6 +149,10 @@ export default function CardList({
     <KeyProvider queryKey={queryKey}>
       <Virtuoso
         components={{
+          ...(header && {
+            // eslint-disable-next-line react/no-unstable-nested-components
+            Header: () => <>{header}</>,
+          }),
           // eslint-disable-next-line react/no-unstable-nested-components
           Footer: () => <div className="h-20" />,
         }}

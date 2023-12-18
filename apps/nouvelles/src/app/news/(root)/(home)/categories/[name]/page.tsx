@@ -1,0 +1,72 @@
+import React from 'react';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { notFound } from 'next/navigation';
+import getQueryClient from '~/services/query/get-query-client';
+import CategoryWithTagHeader from '~/components/shared/category-with-tag-header';
+import CardList from '~/components/shared/card-list';
+import { itemService } from '~/server/items/items.server';
+import { QUERIES_KEY } from '~/constants/constants';
+import { categoriesService } from '~/server/categories/categories.server';
+
+interface PageProps {
+  params: { name: string };
+}
+
+export default async function Pages({ params }: PageProps) {
+  const name = decodeURIComponent(params.name);
+
+  const categoryInfo = await categoriesService.findByName(
+    decodeURIComponent(params.name),
+  );
+
+  if (!categoryInfo) {
+    notFound();
+  }
+
+  const queryClient = getQueryClient();
+
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: QUERIES_KEY.items.categories(name),
+    initialPageParam: null,
+    queryFn: async () => {
+      return itemService.getItems({
+        limit: 10,
+        type: 'categories',
+        category: name,
+      });
+    },
+  });
+
+  const data = await queryClient.getQueryData<any>(
+    QUERIES_KEY.items.categories(name),
+  );
+
+  const totalCount =
+    data?.pages
+      ?.map((page: any) => page?.totalCount)
+      .flat()
+      ?.at(0) ?? 0;
+
+  const isEmptyData = totalCount === 0;
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      {isEmptyData ? (
+        <>Empty</>
+      ) : (
+        <CardList
+          header={
+            <CategoryWithTagHeader
+              count={categoryInfo._count?.Item}
+              id={categoryInfo.id}
+              name={name}
+              type="categories"
+            />
+          }
+          tag={name}
+          type="categories"
+        />
+      )}
+    </HydrationBoundary>
+  );
+}

@@ -3,7 +3,6 @@ import Link from 'next/link';
 import React, { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { getDateFormatted } from '@nouvelles/libs';
-import { usePathname, useSearchParams } from 'next/navigation';
 import Avatars from '~/components/shared/avatars';
 import {
   Tooltip,
@@ -16,15 +15,13 @@ import type { ItemSchema } from '~/server/items/items.model';
 import { TipTapEditor } from '~/components/editor/tiptap-editor';
 import { buttonVariants } from '~/components/ui/button';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
+import { PAGE_ENDPOINTS } from '~/constants/constants';
 
 interface CardProps {
   item: ItemSchema;
 }
 
 export default function Card({ item }: CardProps) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
   const date = useMemo(() => {
     if (!item.pulbishedAt) return null;
     return {
@@ -51,27 +48,6 @@ export default function Card({ item }: CardProps) {
       href: url.href,
     };
   }, [url]);
-
-  const categoryUrl = useMemo(() => {
-    const _searchParams = new URLSearchParams(searchParams);
-    if (_searchParams.has('category')) {
-      _searchParams.delete('category');
-    } else if (item.Category) _searchParams.set('category', item.Category.name);
-    return `${pathname}?${_searchParams.toString()}`;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, pathname]);
-
-  const tagUrl = useMemo(() => {
-    const _searchParams = new URLSearchParams(searchParams);
-    if (_searchParams.has('tag')) {
-      _searchParams.delete('tag');
-    } else {
-      const firstTag = item.ItemTag.at(0);
-      if (firstTag?.tag) _searchParams.set('tag', firstTag.tag.name);
-    }
-    return `${pathname}?${_searchParams.toString()}`;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, pathname]);
 
   return (
     <div className=" pr-[15px] pl-[10px] border-b cursor-pointer overflow-hidden">
@@ -159,9 +135,28 @@ export default function Card({ item }: CardProps) {
                   </a>
                 </div>
               </div>
-              <div className="w-full rounded-xl md:rounded-lg bg-slate-100 dark:bg-slate-800 relative cursor-pointer md:basis-[180px] md:h-[108px] md:shrink-0">
-                <div className="md:hidden">
-                  <AspectRatio ratio={16 / 9}>
+              {item.image ? (
+                <div className="w-full rounded-xl md:rounded-lg bg-slate-100 dark:bg-slate-800 relative cursor-pointer md:basis-[180px] md:h-[108px] md:shrink-0">
+                  <div className="md:hidden">
+                    <AspectRatio ratio={16 / 9}>
+                      <a
+                        aria-label={link.label}
+                        className="block w-full h-full overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:dark:ring-offset-slate-800"
+                        href={link.href}
+                        rel="noopener"
+                        target="_blank"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          alt={item.title ?? undefined}
+                          className="object-cover w-full h-full rounded-xl md:rounded-lg"
+                          loading="lazy"
+                          src={item.image ?? undefined}
+                        />
+                      </a>
+                    </AspectRatio>
+                  </div>
+                  <div className="hidden md:block w-full h-full">
                     <a
                       aria-label={link.label}
                       className="block w-full h-full overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:dark:ring-offset-slate-800"
@@ -177,26 +172,9 @@ export default function Card({ item }: CardProps) {
                         src={item.image ?? undefined}
                       />
                     </a>
-                  </AspectRatio>
+                  </div>
                 </div>
-                <div className="hidden md:block w-full h-full">
-                  <a
-                    aria-label={link.label}
-                    className="block w-full h-full overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:dark:ring-offset-slate-800"
-                    href={link.href}
-                    rel="noopener"
-                    target="_blank"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      alt={item.title ?? undefined}
-                      className="object-cover w-full h-full rounded-xl md:rounded-lg"
-                      loading="lazy"
-                      src={item.image ?? undefined}
-                    />
-                  </a>
-                </div>
-              </div>
+              ) : null}
             </div>
           </div>
           <div className="flex items-center justify-end space-x-4 py-4">
@@ -208,9 +186,7 @@ export default function Card({ item }: CardProps) {
                     size: 'xxs',
                     className: 'text-xs',
                   })}
-                  href={categoryUrl}
-                  prefetch={false}
-                  replace
+                  href={PAGE_ENDPOINTS.NEWS.CATEGORIES.ID(item.Category.name)}
                 >
                   {item.Category.name}
                 </Link>
@@ -221,10 +197,8 @@ export default function Card({ item }: CardProps) {
                     variant: 'secondary',
                     size: 'xxs',
                   })}
-                  href={tagUrl}
+                  href={PAGE_ENDPOINTS.NEWS.TAGS.ID(data.tag.name)}
                   key={data.tag.id}
-                  prefetch={false}
-                  replace
                 >
                   {data.tag.name}
                 </Link>

@@ -10,14 +10,14 @@ enum Action {
 interface SetQueryKeyAction {
   type: Action.SET_QUERY_KEY;
   payload: {
-    queryKey: string[];
+    queryKey: any[];
   };
 }
 
 type KeyAction = SetQueryKeyAction;
 
 interface KeyState {
-  queryKey: string[];
+  queryKey: any[];
 }
 
 interface keyContext extends KeyState {
@@ -37,7 +37,7 @@ const [Provider, useKeyContext] = createContext<keyContext>({
 
 interface Props {
   children: React.ReactNode;
-  queryKey?: string[];
+  queryKey?: any[];
 }
 
 // eslint-disable-next-line @typescript-eslint/default-param-last
