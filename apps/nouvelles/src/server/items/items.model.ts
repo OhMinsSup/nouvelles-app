@@ -15,11 +15,11 @@ export interface ItemSchema {
   description: Item['description'];
   pulbishedAt: Item['pulbishedAt'];
   image: Item['image'];
-  Category: Pick<Category, 'id' | 'name'>;
+  Category: Pick<Category, 'id' | 'name' | 'slug'>;
   ItemTag: {
-    tag: Pick<Tag, 'id' | 'name'>;
+    tag: Pick<Tag, 'id' | 'name' | 'slug'>;
   }[];
-  Newspaper: Pick<Newspaper, 'id' | 'name'>;
+  Newspaper: Pick<Newspaper, 'id' | 'name' | 'slug'>;
 }
 
 export type ItemListSchema = PaginationSchema & {

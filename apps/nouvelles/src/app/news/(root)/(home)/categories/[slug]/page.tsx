@@ -2,40 +2,41 @@ import React from 'react';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { notFound } from 'next/navigation';
 import getQueryClient from '~/services/query/get-query-client';
+import CategoryWithTagHeader from '~/components/shared/category-with-tag-header';
 import CardList from '~/components/shared/card-list';
 import { itemService } from '~/server/items/items.server';
 import { QUERIES_KEY } from '~/constants/constants';
-import CategoryWithTagHeader from '~/components/shared/category-with-tag-header';
-import { tagsService } from '~/server/tags/tags.server';
+import { categoriesService } from '~/server/categories/categories.server';
 
 interface PageProps {
-  params: { name: string };
+  params: { slug: string };
 }
 
 export default async function Pages({ params }: PageProps) {
-  const name = decodeURIComponent(params.name);
+  const name = decodeURIComponent(params.slug);
 
-  const tagInfo = await tagsService.findByName(name);
-  if (!tagInfo) {
+  const categoryInfo = await categoriesService.findBySlug(name);
+
+  if (!categoryInfo) {
     notFound();
   }
 
   const queryClient = getQueryClient();
 
   await queryClient.prefetchInfiniteQuery({
-    queryKey: QUERIES_KEY.items.root,
+    queryKey: QUERIES_KEY.items.categories(name),
     initialPageParam: null,
     queryFn: async () => {
       return itemService.getItems({
         limit: 10,
-        type: 'tags',
-        tag: name,
+        type: 'categories',
+        category: name,
       });
     },
   });
 
   const data = await queryClient.getQueryData<any>(
-    QUERIES_KEY.items.tags(name),
+    QUERIES_KEY.items.categories(name),
   );
 
   const totalCount =
@@ -54,14 +55,15 @@ export default async function Pages({ params }: PageProps) {
         <CardList
           header={
             <CategoryWithTagHeader
-              count={data._count.ItemTag ?? 0}
-              id={data.id}
-              name={params.name}
-              type="tags"
+              count={categoryInfo._count?.Item}
+              id={categoryInfo.id}
+              name={categoryInfo.name}
+              slug={categoryInfo.slug}
+              type="categories"
             />
           }
           tag={name}
-          type="tags"
+          type="categories"
         />
       )}
     </HydrationBoundary>

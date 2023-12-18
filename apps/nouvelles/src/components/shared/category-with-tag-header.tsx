@@ -5,12 +5,14 @@ import { Button } from '~/components/ui/button';
 interface CategoryWithTagHeaderProps {
   type: 'tags' | 'categories';
   name: string;
+  slug: string;
   id: number;
   count: number;
 }
 
 export default function CategoryWithTagHeader({
   name,
+  slug,
   count,
 }: CategoryWithTagHeaderProps) {
   const text = decodeURIComponent(name);
@@ -35,7 +37,7 @@ export default function CategoryWithTagHeader({
           </div>
           <div className="flex-row gap-2 hidden sm:flex">
             <div className="flex flex-row gap-2 z-10 text-slate-500 dark:text-slate-400">
-              <span className="z-10">#{text.toLowerCase()}</span>
+              <span className="z-10">#{slug}</span>
               <span className="font-bold hidden sm:block">·</span>
             </div>
             <div className="flex flex-row gap-2 z-10 text-slate-500 dark:text-slate-400">
@@ -46,7 +48,7 @@ export default function CategoryWithTagHeader({
       </div>
       <div className="flex flex-row items-center w-full justify-between sm:hidden">
         <div className="flex flex-row gap-2 z-10 text-slate-500 dark:text-slate-400">
-          <span>#{text.toLowerCase()}</span>
+          <span>#{slug}</span>
           <span className="block font-bold">·</span>
           <span>{count}개의 뉴스</span>
         </div>

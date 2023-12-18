@@ -186,7 +186,7 @@ export default function Card({ item }: CardProps) {
                     size: 'xxs',
                     className: 'text-xs',
                   })}
-                  href={PAGE_ENDPOINTS.NEWS.CATEGORIES.ID(item.Category.name)}
+                  href={PAGE_ENDPOINTS.NEWS.CATEGORIES.ID(item.Category.slug)}
                 >
                   {item.Category.name}
                 </Link>
@@ -197,7 +197,7 @@ export default function Card({ item }: CardProps) {
                     variant: 'secondary',
                     size: 'xxs',
                   })}
-                  href={PAGE_ENDPOINTS.NEWS.TAGS.ID(data.tag.name)}
+                  href={PAGE_ENDPOINTS.NEWS.TAGS.ID(data.tag.slug)}
                   key={data.tag.id}
                 >
                   {data.tag.name}

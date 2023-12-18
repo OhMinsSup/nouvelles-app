@@ -319,7 +319,7 @@ export class ItemService {
     try {
       const tagItem = await db.tag.findFirst({
         where: {
-          name: tag,
+          slug: tag,
         },
       });
 
@@ -398,7 +398,7 @@ export class ItemService {
     try {
       const categoryItem = await db.category.findFirst({
         where: {
-          name: category,
+          slug: category,
         },
       });
 

@@ -7,10 +7,11 @@ export class TagsService {
     return db.tag.findMany();
   }
 
-  public findByName(name: string) {
+  public findBySlug(slug: string) {
+    console.log('slug', slug);
     return db.tag.findUnique({
       where: {
-        name,
+        slug,
       },
       select: selectByTag,
     });

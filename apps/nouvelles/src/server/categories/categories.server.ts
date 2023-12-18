@@ -7,10 +7,10 @@ export class CategoriesService {
     return db.category.findMany();
   }
 
-  public findByName(name: string) {
+  public findBySlug(slug: string) {
     return db.category.findUnique({
       where: {
-        name,
+        slug,
       },
       select: selectByCategory,
     });

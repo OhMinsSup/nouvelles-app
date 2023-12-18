@@ -14,12 +14,14 @@ export const selectByItem = Prisma.validator<Prisma.ItemSelect>()({
     select: {
       id: true,
       name: true,
+      slug: true,
     },
   },
   Category: {
     select: {
       id: true,
       name: true,
+      slug: true,
     },
   },
   ItemTag: {
@@ -28,6 +30,7 @@ export const selectByItem = Prisma.validator<Prisma.ItemSelect>()({
         select: {
           id: true,
           name: true,
+          slug: true,
         },
       },
     },
