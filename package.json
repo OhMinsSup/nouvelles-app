@@ -17,7 +17,9 @@
     "db:migrate:dev": "dotenv -- turbo run db:migrate:dev",
     "db:push": "dotenv -- turbo run db:push",
     "db:studio": "dotenv -- turbo run db:studio",
-    "dev": "dotenv -- turbo run dev --concurrency 13",
+    "dev": "dotenv -- turbo run dev --concurrency 255",
+    "env:build": "dotenv -- turbo run env:build",
+    "env:watch": "dotenv -- turbo run env:watch",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "watch": "turbo run watch --concurrency 50%"

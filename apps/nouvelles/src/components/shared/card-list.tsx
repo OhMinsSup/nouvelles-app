@@ -1,14 +1,21 @@
+/* eslint-disable react/no-unstable-nested-components */
 'use client';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useRef, useLayoutEffect, useCallback, useMemo } from 'react';
 import last from 'lodash-es/last';
 import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
-import { useBeforeUnload, useIsHydrating, isBrowser } from '@nouvelles/react';
+import {
+  useBeforeUnload,
+  useIsHydrating,
+  isBrowser,
+  useUnmount,
+} from '@nouvelles/react';
 import { isEmpty } from '@nouvelles/libs';
 import Card from '~/components/shared/card';
 import { QUERIES_KEY } from '~/constants/constants';
 import { getItemsApi } from '~/server/items/items.api';
 import { KeyProvider } from '~/libs/providers/key';
+import type { ItemListSchema } from '~/server/items/items.model';
 
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 
@@ -21,7 +28,7 @@ interface CardListProps {
   header?: React.ReactNode;
 }
 
-interface Cache {
+interface Restoration {
   top: number;
   pages: number[];
 }
@@ -34,19 +41,22 @@ export default function CardList({
   category,
   header,
 }: CardListProps) {
+  const queryClient = useQueryClient();
   const $virtuoso = useRef<VirtuosoHandle>(null);
-  const $cache = useRef<Cache | null>(null);
+  const $restoration = useRef<Restoration | null>(null);
+  const $observer = useRef<MutationObserver | null>(null);
+  const $isLockFetching = useRef(false);
 
   const key = useMemo(() => {
     return `@items::scroll::${type}`;
   }, [type]);
 
-  const getCache = useCallback(() => {
-    return $cache.current;
+  const getRestoration = useCallback(() => {
+    return $restoration.current;
   }, []);
 
-  const setCache = useCallback((data: Cache | null) => {
-    $cache.current = data;
+  const setRestoration = useCallback((data: Restoration | null) => {
+    $restoration.current = data;
   }, []);
 
   const hydrating = useIsHydrating('[data-hydrating-signal]');
@@ -61,19 +71,73 @@ export default function CardList({
     return QUERIES_KEY.items.root;
   }, [type, category, tag]);
 
+  const closeMutationObserver = () => {
+    if ($observer.current) {
+      $observer.current.disconnect();
+      $observer.current = null;
+    }
+  };
+
+  const fetcher = (cursor: number | null) => {
+    return getItemsApi({
+      type,
+      ...(category ? { category: decodeURIComponent(category) } : {}),
+      ...(tag ? { tag: decodeURIComponent(tag) } : {}),
+      ...(type === 'search' ? { q } : {}),
+      ...(userId ? { userId } : {}),
+      limit: 10,
+      cursor: cursor ? cursor : undefined,
+    });
+  };
+
+  const getRestorationCursorIndex = () => {
+    try {
+      const _data = getRestoration();
+      console.log('getRestorationCursorIndex', _data);
+      if (!_data || isEmpty(_data)) {
+        return null;
+      }
+      if (isEmpty(_data.pages)) {
+        return null;
+      }
+      const _pages = data?.pages ?? [];
+      if (isEmpty(_pages)) {
+        return null;
+      }
+      return {
+        cusors: _data.pages,
+        top: _data.top,
+      };
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
+  const setQueryHydrated = (prefetchData: ItemListSchema[]) => {
+    if (!prefetchData || isEmpty(prefetchData)) return;
+
+    try {
+      queryClient.setQueryData(queryKey, (queryData: any) => {
+        const _oldPages = (queryData.pages ?? []) as ItemListSchema[];
+        const _oldPageParams = (queryData.pageParams ?? []) as number[];
+        const _nextPageParams = prefetchData.map((page) => page?.endCursor);
+        return {
+          pages: [..._oldPages, ...prefetchData],
+          pageParams: [..._oldPageParams, ..._nextPageParams],
+        };
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setRestoration(null);
+    }
+  };
+
   const { data, fetchNextPage } = useInfiniteQuery({
     queryKey,
-    queryFn: ({ pageParam }) => {
-      return getItemsApi({
-        type,
-        ...(category ? { category: decodeURIComponent(category) } : {}),
-        ...(tag ? { tag: decodeURIComponent(tag) } : {}),
-        ...(type === 'search' ? { q } : {}),
-        ...(userId ? { userId } : {}),
-        limit: 10,
-        cursor: pageParam ? pageParam : undefined,
-      });
-    },
+    queryFn: ({ pageParam }) => fetcher(pageParam),
+    staleTime: 1000 * 60 * 60 * 24,
     initialPageParam: null as number | null,
     getNextPageParam: (lastPage) => {
       return lastPage?.hasNextPage && lastPage?.endCursor
@@ -82,7 +146,9 @@ export default function CardList({
     },
   });
 
-  const list = data?.pages.map((page) => page?.list).flat() ?? [];
+  const oldPages = data?.pages ?? [];
+
+  const list = oldPages.map((page) => page?.list).flat() ?? [];
 
   const loadMore = (index: number) => {
     if (index <= 0) return;
@@ -98,50 +164,98 @@ export default function CardList({
     const $api = $virtuoso.current;
     if (!$api) return;
     $api.getState((state) => {
-      sessionStorage.setItem(
-        key,
-        JSON.stringify({
-          top: state.scrollTop,
-          pages: data?.pages
-            .filter((page) => page?.endCursor)
-            ?.map((page) => page.endCursor)
-            ?.filter(Boolean),
-        }),
-      );
+      const positions = JSON.stringify({
+        top: state.scrollTop,
+        pages: data?.pages
+          .filter((page) => page?.endCursor)
+          ?.map((page) => page.endCursor)
+          ?.filter(Boolean),
+      });
+      sessionStorage.setItem(key, positions);
     });
   });
 
   useSSRLayoutEffect(() => {
     if (hydrating) {
-      const _data = JSON.parse(sessionStorage.getItem(key) || '{}') as Cache;
-      if (!isEmpty(_data)) setCache(_data);
+      const _data = JSON.parse(
+        sessionStorage.getItem(key) || '{}',
+      ) as Restoration;
+      if (!isEmpty(_data)) setRestoration(_data);
     }
     return () => {
       sessionStorage.removeItem(key);
     };
   }, [hydrating]);
 
-  const fetchScrollRestoration = () => {
-    const _data = getCache();
-    if (_data && !isEmpty(_data)) {
-      const _pages = data?.pages ?? [];
-      const currentCursor = _pages.at(_pages.length - 1)?.endCursor;
-      const _cursorIndex = _data.pages.findIndex(
-        (page) => page === currentCursor,
-      );
-      const _pagesAfterCursor = _data.pages.slice(_cursorIndex + 1);
-      _pagesAfterCursor.map(() => fetchNextPage());
-      setCache(null);
-      $virtuoso.current?.scrollTo({
-        top: _data.top,
-        behavior: 'smooth',
-      });
+  const fetchScrollRestoration = async () => {
+    const result = getRestorationCursorIndex();
+    if (
+      !result ||
+      (result && !result.top) ||
+      (result && isEmpty(result.cusors))
+    ) {
+      return;
     }
+
+    if ($isLockFetching.current) return;
+
+    $isLockFetching.current = true;
+
+    const prefetchData: Awaited<ItemListSchema[]> = await Promise.all(
+      result.cusors.map((cursor) => fetcher(cursor)),
+    );
+
+    setQueryHydrated(prefetchData);
+
+    closeMutationObserver();
+
+    const $element = document.querySelector(
+      'div[data-test-id="virtuoso-item-list"]',
+    );
+
+    if (!$element) return;
+
+    $observer.current = new MutationObserver((el) => {
+      if (!el || isEmpty(el)) {
+        closeMutationObserver();
+        return;
+      }
+
+      const target = last(el)?.target;
+      if (!target) {
+        closeMutationObserver();
+        return;
+      }
+
+      if (!$element?.contains(target)) {
+        return;
+      }
+
+      for (const _ of result.cusors) {
+        $virtuoso.current?.scrollTo({
+          top: result.top,
+          behavior: 'smooth',
+        });
+      }
+
+      closeMutationObserver();
+    });
+
+    $observer.current.observe($element, { childList: true });
+
+    $virtuoso.current?.scrollTo({
+      top: result.top,
+      behavior: 'smooth',
+    });
   };
 
   useSSRLayoutEffect(() => {
-    if (hydrating) fetchScrollRestoration();
+    if (hydrating) void fetchScrollRestoration();
   }, [hydrating]);
+
+  useUnmount(() => {
+    closeMutationObserver();
+  });
 
   const lastItem = last(data?.pages ?? []);
 
@@ -150,10 +264,8 @@ export default function CardList({
       <Virtuoso
         components={{
           ...(header && {
-            // eslint-disable-next-line react/no-unstable-nested-components
             Header: () => <>{header}</>,
           }),
-          // eslint-disable-next-line react/no-unstable-nested-components
           Footer: () => <div className="h-20" />,
         }}
         computeItemKey={(index, item) => {
@@ -166,7 +278,6 @@ export default function CardList({
         data-hydrating-signal
         endReached={loadMore}
         initialItemCount={list.length - 1}
-        // eslint-disable-next-line react/no-unstable-nested-components
         itemContent={(_, item) => {
           return <Card item={item} />;
         }}
