@@ -12,8 +12,9 @@
   "author": "",
   "type": "module",
   "scripts": {
-    "build": "turbo run build",
+    "build": "dotenv -- turbo run build",
     "clean": "turbo clean",
+    "db:migrate:deploy": "dotenv -- turbo run db:migrate:deploy",
     "db:migrate:dev": "dotenv -- turbo run db:migrate:dev",
     "db:push": "dotenv -- turbo run db:push",
     "db:studio": "dotenv -- turbo run db:studio",
