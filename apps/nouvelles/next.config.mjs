@@ -28,7 +28,7 @@ const nextConfig = {
   compiler: {
     removeConsole: isProduction
       ? {
-          exclude: ['error', 'debug'],
+          exclude: ['error', 'debug', 'info'],
         }
       : false,
   },
