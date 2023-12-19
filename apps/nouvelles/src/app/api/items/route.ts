@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import * as z from 'zod';
+import { env } from 'env.mjs';
 import { itemService } from '~/server/items/items.server';
+import cors from '~/server/utils/cors';
 
-const searchParamsSchema = z.object({
+const schema = z.object({
   cursor: z
     .string()
     .optional()
@@ -38,24 +40,57 @@ const searchParamsSchema = z.object({
   q: z.string().optional(),
 });
 
-export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url);
+const validateQuery = async (searchParams: URLSearchParams) => {
+  const input = {
+    cursor: searchParams.get('cursor') ?? undefined,
+    limit: searchParams.get('limit') ?? undefined,
+    type: searchParams.get('type') ?? undefined,
+    category: searchParams.get('category') ?? undefined,
+    tag: searchParams.get('tag') ?? undefined,
+    q: searchParams.get('q') ?? undefined,
+  };
 
-    const query = await searchParamsSchema.parseAsync({
-      cursor: searchParams.get('cursor') ?? undefined,
-      limit: searchParams.get('limit') ?? undefined,
-      type: searchParams.get('type') ?? undefined,
-      category: searchParams.get('category') ?? undefined,
-      tag: searchParams.get('tag') ?? undefined,
-      q: searchParams.get('q') ?? undefined,
-    });
+  return schema.parseAsync(input);
+};
+
+const originFn = (origin: string | undefined) => {
+  // 개발일 때는 * 로 허용 배포일 때는 특정 도메인만 허용
+  if (env.NODE_ENV === 'development') {
+    return '*';
+  }
+
+  if (!origin) {
+    return false;
+  }
+
+  // nouvelles-*.vercel.app
+  const allowedOriginsRegex = [
+    /^https?:\/\/nouvelles-.*\.vercel\.app$/,
+    /^https?:\/\/nouvelles\.vercel\.app$/,
+  ];
+
+  return allowedOriginsRegex.some((regex) => regex.test(origin));
+};
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+
+  const defaultValues = itemService.getDefaultItems();
+
+  try {
+    const query = await validateQuery(searchParams);
 
     const data = await itemService.getItems(query);
-    return NextResponse.json({
-      ...data,
-      error: null,
-    });
+    return cors(
+      request,
+      NextResponse.json({
+        ...data,
+        error: null,
+      }),
+      {
+        origin: originFn,
+      },
+    );
   } catch (error) {
     if (error instanceof z.ZodError) {
       const err = {
@@ -64,16 +99,37 @@ export async function GET(request: Request) {
         errors: error.issues,
       };
 
-      const defaultValues = itemService.getDefaultItems();
-      return NextResponse.json(
+      return cors(
+        request,
+        NextResponse.json(
+          {
+            ...defaultValues,
+            error: err,
+          },
+          { status: 400 },
+        ),
         {
-          ...defaultValues,
-          error: err,
+          origin: originFn,
         },
-        { status: 400 },
       );
     }
 
-    return new Response(null, { status: 500 });
+    return cors(
+      request,
+      NextResponse.json(
+        {
+          ...defaultValues,
+          error: {
+            code: 'unknown_error',
+            message: 'Unknown error',
+            errors: [],
+          },
+        },
+        { status: 500 },
+      ),
+      {
+        origin: originFn,
+      },
+    );
   }
 }
