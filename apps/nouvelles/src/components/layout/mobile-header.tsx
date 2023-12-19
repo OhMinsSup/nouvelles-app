@@ -53,6 +53,8 @@ HeaderMobile.Internal = function Item({ children }: HeaderMobileProps) {
     setHeight(bounding.height + 10);
   }, []);
 
+  console.log('render HeaderMobile', height);
+
   return (
     <header
       className="sticky top-0 z-40 block md:hidden"

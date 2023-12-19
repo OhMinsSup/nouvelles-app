@@ -136,119 +136,37 @@ export class ItemService {
     }
   }
 
-  private async _getItemsBySearch({ q, tag, category }: ItemQuery, _?: string) {
+  private async _getItemsBySearch({ q }: ItemQuery, _?: string) {
     try {
+      const searchWhere: Prisma.ItemWhereInput = {
+        title: {
+          search: q,
+        },
+        description: {
+          search: q,
+        },
+      };
+
       const [totalCount, list] = await Promise.all([
         db.item.count({
-          where: {
-            OR: [
-              {
-                title: {
-                  contains: q,
-                },
-              },
-              {
-                description: {
-                  contains: q,
-                },
-              },
-            ],
-            ...(category && {
-              Category: {
-                name: category,
-              },
-            }),
-            ...(tag && {
-              ItemTag: {
-                some: {
-                  tag: {
-                    name: tag,
-                  },
-                },
-              },
-            }),
-          },
+          where: searchWhere,
         }),
         db.item.findMany({
           orderBy: {
             id: 'desc',
           },
-          where: {
-            OR: [
-              {
-                title: {
-                  contains: q,
-                },
-              },
-              {
-                description: {
-                  contains: q,
-                },
-              },
-            ],
-            ...(category && {
-              Category: {
-                name: category,
-              },
-            }),
-            ...(tag && {
-              ItemTag: {
-                some: {
-                  tag: {
-                    name: tag,
-                  },
-                },
-              },
-            }),
-          },
+          where: searchWhere,
           select: selectByItem,
         }),
       ]);
 
-      const endItem = list.at(-1);
-      const endCursor = endItem?.id ?? null;
-      const hasNextPage =
-        endItem && endCursor
-          ? (await db.item.count({
-              where: {
-                id: {
-                  lt: endCursor,
-                },
-                ...(category && {
-                  Category: {
-                    name: category,
-                  },
-                }),
-                ...(tag && {
-                  ItemTag: {
-                    some: {
-                      tag: {
-                        name: tag,
-                      },
-                    },
-                  },
-                }),
-                OR: [
-                  {
-                    title: {
-                      contains: q,
-                    },
-                  },
-                  {
-                    description: {
-                      contains: q,
-                    },
-                  },
-                ],
-              },
-            })) > 0
-          : false;
+      console.log(list);
 
       return {
         totalCount,
         list: list as unknown as ItemSchema[],
-        endCursor,
-        hasNextPage,
+        endCursor: null,
+        hasNextPage: false,
       };
     } catch (error) {
       return this.getDefaultItems<ItemSchema>();

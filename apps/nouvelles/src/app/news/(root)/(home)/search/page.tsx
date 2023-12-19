@@ -1,35 +1,33 @@
 import React from 'react';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { QUERIES_KEY } from '~/constants/constants';
+import { itemService } from '~/server/items/items.server';
 import getQueryClient from '~/services/query/get-query-client';
 import CardList from '~/components/shared/card-list';
-import { itemService } from '~/server/items/items.server';
-import { QUERIES_KEY } from '~/constants/constants';
-import TodayHeader from '~/components/shared/today-header';
+import SearchForm from '~/components/shared/search-form';
 import WindowScrollHidden from '~/components/shared/window-scroll-hidden';
 
 interface PageProps {
-  searchParams: { category: string | undefined; tag: string | undefined };
+  searchParams?: { q: string | undefined };
 }
 
 export default async function Pages({ searchParams }: PageProps) {
   const queryClient = getQueryClient();
 
-  const category = searchParams?.category ?? undefined;
-  const tag = searchParams?.tag ?? undefined;
+  const q = searchParams?.q ? decodeURIComponent(searchParams.q) : undefined;
 
   await queryClient.prefetchInfiniteQuery({
-    queryKey: QUERIES_KEY.items.today,
+    queryKey: QUERIES_KEY.items.search(q),
     initialPageParam: null,
     queryFn: async () => {
       return itemService.getItems({
-        limit: 10,
-        category,
-        tag,
+        type: 'search',
+        q,
       });
     },
   });
 
-  const data = await queryClient.getQueryData<any>(QUERIES_KEY.items.today);
+  const data = await queryClient.getQueryData<any>(QUERIES_KEY.items.search(q));
 
   const totalCount =
     data?.pages
@@ -47,10 +45,13 @@ export default async function Pages({ searchParams }: PageProps) {
     <HydrationBoundary state={dehydrate(queryClient)}>
       <WindowScrollHidden>
         <CardList
-          category={category}
-          header={<TodayHeader count={totalCount} />}
-          tag={tag}
-          type="today"
+          header={
+            <section className="my-5 md:my-8 px-6">
+              <SearchForm />
+            </section>
+          }
+          q={q}
+          type="search"
         />
       </WindowScrollHidden>
     </HydrationBoundary>
