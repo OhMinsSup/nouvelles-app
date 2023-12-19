@@ -1,5 +1,5 @@
 import { isString } from '@nouvelles/libs';
-import type { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 /**
  * Multi purpose CORS lib.
@@ -155,7 +155,10 @@ export default async function cors(
     if (opts.preflightContinue) return res;
 
     headers.set('Content-Length', '0');
-    return new Response(null, { status: opts.optionsSuccessStatus, headers });
+    return new NextResponse(null, {
+      status: opts.optionsSuccessStatus,
+      headers,
+    });
   }
 
   // If we got here, it's a normal request

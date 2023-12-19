@@ -73,6 +73,21 @@ const originFn = (origin: string | undefined) => {
 };
 
 export async function GET(request: Request) {
+  const resposne = await cors(
+    request,
+    new NextResponse(null, {
+      status: 401,
+    }),
+    {
+      origin: originFn,
+      credentials: true,
+    },
+  );
+
+  if (resposne.status === 401) {
+    return resposne;
+  }
+
   const { searchParams } = new URL(request.url);
 
   const defaultValues = itemService.getDefaultItems();
@@ -81,14 +96,15 @@ export async function GET(request: Request) {
     const query = await validateQuery(searchParams);
 
     const data = await itemService.getItems(query);
-    return cors(
-      request,
-      NextResponse.json({
+
+    return new NextResponse(
+      JSON.stringify({
         ...data,
         error: null,
       }),
       {
-        origin: originFn,
+        ...resposne,
+        status: 200,
       },
     );
   } catch (error) {
@@ -99,36 +115,30 @@ export async function GET(request: Request) {
         errors: error.issues,
       };
 
-      return cors(
-        request,
-        NextResponse.json(
-          {
-            ...defaultValues,
-            error: err,
-          },
-          { status: 400 },
-        ),
+      return new NextResponse(
+        JSON.stringify({
+          ...defaultValues,
+          error: err,
+        }),
         {
-          origin: originFn,
+          ...resposne,
+          status: 400,
         },
       );
     }
 
-    return cors(
-      request,
-      NextResponse.json(
-        {
-          ...defaultValues,
-          error: {
-            code: 'unknown_error',
-            message: 'Unknown error',
-            errors: [],
-          },
+    return new NextResponse(
+      JSON.stringify({
+        ...defaultValues,
+        error: {
+          code: 'unknown_error',
+          message: 'Unknown error',
+          errors: [],
         },
-        { status: 500 },
-      ),
+      }),
       {
-        origin: originFn,
+        ...resposne,
+        status: 500,
       },
     );
   }
