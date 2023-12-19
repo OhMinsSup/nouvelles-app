@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { isBrowser } from '@nouvelles/react';
 
 type LogCategory =
