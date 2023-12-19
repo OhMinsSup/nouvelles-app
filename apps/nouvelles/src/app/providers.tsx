@@ -13,7 +13,16 @@ interface ProvidersProps {
 
 export function Providers({ children, theme }: ProvidersProps) {
   // eslint-disable-next-line react/hook-use-state
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: 3,
+          },
+        },
+      }),
+  );
 
   return (
     <QueryClientProvider client={queryClient}>

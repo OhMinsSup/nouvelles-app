@@ -54,6 +54,7 @@ const validateQuery = async (searchParams: URLSearchParams) => {
 };
 
 const originFn = (origin: string | undefined) => {
+  console.debug('cors:origin', origin);
   // 개발일 때는 * 로 허용 배포일 때는 특정 도메인만 허용
   if (env.NODE_ENV === 'development') {
     return '*';
@@ -68,6 +69,15 @@ const originFn = (origin: string | undefined) => {
     /^https?:\/\/nouvelles-.*\.vercel\.app$/,
     /^https?:\/\/nouvelles\.vercel\.app$/,
   ];
+
+  console.debug(
+    'cors:allowedOriginsRegex',
+    allowedOriginsRegex.some((regex) => regex.test(origin)),
+  );
+
+  for (const regex of allowedOriginsRegex) {
+    console.debug('cors:regex', regex, regex.test(origin));
+  }
 
   return allowedOriginsRegex.some((regex) => regex.test(origin));
 };
