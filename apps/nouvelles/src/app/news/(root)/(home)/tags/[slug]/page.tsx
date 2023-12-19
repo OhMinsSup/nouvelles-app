@@ -7,7 +7,6 @@ import { itemService } from '~/server/items/items.server';
 import { QUERIES_KEY } from '~/constants/constants';
 import CategoryWithTagHeader from '~/components/shared/category-with-tag-header';
 import { tagsService } from '~/server/tags/tags.server';
-import WindowScrollHidden from '~/components/shared/window-scroll-hidden';
 
 interface PageProps {
   params: { slug: string };
@@ -53,21 +52,19 @@ export default async function Pages({ params }: PageProps) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <WindowScrollHidden>
-        <CardList
-          header={
-            <CategoryWithTagHeader
-              count={tagInfo._count.ItemTag ?? 0}
-              id={tagInfo.id}
-              name={tagInfo.name}
-              slug={tagInfo.slug}
-              type="tags"
-            />
-          }
-          tag={name}
-          type="tags"
-        />
-      </WindowScrollHidden>
+      <CardList
+        header={
+          <CategoryWithTagHeader
+            count={tagInfo._count.ItemTag ?? 0}
+            id={tagInfo.id}
+            name={tagInfo.name}
+            slug={tagInfo.slug}
+            type="tags"
+          />
+        }
+        tag={name}
+        type="tags"
+      />
     </HydrationBoundary>
   );
 }

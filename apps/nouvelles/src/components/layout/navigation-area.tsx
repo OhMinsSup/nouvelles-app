@@ -47,8 +47,7 @@ NavigationArea.Item = function Item({ item, type }: ItemProps) {
 NavigationArea.Link = function Item({ item, type }: ItemProps) {
   const pathname = usePathname();
   const href = item.href as unknown as string;
-  const isActive =
-    href === '/' ? pathname === '/' : pathname.startsWith(href) && href !== '/';
+  const isActive = href === '/' ? pathname === '/' : href === pathname;
 
   return (
     <TooltipProvider>
@@ -65,6 +64,7 @@ NavigationArea.Link = function Item({ item, type }: ItemProps) {
               'justify-start space-x-2 w-full px-3 py-2',
             )}
             href={item.disabled ? '#' : href}
+            scroll={false}
           >
             <item.icon />
             {type === 'desktop' ? (

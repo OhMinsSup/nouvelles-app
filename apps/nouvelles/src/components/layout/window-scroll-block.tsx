@@ -2,18 +2,23 @@
 'use client';
 import React from 'react';
 
-interface WindowScrollHiddenProps {
+interface WindowScrollBlockProps {
   children: React.ReactNode;
 }
 
-export default function WindowScrollHidden({
+export default function WindowScrollBlock({
   children,
-}: WindowScrollHiddenProps) {
+}: WindowScrollBlockProps) {
   return (
     <>
       {children}
       <style global jsx>{`
-        html {
+        html,
+        body {
+          overflow: hidden;
+        }
+
+        [data-name='main-layout'] {
           overflow: hidden;
         }
       `}</style>

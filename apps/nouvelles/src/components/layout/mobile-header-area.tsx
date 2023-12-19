@@ -62,9 +62,9 @@ export default function MobileHeaderArea() {
         </div>
         <div className="flex col-span-8 flex-row items-center justify-end gap-5">
           <div className="flex gap-2">
-            <Button variant="ghost">
+            {/* <Button variant="ghost">
               <Icons.setting />
-            </Button>
+            </Button> */}
             <Menu />
           </div>
         </div>

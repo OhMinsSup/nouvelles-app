@@ -160,8 +160,6 @@ export class ItemService {
         }),
       ]);
 
-      console.log(list);
-
       return {
         totalCount,
         list: list as unknown as ItemSchema[],
@@ -173,7 +171,7 @@ export class ItemService {
     }
   }
 
-  private async _getItemsByToDay({ category, tag }: ItemQuery, _?: string) {
+  private async _getItemsByToDay(_: ItemQuery, __?: string) {
     const collectingDate = dayjs().startOf('day').toDate();
 
     const collectingData = await db.crawlerDateCollected.findFirst({
@@ -185,30 +183,13 @@ export class ItemService {
       },
     });
 
+    console.log(collectingData);
+
     if (!collectingData) {
       return this.getDefaultItems<ItemSchema>();
     }
 
-    const { categoryItem, tagItem } = await this.findByTagWithCategory({
-      tag,
-      category,
-    });
-
     const searchWhere: Prisma.ItemWhereInput = {
-      ...(categoryItem && {
-        Category: {
-          id: categoryItem.id,
-        },
-      }),
-      ...(tagItem && {
-        ItemTag: {
-          some: {
-            tag: {
-              id: tagItem.id,
-            },
-          },
-        },
-      }),
       collectingDateId: collectingData.id,
     };
 

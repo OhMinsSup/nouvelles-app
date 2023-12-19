@@ -7,7 +7,6 @@ import CardList from '~/components/shared/card-list';
 import { itemService } from '~/server/items/items.server';
 import { QUERIES_KEY } from '~/constants/constants';
 import { categoriesService } from '~/server/categories/categories.server';
-import WindowScrollHidden from '~/components/shared/window-scroll-hidden';
 
 interface PageProps {
   params: { slug: string };
@@ -54,21 +53,19 @@ export default async function Pages({ params }: PageProps) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <WindowScrollHidden>
-        <CardList
-          header={
-            <CategoryWithTagHeader
-              count={categoryInfo._count?.Item}
-              id={categoryInfo.id}
-              name={categoryInfo.name}
-              slug={categoryInfo.slug}
-              type="categories"
-            />
-          }
-          tag={name}
-          type="categories"
-        />
-      </WindowScrollHidden>
+      <CardList
+        header={
+          <CategoryWithTagHeader
+            count={categoryInfo._count?.Item}
+            id={categoryInfo.id}
+            name={categoryInfo.name}
+            slug={categoryInfo.slug}
+            type="categories"
+          />
+        }
+        tag={name}
+        type="categories"
+      />
     </HydrationBoundary>
   );
 }

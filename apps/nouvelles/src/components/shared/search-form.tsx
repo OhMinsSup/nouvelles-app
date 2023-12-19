@@ -23,7 +23,9 @@ export default function SearchForm() {
       }
 
       startTransition(() => {
-        router.push(`${pathname}?${nextSearchParams.toString()}`);
+        router.push(`${pathname}?${nextSearchParams.toString()}`, {
+          scroll: false,
+        });
       });
     },
     250,

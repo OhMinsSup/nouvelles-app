@@ -83,7 +83,7 @@ export default function CardList({
       type,
       ...(category ? { category: decodeURIComponent(category) } : {}),
       ...(tag ? { tag: decodeURIComponent(tag) } : {}),
-      ...(type === 'search' ? { q } : {}),
+      ...(type === 'search' && q ? { q: decodeURIComponent(q) } : {}),
       ...(userId ? { userId } : {}),
       limit: 10,
       cursor: cursor ? cursor : undefined,
@@ -93,7 +93,6 @@ export default function CardList({
   const getRestorationCursorIndex = () => {
     try {
       const _data = getRestoration();
-      console.log('getRestorationCursorIndex', _data);
       if (!_data || isEmpty(_data)) {
         return null;
       }
@@ -137,7 +136,6 @@ export default function CardList({
   const { data, fetchNextPage } = useInfiniteQuery({
     queryKey,
     queryFn: ({ pageParam }) => fetcher(pageParam),
-    staleTime: 1000 * 60 * 60 * 24,
     initialPageParam: null as number | null,
     getNextPageParam: (lastPage) => {
       return lastPage?.hasNextPage && lastPage?.endCursor
@@ -266,7 +264,7 @@ export default function CardList({
           ...(header && {
             Header: () => <>{header}</>,
           }),
-          Footer: () => <div className="h-20" />,
+          Footer: () => <div className="h-40" />,
         }}
         computeItemKey={(index, item) => {
           if (!item) {

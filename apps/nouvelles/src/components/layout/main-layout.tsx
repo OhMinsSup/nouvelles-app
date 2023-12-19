@@ -25,7 +25,7 @@ export default function MainLayout({
   return (
     <>
       {mobileHeader ? <HeaderMobile>{mobileHeader}</HeaderMobile> : null}
-      <div className={cn('flex h-screen', className)}>
+      <div className={cn('flex h-screen', className)} data-name="main-layout">
         <div className="hidden md:block xl:hidden" data-name="tablet-sidebar">
           {tabletSidebar}
         </div>

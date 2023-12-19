@@ -5,17 +5,9 @@ import CardList from '~/components/shared/card-list';
 import { itemService } from '~/server/items/items.server';
 import { QUERIES_KEY } from '~/constants/constants';
 import TodayHeader from '~/components/shared/today-header';
-import WindowScrollHidden from '~/components/shared/window-scroll-hidden';
 
-interface PageProps {
-  searchParams: { category: string | undefined; tag: string | undefined };
-}
-
-export default async function Pages({ searchParams }: PageProps) {
+export default async function Pages() {
   const queryClient = getQueryClient();
-
-  const category = searchParams?.category ?? undefined;
-  const tag = searchParams?.tag ?? undefined;
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: QUERIES_KEY.items.today,
@@ -23,8 +15,7 @@ export default async function Pages({ searchParams }: PageProps) {
     queryFn: async () => {
       return itemService.getItems({
         limit: 10,
-        category,
-        tag,
+        type: 'today',
       });
     },
   });
@@ -45,14 +36,7 @@ export default async function Pages({ searchParams }: PageProps) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <WindowScrollHidden>
-        <CardList
-          category={category}
-          header={<TodayHeader count={totalCount} />}
-          tag={tag}
-          type="today"
-        />
-      </WindowScrollHidden>
+      <CardList header={<TodayHeader count={totalCount} />} type="today" />
     </HydrationBoundary>
   );
 }
