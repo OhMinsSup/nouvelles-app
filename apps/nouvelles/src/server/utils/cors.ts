@@ -75,7 +75,11 @@ async function originHeadersFromReq(
   req: Request,
   origin: StaticOrigin | OriginFn,
 ) {
-  const reqOrigin = req.headers.get('Origin') || undefined;
+  const reqOrigin =
+    req.headers.get('Origin') ||
+    req.headers.get('X-Forwarded-Host') ||
+    req.headers.get('host') ||
+    undefined;
   const value =
     typeof origin === 'function' ? await origin(reqOrigin, req) : origin;
   if (!value) return;
