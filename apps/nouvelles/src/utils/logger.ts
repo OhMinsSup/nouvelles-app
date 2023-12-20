@@ -1,6 +1,4 @@
-import { log } from 'next-axiom';
-import { isBrowser } from '@nouvelles/react';
-import { env } from 'env.mjs';
+// import { env } from 'env.mjs';
 
 type LogCategory =
   | 'client'
@@ -16,12 +14,12 @@ type Extra = Record<string, any>;
 
 class Logger {
   info(label: LogCategory, message: string, extra?: Extra) {
-    if (env.NODE_ENV === 'production' && env.NEXT_PUBLIC_AXIOM_TOKEN) {
-      log.info(`[${label}]:${message}`, extra);
-      return;
-    }
+    // if (env.NODE_ENV === 'production' && env.NEXT_PUBLIC_AXIOM_TOKEN) {
+    //   log.info(`[${label}]:${message}`, extra);
+    //   return;
+    // }
 
-    if (isBrowser) {
+    if (typeof window !== 'undefined') {
       console.info(
         `%c[${label}]:${message}`,
         'color: #fff; background-color: #28a745; padding: 2px 4px; border-radius: 4px;',
@@ -33,12 +31,12 @@ class Logger {
   }
 
   debug(label: LogCategory, message: string, extra?: Extra) {
-    if (env.NODE_ENV === 'production' && env.NEXT_PUBLIC_AXIOM_TOKEN) {
-      log.debug(`[${label}]:${message}`, extra);
-      return;
-    }
+    // if (env.NODE_ENV === 'production' && env.NEXT_PUBLIC_AXIOM_TOKEN) {
+    //   log.debug(`[${label}]:${message}`, extra);
+    //   return;
+    // }
 
-    if (isBrowser) {
+    if (typeof window !== 'undefined') {
       console.debug(
         `%c[${label}]${message}`,
         'color: #fff; background-color: #17a2b8; padding: 2px 4px; border-radius: 4px;',
@@ -50,7 +48,7 @@ class Logger {
   }
 
   log(label: LogCategory, message: string, extra?: Extra) {
-    if (isBrowser) {
+    if (typeof window !== 'undefined') {
       console.log(
         `%c[${label}]:${message}`,
         'color: #fff; background-color: #17a2b8; padding: 2px 4px; border-radius: 4px;',
@@ -72,10 +70,10 @@ class Logger {
   }
 
   warn(message: string, extra?: Extra) {
-    if (env.NODE_ENV === 'production' && env.NEXT_PUBLIC_AXIOM_TOKEN) {
-      log.warn(`[warning]:${message}`, extra);
-      return;
-    }
+    // if (env.NODE_ENV === 'production' && env.NEXT_PUBLIC_AXIOM_TOKEN) {
+    //   log.warn(`[warning]:${message}`, extra);
+    //   return;
+    // }
     // if (sentryDSN) {
     //   Sentry.withScope(function (scope) {
     //     scope.setLevel('warning');
@@ -88,7 +86,7 @@ class Logger {
     //   });
     // }
 
-    if (isBrowser) {
+    if (typeof window !== 'undefined') {
       console.warn(
         `%c[warning]:${message}`,
         'color: #fff; background-color: #ffc107; padding: 2px 4px; border-radius: 4px;',
@@ -100,14 +98,14 @@ class Logger {
   }
 
   error(error: Error, message?: string, extra?: Extra) {
-    if (env.NODE_ENV === 'production' && env.NEXT_PUBLIC_AXIOM_TOKEN) {
-      log.error(`[error]:${error.name}`, {
-        error,
-        message,
-        extra,
-      });
-      return;
-    }
+    // if (env.NODE_ENV === 'production' && env.NEXT_PUBLIC_AXIOM_TOKEN) {
+    //   log.error(`[error]:${error.name}`, {
+    //     error,
+    //     message,
+    //     extra,
+    //   });
+    //   return;
+    // }
     // if (sentryDSN) {
     //   Sentry.withScope(function (scope) {
     //     scope.setLevel('error');

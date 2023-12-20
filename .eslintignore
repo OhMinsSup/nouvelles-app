@@ -5,6 +5,7 @@ node_modules
 out
 .next
 public
+dist
 
 # vscode
 .vscode

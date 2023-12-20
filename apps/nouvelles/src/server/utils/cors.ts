@@ -1,5 +1,6 @@
-import { isString } from '@nouvelles/libs';
-import { NextResponse } from 'next/server';
+'server-only';
+import { env } from 'env.mjs';
+import logger from '~/utils/logger';
 
 /**
  * Multi purpose CORS lib.
@@ -36,7 +37,7 @@ function isOriginAllowed(origin: string, allowed: StaticOrigin): boolean {
     return allowed.some((o) => isOriginAllowed(origin, o));
   }
 
-  if (isString(allowed)) {
+  if (typeof allowed === 'string') {
     return origin === allowed;
   }
 
@@ -106,9 +107,44 @@ function getAllowedHeaders(req: Request, allowed?: string | string[]) {
   return headers;
 }
 
+export const commonOriginFunc = (origin: string | undefined) => {
+  logger.info('server', 'cors:origin', {
+    origin,
+  });
+
+  // nouvelles-*.vercel.app
+  const corsWhitelist: RegExp[] = [
+    /^https?:\/\/nouvelles-.*\.vercel\.app$/,
+    /^https?:\/\/nouvelles\.vercel\.app$/,
+  ];
+
+  if (env.NODE_ENV === 'development') {
+    corsWhitelist.push(/^http:\/\/localhost/);
+  }
+
+  if (origin) {
+    logger.info('server', 'cors:allowedOriginsRegex', {
+      allowed: corsWhitelist.some((regex) => regex.test(origin)),
+    });
+
+    for (const regex of corsWhitelist) {
+      logger.info('server', 'cors:regex', {
+        regex: regex.toString(),
+        test: regex.test(origin),
+      });
+    }
+  }
+
+  if (!origin || corsWhitelist.some((regex) => regex.test(origin))) {
+    return true;
+  }
+
+  return false;
+};
+
 export default async function cors(
   req: Request,
-  res: NextResponse,
+  res: Response,
   options?: CorsOptions,
 ) {
   const opts = { ...defaultOptions, ...options };
@@ -155,7 +191,7 @@ export default async function cors(
     if (opts.preflightContinue) return res;
 
     headers.set('Content-Length', '0');
-    return new NextResponse(null, {
+    return new Response(null, {
       status: opts.optionsSuccessStatus,
       headers,
     });
