@@ -22,12 +22,24 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
 
     const site = new NeusralSite();
 
+    const result: Awaited<ReturnType<typeof site.run>> = [];
+
     try {
       const data = await site.run();
-      const result = await itemsService.generateItems(data, today);
+      result.push(...data);
+      console.log('Completed items job');
+    } catch (error) {
+      console.error(error);
+    } finally {
+      site.close();
+      console.log('Completed items job');
+    }
+
+    try {
+      const data = await itemsService.generateItems(result, today);
       reply.status(200).send({
         ok: true,
-        items: result,
+        items: data,
         message: 'Completed items job',
       });
     } catch (error) {
@@ -37,10 +49,9 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
         items: [],
         message: 'Failed items job',
       });
-    } finally {
-      site.close();
     }
   });
+
   done();
 };
 
