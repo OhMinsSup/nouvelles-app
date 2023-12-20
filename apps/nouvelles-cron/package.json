@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsup",
     "clean": "rimraf dist",
+    "dev": "tsx watch src/main.ts",
     "lint": "eslint --max-warnings 0 .",
     "start:dev": "tsx watch src/main.ts"
   },
