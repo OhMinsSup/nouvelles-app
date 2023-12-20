@@ -19,13 +19,16 @@
   ],
   "scripts": {
     "build": "tsup",
-    "clean": "rm -rf dist",
+    "clean": "rimraf dist",
     "postinstall": "tsup",
+    "lint": "eslint --max-warnings 0 .",
     "watch": "tsup --watch"
   },
   "devDependencies": {
+    "@nouvelles/lintconfig": "workspace:*",
     "@nouvelles/tsconfig": "workspace:*",
+    "rimraf": "^5.0.5",
     "tsup": "^8.0.1",
-    "typescript": "^5.3.2"
+    "typescript": "^5.3.3"
   }
 }

@@ -6,6 +6,19 @@ export const QUERIES_KEY = {
       if (q) searchParams.append('q', q);
       return ['items', 'search', searchParams.toString()];
     },
+    tags: (tagId: string | number) => ['items', 'tags', tagId],
+    categories: (categoryId: string | number) => [
+      'items',
+      'categories',
+      categoryId,
+    ],
+    today: ['items', 'today'],
+  },
+  categories: {
+    root: ['categories'],
+  },
+  tags: {
+    root: ['tags'],
   },
 };
 
@@ -25,16 +38,25 @@ export const API_ENDPOINTS = {
 export const ASSET_URL = {};
 
 export const PAGE_ENDPOINTS = {
-  ROOT: '/',
-  TODAY: '/today',
-  SEARCH: '/search',
-  ADMIN: {
-    ROOT: '/admin',
-    AUTH: {
-      SIGNIN: '/admin/signin',
+  NEWS: {
+    ROOT: '/news',
+    TODAY: '/news/today',
+    SEARCH: '/news/search',
+    TAGS: {
+      ID: (tagId: string | number) => `/news/tags/${tagId}`,
+    },
+    CATEGORIES: {
+      ID: (categoryId: string | number) => `/news/categories/${categoryId}`,
     },
   },
 } as const;
+
+export const CORS_WHITELIST = {
+  ORIGIN: [
+    /^https?:\/\/nouvelles-.*\.vercel\.app$/,
+    /^https?:\/\/nouvelles\.vercel\.app$/,
+  ],
+};
 
 export const SITE_CONFIG = {
   title: 'Nouvelles',
@@ -46,6 +68,7 @@ export const SITE_CONFIG = {
   apple180x180: undefined,
   apple256x256: undefined,
   manifest: '/manifest.json',
+  github: 'https://github.com/OhMinsSup/nouvelles-app',
 };
 
 export const STATUS_CODE = {

@@ -4,21 +4,22 @@ export interface AgentFetchHandlerResponse {
   body: any;
 }
 
-export type AgentFetchHandlerOptions = {
+export interface AgentFetchHandlerOptions {
   uri: string;
   method: string;
   headers: Headers | Record<string, string> | undefined;
-  reqBody: any | undefined;
-};
+  reqBody: unknown;
+}
 
 export type AgentFetchHandler = (
   opts: AgentFetchHandlerOptions,
 ) => Promise<AgentFetchHandlerResponse>;
 
-export type AgentConfigureOptions = {
+export interface AgentConfigureOptions {
   fetch: AgentFetchHandler;
-};
+}
 
 export interface AgentOpts {
   service: string | URL;
+  prefix?: string;
 }

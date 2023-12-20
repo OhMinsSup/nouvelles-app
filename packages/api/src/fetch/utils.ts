@@ -1,6 +1,6 @@
 import { isString, isUndefined, isFunction, isNull } from '@nouvelles/libs';
 import { NouvellesError, ErrorType } from '@nouvelles/error';
-import { QueryParams } from './types';
+import type { QueryParams } from './types';
 
 export const getSearchParams = (
   url: URL | string,
@@ -27,7 +27,7 @@ export function normalizeHeaders(
   const normalized: Headers = new Headers();
 
   for (const [header, value] of Object.entries(headers)) {
-    normalized.set(header.toLowerCase(), value);
+    normalized.set(header.toLowerCase(), value as unknown as string);
   }
   return normalized;
 }
@@ -49,14 +49,14 @@ export function encodeMethodCallBody(
   }
 
   if (contentType.startsWith('text/')) {
-    return new TextEncoder().encode(data.toString());
+    return new TextEncoder().encode((data as string).toString());
   }
 
   if (contentType.startsWith('application/json')) {
     return new TextEncoder().encode(JSON.stringify(data));
   }
 
-  return data;
+  return undefined;
 }
 
 export function normalizeResponseHeaders(
@@ -66,13 +66,13 @@ export function normalizeResponseHeaders(
   // Object.fromEntries() turns this into an object
   const supportEntries = 'entries' in headers && isFunction(headers.entries);
   if (supportEntries) {
-    // @ts-ignore TS2339: Property 'entries' does not exist on type 'Headers'.
-    return Object.fromEntries(headers.entries());
+    // @ts-expect-error TS2339: Property 'entries' does not exist on type 'Headers'.
+    return Object.fromEntries(headers.entries() as unknown);
   }
 
   const normalized: Record<string, string> = {};
   for (const [header, value] of Object.entries(headers)) {
-    normalized[header.toLowerCase()] = value;
+    normalized[header.toLowerCase()] = value as unknown as string;
   }
   return normalized;
 }
@@ -84,7 +84,7 @@ export async function httpResponseBodyParse(
   if (mimeType) {
     if (mimeType.includes('application/json')) {
       try {
-        return await res.json();
+        return res.json();
       } catch (e) {
         throw new NouvellesError(
           ErrorType.ResponseError,
@@ -94,7 +94,7 @@ export async function httpResponseBodyParse(
     }
     if (mimeType.startsWith('text/')) {
       try {
-        return await res.text();
+        return res.text();
       } catch (e) {
         throw new NouvellesError(
           ErrorType.ResponseError,
@@ -104,7 +104,7 @@ export async function httpResponseBodyParse(
     }
 
     try {
-      return await res.blob();
+      return res.blob();
     } catch (error) {
       throw new NouvellesError(
         ErrorType.ResponseError,
@@ -139,9 +139,10 @@ export function constructMethodCallUri(
           );
 
           if (hasToString) {
+            const data = value as unknown as { toString: () => string };
             uri.searchParams.append(
               key,
-              encodeQueryParam('unknown', value.toString()),
+              encodeQueryParam('unknown', data.toString()),
             );
           } else {
             uri.searchParams.append(key, encodeQueryParam('unknown', value));

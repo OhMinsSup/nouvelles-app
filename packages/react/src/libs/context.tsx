@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
 
-export interface CreateContextOptions {
+export interface CreateContextOptions<ContextType = unknown> {
   /**
-   * `true` => context 가 `null` or `undefined` 인경우 throw error
-   * `false` => 중첩 컨텍스트를 지원하는 경우 사용
+   * `true`  context 가 `null` or `undefined` 인경우 throw error
+   * `false` 중첩 컨텍스트를 지원하는 경우 사용
    */
   strict?: boolean;
   /**
@@ -18,12 +18,14 @@ export interface CreateContextOptions {
   /**
    * 컨텍스트의 기본값
    */
-  defaultValue?: any;
+  defaultValue?: ContextType;
 }
 
 type CreateContextReturn<T> = [React.Provider<T>, () => T, React.Context<T>];
 
-export function createContext<ContextType>(options: CreateContextOptions = {}) {
+export function createContext<ContextType>(
+  options: CreateContextOptions<ContextType> = {},
+) {
   const {
     strict = true,
     errorMessage = 'useContext: `context` is undefined. Seems you forgot to wrap component within the Provider',
@@ -41,8 +43,7 @@ export function createContext<ContextType>(options: CreateContextOptions = {}) {
     if (!context && strict) {
       const error = new Error(errorMessage);
       error.name = 'ContextError';
-      // @ts-ignore
-      Error.captureStackTrace?.(error, useContext);
+      Error.captureStackTrace(error, useContext);
       throw error;
     }
 

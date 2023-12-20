@@ -46,7 +46,7 @@ export function SkipRenderOnClient({
   const isClient = typeof window !== 'undefined';
   const isFirstRender = useIsFirstRender();
 
-  if (isClient && isFirstRender && shouldRenderOnClient() === false) {
+  if (isClient && isFirstRender && !shouldRenderOnClient()) {
     const el = document.getElementById(id);
     if (el !== null) {
       el.innerHTML = '';
@@ -56,8 +56,8 @@ export function SkipRenderOnClient({
   const shouldRender = isClient ? shouldRenderOnClient() : true;
 
   return (
-    <div id={id} className={className} style={style}>
-      {shouldRender && children}
+    <div className={className} id={id} style={style}>
+      {shouldRender ? children : null}
     </div>
   );
 }

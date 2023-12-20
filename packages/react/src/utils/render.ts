@@ -10,18 +10,17 @@ const fullClone = {
   __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED?: {
     usingClientEntryPoint?: boolean;
   };
-  createRoot?: CreateRoot;
+  createRoot?: CreateRoot | undefined;
 };
 
 type CreateRoot = (container: ContainerType) => Root;
 
 const { version, render: reactRender, unmountComponentAtNode } = fullClone;
 
-let createRoot: CreateRoot;
+let createRoot: CreateRoot | undefined;
 try {
   const mainVersion = Number((version || '').split('.')[0]);
   if (mainVersion >= 18) {
-    // @ts-ignore
     ({ createRoot } = fullClone);
   }
 } catch (e) {
@@ -49,10 +48,10 @@ type ContainerType = (Element | DocumentFragment) & {
 
 function modernRender(node: React.ReactElement, container: ContainerType) {
   toggleWarning(true);
-  const root = container[MARK] || createRoot(container);
+  const root = container[MARK] || createRoot?.(container);
   toggleWarning(false);
 
-  root.render(node);
+  root?.render(node);
 
   container[MARK] = root;
 }
@@ -61,16 +60,15 @@ function legacyRender(node: React.ReactElement, container: ContainerType) {
   reactRender(node, container);
 }
 
-/** @private Test usage. Not work in prod */
+/** Test usage. Not work in prod */
 export function _r(node: React.ReactElement, container: ContainerType) {
   if (process.env.NODE_ENV !== 'production') {
-    return legacyRender(node, container);
+    legacyRender(node, container);
   }
 }
 
 export function render(node: React.ReactElement, container: ContainerType) {
-  // @ts-ignore
-  if (createRoot) {
+  if (createRoot as unknown as CreateRoot | undefined) {
     modernRender(node, container);
     return;
   }
@@ -92,10 +90,10 @@ function legacyUnmount(container: ContainerType) {
   unmountComponentAtNode(container);
 }
 
-/** @private Test usage. Not work in prod */
+/** Test usage. Not work in prod */
 export function _u(container: ContainerType) {
   if (process.env.NODE_ENV !== 'production') {
-    return legacyUnmount(container);
+    legacyUnmount(container);
   }
 }
 

@@ -1,3 +1,5 @@
+'use client';
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useMemo, useReducer } from 'react';
 import { createContext } from '@nouvelles/react';
 
@@ -6,16 +8,16 @@ enum Action {
   CHANGE_DATA_KEY = 'CHANGE_DATA_KEY',
 }
 
-type ForcedUpdateAction = {
+interface ForcedUpdateAction {
   type: Action.FORCED_UPDATE;
-};
+}
 
-type ChangeDataKeyAction = {
+interface ChangeDataKeyAction {
   type: Action.CHANGE_DATA_KEY;
   payload: {
     dataKey: symbol;
   };
-};
+}
 
 type AppAction = ForcedUpdateAction | ChangeDataKeyAction;
 
@@ -32,19 +34,20 @@ interface AppContext extends AppState {
 
 const initialState: AppState = {
   renderObject: {},
-  dataKey: Symbol(),
+  dataKey: Symbol('dataKey'),
 };
 
 const [Provider, useAppContext] = createContext<AppContext>({
   name: 'useAppContext',
   errorMessage: 'useAppContext: `context` is undefined.',
-  defaultValue: initialState,
+  defaultValue: initialState as AppContext,
 });
 
 interface Props {
   children: React.ReactNode;
 }
 
+// eslint-disable-next-line @typescript-eslint/default-param-last
 function reducer(state = initialState, action: AppAction) {
   switch (action.type) {
     case Action.FORCED_UPDATE:

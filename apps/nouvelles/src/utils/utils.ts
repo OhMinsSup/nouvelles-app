@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import noop from 'lodash-es/noop';
 import { twMerge } from 'tailwind-merge';
 import { isEmpty, isNull, isUndefined } from '@nouvelles/libs';
+import { CORS_WHITELIST } from '~/constants/constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -59,7 +60,7 @@ export const delayPromise = (ms: number) => {
     promise,
     cancel: () => {
       clearTimeout(timer);
-      rejectFn?.(new Error('Cancelled'));
+      rejectFn(new Error('Cancelled'));
     },
     close: () => {
       clearTimeout(timer);
@@ -68,3 +69,22 @@ export const delayPromise = (ms: number) => {
     },
   };
 };
+
+// 렌더링 후 상태 업데이트를 예약하는 데 사용되는 함수
+export function scheduleMicrotask(callback: () => void): void {
+  Promise.resolve()
+    .then(callback)
+    .catch((error) =>
+      setTimeout(() => {
+        throw error;
+      }),
+    );
+}
+
+export function validateOrigin(origin: string) {
+  const corsWhitelist: RegExp[] = CORS_WHITELIST.ORIGIN;
+
+  const isAllowed = corsWhitelist.some((regex) => regex.test(origin));
+
+  return isAllowed;
+}

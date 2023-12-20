@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'server-only';
 import {
   experimental_taintUniqueValue,

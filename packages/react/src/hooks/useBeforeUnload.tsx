@@ -9,12 +9,12 @@ import React from 'react';
  * `React.useCallback()`.
  */
 export function useBeforeUnload(
-  callback: (event: BeforeUnloadEvent) => any,
+  callback: (event: BeforeUnloadEvent) => void,
   options?: { capture?: boolean },
 ): void {
-  let { capture } = options || {};
+  const { capture } = options || {};
   React.useEffect(() => {
-    let opts = capture != null ? { capture } : undefined;
+    const opts = capture !== undefined ? { capture } : undefined;
     window.addEventListener('beforeunload', callback, opts);
     return () => {
       window.removeEventListener('beforeunload', callback, opts);

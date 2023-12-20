@@ -3,7 +3,7 @@ import { ErrorType } from './constants';
 export class FetchError extends Error {
   public response: Response;
   public request: Request;
-  public options: any;
+  public options: unknown;
 
   constructor(response: Response, request: Request, options: any) {
     const code =

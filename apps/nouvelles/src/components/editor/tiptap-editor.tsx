@@ -1,14 +1,16 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 'use client';
 import { useImperativeHandle, useRef, forwardRef } from 'react';
 import type { Editor } from '@tiptap/react';
 import { useEditor, EditorContent } from '@tiptap/react';
-
-import { TiptapExtensions } from './extensions';
-import { TiptapEditorProps } from './props';
 import { useDebouncedCallback } from 'use-debounce';
+import { TiptapEditorProps } from '~/components/editor/props';
+import { TiptapExtensions } from '~/components/editor/extensions';
 import { cn } from '~/utils/utils';
 
-export interface ITipTapRichTextEditor {
+export interface TipTapRichTextEditorProps {
   value: string;
   name?: string;
   onChange?: (json: any, html: string, empty: boolean) => void;
@@ -27,7 +29,7 @@ export interface ITipTapRichTextEditor {
   className?: string;
 }
 
-const Tiptap = (props: ITipTapRichTextEditor) => {
+function Tiptap(props: TipTapRichTextEditorProps) {
   const {
     name,
     className,
@@ -47,10 +49,10 @@ const Tiptap = (props: ITipTapRichTextEditor) => {
 
   const editor = useEditor({
     editable: editable ?? true,
-    editorProps: TiptapEditorProps(setIsSubmitting, className),
-    extensions: TiptapExtensions(setIsSubmitting),
+    editorProps: TiptapEditorProps(className),
+    extensions: TiptapExtensions(),
     content: value,
-    onUpdate: async ({ editor }) => {
+    onUpdate: ({ editor }) => {
       // for instant feedback loop
       setIsSubmitting?.('submitting');
       setShouldShowAlert?.(true);
@@ -75,22 +77,19 @@ const Tiptap = (props: ITipTapRichTextEditor) => {
     setEditorValue: (content: string) => {
       editorRef.current?.commands.setContent(content);
     },
-    focus: () => editorRef?.current?.chain().focus().run(),
-    select: () => editorRef?.current?.chain().selectAll().run(),
-    setCustomValidity: (message: string) => {},
+    focus: () => editorRef.current?.chain().focus().run(),
+    select: () => editorRef.current?.chain().selectAll().run(),
+    setCustomValidity: (_: string) => {},
     reportValidity: () => {},
   }));
 
-  const debouncedUpdates = useDebouncedCallback(
-    async ({ onChange, editor }) => {
-      setTimeout(async () => {
-        if (onChange) {
-          onChange(editor.getJSON(), editor.getHTML(), editor.isEmpty);
-        }
-      }, 500);
-    },
-    1000,
-  );
+  const debouncedUpdates = useDebouncedCallback(({ onChange, editor }) => {
+    setTimeout(() => {
+      if (onChange) {
+        onChange(editor.getJSON(), editor.getHTML(), editor.isEmpty);
+      }
+    }, 500);
+  }, 1000);
 
   const editorClassNames = `relative w-full max-w-full sm:rounded-lg mt-2 p-3 relative focus:outline-none rounded-md
   ${noBorder ? '' : 'border border-custom-border-200'} ${
@@ -102,25 +101,26 @@ const Tiptap = (props: ITipTapRichTextEditor) => {
 
   return (
     <div
-      id="tiptap-container"
       className={cn(
         'tiptap-editor-container relative cursor-text',
         editorClassNames,
       )}
+      id="tiptap-container"
       onClick={() => {
-        editor?.chain().focus().run();
+        editor.chain().focus().run();
       }}
     >
       <div className={cn(editorContentCustomClassNames)}>
-        <EditorContent name={name} editor={editor} />
+        <EditorContent editor={editor} name={name} />
       </div>
     </div>
   );
-};
+}
 
-const TipTapEditor = forwardRef<ITipTapRichTextEditor, ITipTapRichTextEditor>(
-  (props, ref) => <Tiptap {...props} forwardedRef={ref} />,
-);
+const TipTapEditor = forwardRef<
+  TipTapRichTextEditorProps,
+  TipTapRichTextEditorProps
+>((props, ref) => <Tiptap {...props} forwardedRef={ref} />);
 
 TipTapEditor.displayName = 'TipTapEditor';
 

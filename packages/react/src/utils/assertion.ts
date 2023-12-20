@@ -4,10 +4,10 @@ export function isRefObject(val: any): val is { current: any } {
 
 export function isElement(el: any): el is Element {
   return (
-    el != null &&
-    typeof el == 'object' &&
+    el !== null &&
+    typeof el === 'object' &&
     'nodeType' in el &&
-    el.nodeType === Node.ELEMENT_NODE
+    (el as Element).nodeType === Node.ELEMENT_NODE
   );
 }
 
@@ -21,11 +21,15 @@ export function isHTMLElement(el: any): el is HTMLElement {
 }
 
 export function canUseDOM(): boolean {
-  return !!(
-    typeof window !== 'undefined' &&
-    window.document &&
-    window.document.createElement
-  );
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  if ('document' in window && 'createElement' in window.document) {
+    return true;
+  }
+
+  return false;
 }
 
 export const isBrowser = canUseDOM();

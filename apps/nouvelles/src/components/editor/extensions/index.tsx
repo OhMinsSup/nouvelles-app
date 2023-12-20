@@ -2,11 +2,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import CharacterCount from '@tiptap/extension-character-count';
 
-export const TiptapExtensions = (
-  setIsSubmitting?: (
-    isSubmitting: 'submitting' | 'submitted' | 'saved',
-  ) => void,
-) => [
+export const TiptapExtensions = () => [
   Placeholder.configure({
     emptyEditorClass: 'is-editor-empty',
     placeholder: ({ node }) => {

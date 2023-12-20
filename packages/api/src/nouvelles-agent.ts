@@ -3,6 +3,9 @@ import type {
   GetItemsHandler,
   GetItemHandler,
   CreateItemsHandler,
+  GetCategoriesHandler,
+  GetNewspapersHandler,
+  GetTagsHandler,
 } from './client/types';
 
 export class NouvellesAgent extends Agent {
@@ -20,5 +23,17 @@ export class NouvellesAgent extends Agent {
 
   getItem: GetItemHandler = (id, opts) => {
     return this.api.app.item.getItem(id, opts);
+  };
+
+  getCategories: GetCategoriesHandler = (params, opts) => {
+    return this.api.app.category.getCategories(params, opts);
+  };
+
+  getTags: GetTagsHandler = (params, opts) => {
+    return this.api.app.tag.getTags(params, opts);
+  };
+
+  getNewspapers: GetNewspapersHandler = (params, opts) => {
+    return this.api.app.newspaper.getNewspapers(params, opts);
   };
 }

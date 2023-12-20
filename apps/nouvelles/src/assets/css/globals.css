@@ -77,8 +77,8 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings:
-      "rlig" 1,
-      "calt" 1;
+      'rlig' 1,
+      'calt' 1;
   }
 }
 
@@ -88,4 +88,14 @@
       @apply cursor-default bg-transparent;
     }
   }
+}
+
+.left-desktop-sidebar {
+  width: 220px;
+  right: calc(50vw + 312px);
+}
+
+.right-desktop-sidebar {
+  width: 304px;
+  left: calc(50vw + 320px);
 }

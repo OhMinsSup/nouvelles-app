@@ -1,8 +1,8 @@
+import type { ItemListSchema } from '~/server/items/items.model';
+import type { ItemQueryInput } from '~/server/items/items.query';
 import { agent } from '~/services/client/agent';
-import type { ItemQuery } from './items.query';
-import type { ItemListSchema } from './items.model';
 
-export const getItemsApi = async (query?: ItemQuery) => {
-  const { body } = await agent.getItems(query);
+export const getItemsApi = async (query?: ItemQueryInput) => {
+  const { body } = await agent.getItems(query as Record<string, any>);
   return body as ItemListSchema;
 };

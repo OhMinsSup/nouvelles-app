@@ -1,8 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 
 declare global {
-  // eslint-disable-next-line no-var
-  var cachedPrisma: PrismaClient;
+  var cachedPrisma: PrismaClient | undefined;
 }
 
 let prisma: PrismaClient;
@@ -18,5 +17,3 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export const db: PrismaClient = prisma;
-
-export * from '@prisma/client';

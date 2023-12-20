@@ -3,7 +3,7 @@
 
 generator client {
     provider        = "prisma-client-js"
-    previewFeatures = ["fullTextSearch", "fullTextIndex"]
+    previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -73,32 +73,60 @@ model VerificationToken {
     @@map(name: "verification_tokens")
 }
 
+model CrawlerDateCollected {
+    id             Int      @id @default(autoincrement())
+    collectingDate DateTime @unique
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @default(now()) @updatedAt
+    Item           Item[]
+
+    @@map("crawler_date_collected")
+}
+
 model Item {
-    id          String    @id @default(uuid())
-    neusralId   String?
-    reporter    String?
-    title       String?
-    link        String?
-    realLink    String?
-    description String?
-    image       String?
-    pulbishedAt DateTime?
-    categoryId  String?
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @default(now()) @updatedAt
-    deletedAt   DateTime? // 삭제일 (soft delete)
-    ItemTag     ItemTag[]
-    Category    Category? @relation(fields: [categoryId], references: [id])
+    id                   Int                   @id @default(autoincrement())
+    neusralId            String?
+    title                String?
+    link                 String?
+    realLink             String?
+    description          String?
+    image                String?
+    publishedAt          DateTime?
+    categoryId           Int?
+    newspaperId          Int?
+    collectingDateId     Int?
+    createdAt            DateTime              @default(now())
+    updatedAt            DateTime              @default(now()) @updatedAt
+    deletedAt            DateTime? // 삭제일 (soft delete)
+    ItemTag              ItemTag[]
+    Category             Category?             @relation(fields: [categoryId], references: [id])
+    Newspaper            Newspaper?            @relation(fields: [newspaperId], references: [id])
+    CrawlerDateCollected CrawlerDateCollected? @relation(fields: [collectingDateId], references: [id])
 
     @@index([neusralId])
     @@index([categoryId])
-    @@index([reporter])
+    @@index([newspaperId])
+    @@index([collectingDateId])
     @@map("items")
 }
 
-model Category {
-    id        String    @id @default(uuid())
+model Newspaper {
+    id        Int       @id @default(autoincrement())
     name      String    @unique
+    slug      String    @unique
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @default(now()) @updatedAt
+    deletedAt DateTime? // 삭제일 (soft delete)
+    Item      Item[]
+
+    @@index([name])
+    @@map("newspapers")
+}
+
+model Category {
+    id        Int       @id @default(autoincrement())
+    name      String    @unique
+    slug      String    @unique
     createdAt DateTime  @default(now())
     updatedAt DateTime  @default(now()) @updatedAt
     deletedAt DateTime? // 삭제일 (soft delete)
@@ -109,8 +137,9 @@ model Category {
 }
 
 model Tag {
-    id        String    @id @default(uuid())
+    id        Int       @id @default(autoincrement())
     name      String    @unique
+    slug      String    @unique
     createdAt DateTime  @default(now())
     updatedAt DateTime  @default(now()) @updatedAt
     deletedAt DateTime? // 삭제일 (soft delete)
@@ -121,10 +150,10 @@ model Tag {
 }
 
 model ItemTag {
-    item   Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
-    itemId String @map(name: "item_id")
-    tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
-    tagId  String @map(name: "tag_id")
+    item   Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+    itemId Int  @map(name: "item_id")
+    tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+    tagId  Int  @map(name: "tag_id")
 
     @@id([itemId, tagId])
     @@index([itemId])

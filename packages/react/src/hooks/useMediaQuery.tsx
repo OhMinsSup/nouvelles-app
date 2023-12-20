@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
-import { useMemoizedFn } from './useMemoizedFn';
 import { isBrowser } from '../utils/assertion';
+import { useMemoizedFn } from './useMemoizedFn';
 
 export const MEDIA_QUERY = {
   xxlarge: '(min-width: 1920px)',

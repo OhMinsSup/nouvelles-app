@@ -1,23 +1,20 @@
-"server-only";
-import { db } from "@nouvelles/database";
-import type { Tag } from "@nouvelles/database";
+'server-only';
+import { db } from '@nouvelles/database';
+import { selectByTag } from '~/server/tags/tags.selector';
 
 export class TagsService {
-  async findOrCreate(text: string): Promise<Tag> {
-    const data = await db.tag.findUnique({
+  public findMany() {
+    return db.tag.findMany();
+  }
+
+  public findBySlug(slug: string) {
+    console.log('slug', slug);
+    return db.tag.findUnique({
       where: {
-        name: text,
+        slug,
       },
+      select: selectByTag,
     });
-    if (!data) {
-      const tag = await db.tag.create({
-        data: {
-          name: text,
-        },
-      });
-      return tag;
-    }
-    return data;
   }
 }
 

@@ -3,51 +3,51 @@ import { type BasicTarget, getTargetElement } from '../utils';
 import { useEffectWithTarget } from '../libs/createEffectWithTarget';
 import { useLatest } from './useLatest';
 
-type noop = (...p: any) => void;
+type NoopHandler = (...p: any) => void;
 
 export type Target = BasicTarget<HTMLElement | Element | Window | Document>;
 
-type Options<T extends Target = Target> = {
+interface Options<T extends Target = Target> {
   target?: T;
   capture?: boolean;
   once?: boolean;
   passive?: boolean;
-};
+}
 
-// @ts-ignore
+// @ts-expect-error useEventListener type
 function useEventListener<K extends keyof HTMLElementEventMap>(
   eventName: K,
   handler: (ev: HTMLElementEventMap[K]) => void,
   options?: Options<HTMLElement>,
 ): void;
-// @ts-ignore
+// @ts-expect-error useEventListener type
 function useEventListener<K extends keyof ElementEventMap>(
   eventName: K,
   handler: (ev: ElementEventMap[K]) => void,
   options?: Options<Element>,
 ): void;
-// @ts-ignore
+// @ts-expect-error useEventListener type
 function useEventListener<K extends keyof DocumentEventMap>(
   eventName: K,
   handler: (ev: DocumentEventMap[K]) => void,
   options?: Options<Document>,
 ): void;
-// @ts-ignore
+// @ts-expect-error useEventListener type
 function useEventListener<K extends keyof WindowEventMap>(
   eventName: K,
   handler: (ev: WindowEventMap[K]) => void,
   options?: Options<Window>,
 ): void;
-// @ts-ignore
+// @ts-expect-error useEventListener type
 function useEventListener(
   eventName: string,
-  handler: noop,
+  handler: NoopHandler,
   options: Options,
 ): void;
 
 export function useEventListener(
   eventName: string,
-  handler: noop,
+  handler: NoopHandler,
   options: Options = {},
 ) {
   const handlerRef = useLatest(handler);
@@ -60,7 +60,7 @@ export function useEventListener(
       }
 
       const eventListener = (event: Event) => {
-        return handlerRef.current(event);
+        handlerRef.current(event);
       };
 
       targetElement.addEventListener(eventName, eventListener, {

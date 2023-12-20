@@ -130,14 +130,11 @@ dist
 .pnp.*
 
 # prisma
-prisma/dev.db
-prisma/nouvelles.db
-prisma/nouvelles.db-journal
-prisma/dev.db-journal
-prisma/migrations
+migrations
 
 # env
 env/.env.development
 env/.env.production
 
 .turbo
+.cache

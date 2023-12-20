@@ -11,6 +11,7 @@ const createEffectWithTarget = (
   const useEffectWithTarget = (
     effect: React.EffectCallback,
     deps: React.DependencyList,
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     target: BasicTarget<any> | BasicTarget<any>[],
   ) => {
     const hasInitRef = React.useRef(false);
@@ -18,11 +19,15 @@ const createEffectWithTarget = (
     const lastElementRef = React.useRef<(Element | null)[]>([]);
     const lastDepsRef = React.useRef<React.DependencyList>([]);
 
-    const unLoadRef = React.useRef<any>();
+    const unLoadRef = React.useRef<
+      ReturnType<React.EffectCallback> | undefined
+    >();
 
     useEffectType(() => {
       const targets = Array.isArray(target) ? target : [target];
-      const els = targets.map((item) => getTargetElement(item));
+      const els = targets.map(
+        (item) => getTargetElement(item) as Element | null,
+      );
 
       // init run
       if (!hasInitRef.current) {

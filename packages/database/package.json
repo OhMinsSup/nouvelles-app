@@ -1,35 +1,50 @@
 {
   "name": "@nouvelles/database",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/client.ts"
+    ".": {
+      "import": "./dist/index.js",
+      "module": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "prebuild": "prisma generate",
+    "build": "tsup",
+    "clean": "rimraf dist",
+    "db:format": "prisma format",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx src/seed.ts",
-    "format": "prisma format",
-    "postinstall": "prisma generate",
-    "lint": "eslint . --max-warnings 0",
-    "prebuild": "npm run generate",
-    "predev": "npm run generate",
-    "studio": "prisma studio",
+    "db:studio": "prisma studio",
+    "generate": "prisma generate && tsup",
+    "postinstall": "prisma generate && tsup",
+    "lint": "eslint --max-warnings 0 .",
+    "predev": "prisma generate",
     "watch": "tsup --watch"
   },
   "dependencies": {
-    "@prisma/client": "^5.6.0"
+    "@prisma/client": "^5.7.0"
   },
   "devDependencies": {
     "@nouvelles/lintconfig": "workspace:*",
     "@nouvelles/tsconfig": "workspace:*",
-    "@types/node": "^20.10.3",
+    "@types/node": "^20.10.4",
     "eslint": "^8.55.0",
-    "prisma": "^5.6.0",
+    "prisma": "^5.7.0",
     "rimraf": "^5.0.5",
+    "tsup": "^8.0.1",
     "tsx": "^4.6.2",
-    "typescript": "^5.3.2"
+    "typescript": "^5.3.3"
   }
 }

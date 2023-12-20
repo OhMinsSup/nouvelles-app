@@ -1,55 +1,55 @@
-import { NextResponse } from 'next/server';
-import { itemService } from '~/server/items/items.server';
 import * as z from 'zod';
+import { withAxiom, type AxiomRequest } from 'next-axiom';
+import { itemService } from '~/server/items/items.server';
+import { validateQuery } from '~/server/items/items.query';
+import cors, { commonOriginFunc } from '~/server/utils/cors';
+import { $logger } from '~/libs/logger/logger.server';
 
-const searchParamsSchema = z.object({
-  cursor: z.string().optional(),
-  limit: z.string().optional(),
-  category: z.string().optional(),
-  tag: z.string().optional(),
-  type: z.enum(['root', 'search', 'today']).optional(),
-  q: z.string().optional(),
-});
+const internalGet = async (request: AxiomRequest) => {
+  const response = await cors(request, new Response(), {
+    origin: commonOriginFunc,
+    methods: ['GET', 'HEAD', 'OPTIONS'],
+    credentials: true,
+  });
 
-export async function GET(request: Request) {
+  if (response.status === 204) {
+    return response;
+  }
+
+  if (!response.headers.has('Access-Control-Allow-Origin')) {
+    return response;
+  }
+
   try {
-    const { searchParams } = new URL(request.url);
-
-    const query = await searchParamsSchema.parseAsync({
-      cursor: searchParams.get('cursor') ?? undefined,
-      limit: searchParams.get('limit') ?? undefined,
-      type: searchParams.get('type') ?? undefined,
-      category: searchParams.get('category') ?? undefined,
-      tag: searchParams.get('tag') ?? undefined,
-      q: searchParams.get('q') ?? undefined,
-    });
+    const query = await validateQuery(request);
 
     const data = await itemService.getItems(query);
-    return NextResponse.json({
-      ...data,
-      error: null,
+
+    return new Response(JSON.stringify(data), {
+      headers: response.headers,
+      status: 200,
     });
   } catch (error) {
-    console.log('error', error);
     if (error instanceof z.ZodError) {
-      const err = {
-        code: 'invalid_query_params',
-        message: 'Invalid query params',
-        errors: error.issues,
-      };
-
-      const defaultValues = itemService.getDefaultItems();
-      return NextResponse.json(
-        {
-          ...defaultValues,
-          error: err,
-        },
-        { status: 400 },
-      );
+      const data = itemService.getDefaultItems();
+      return new Response(JSON.stringify({ ...data, error }), {
+        headers: response.headers,
+        status: 400,
+      });
     }
-    
-    return new Response(null, { status: 500 });
-  }
-}
 
-export async function POST(request: Request) {}
+    $logger.error({
+      error,
+      message: '[GET - /api/items]: Error while fetching items',
+      label: 'api',
+      request,
+    });
+
+    return new Response(null, {
+      headers: response.headers,
+      status: 500,
+    });
+  }
+};
+
+export const GET = withAxiom(internalGet);

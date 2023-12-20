@@ -1,28 +1,19 @@
-"server-only";
-import { db } from "@nouvelles/database";
-import type { Category } from "@nouvelles/database";
+'server-only';
+import { db } from '@nouvelles/database';
+import { selectByCategory } from '~/server/categories/categories.selector';
 
 export class CategoriesService {
-  async findMany(): Promise<Category[]> {
-    const data = await db.category.findMany();
-    return data;
+  public findMany() {
+    return db.category.findMany();
   }
 
-  async findOrCreate(text: string): Promise<Category> {
-    const data = await db.category.findUnique({
+  public findBySlug(slug: string) {
+    return db.category.findUnique({
       where: {
-        name: text,
+        slug,
       },
+      select: selectByCategory,
     });
-    if (!data) {
-      const category = await db.category.create({
-        data: {
-          name: text,
-        },
-      });
-      return category;
-    }
-    return data;
   }
 }
 

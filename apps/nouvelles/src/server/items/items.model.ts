@@ -1,26 +1,26 @@
-import type { Category, Item, Tag } from "@nouvelles/database";
+import type { Category, Item, Newspaper, Tag } from '@nouvelles/database';
 
-type PaginationSchema = {
+interface PaginationSchema {
   totalCount: number;
-  endCursor: string | null;
+  endCursor: number | null;
   hasNextPage: boolean;
-};
+}
 
-export type ItemSchema = {
-  id: Item["id"];
-  neutralId: Item["neusralId"];
-  reporter: Item["reporter"];
-  title: Item["title"];
-  link: Item["link"];
-  realLink: Item["realLink"];
-  description: Item["description"];
-  pulbishedAt: Item["pulbishedAt"];
-  image: Item["image"];
-  Category: Pick<Category, "id" | "name">;
+export interface ItemSchema {
+  id: Item['id'];
+  neutralId: Item['neusralId'];
+  title: Item['title'];
+  link: Item['link'];
+  realLink: Item['realLink'];
+  description: Item['description'];
+  publishedAt: Item['publishedAt'];
+  image: Item['image'];
+  Category: Pick<Category, 'id' | 'name' | 'slug'>;
   ItemTag: {
-    tag: Pick<Tag, "id" | "name">;
+    tag: Pick<Tag, 'id' | 'name' | 'slug'>;
   }[];
-};
+  Newspaper: Pick<Newspaper, 'id' | 'name' | 'slug'>;
+}
 
 export type ItemListSchema = PaginationSchema & {
   list: ItemSchema[];

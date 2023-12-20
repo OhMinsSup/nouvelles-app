@@ -1,12 +1,14 @@
 import '~/assets/css/globals.css';
-import { env } from 'env.mjs';
-import { PreloadResources } from '~/libs/react/preload';
 import { Inter as FontSans } from 'next/font/google';
 import localFont from 'next/font/local';
-import { Providers } from './providers';
-import { cn } from '~/utils/utils';
-import { SITE_CONFIG } from '~/constants/constants';
+import { headers } from 'next/headers';
 import type { Metadata } from 'next';
+import { env } from 'env.mjs';
+import { SITE_CONFIG } from '~/constants/constants';
+import { Providers } from '~/app/providers';
+import { PreloadResources } from '~/libs/react/preload';
+import { cn, validateOrigin } from '~/utils/utils';
+import { getHeaderInDomainInfo } from '~/libs/domain/domain.server';
 
 const url = new URL(env.NEXT_PUBLIC_SITE_URL);
 
@@ -54,23 +56,24 @@ interface RoutesProps {
 }
 
 export default function Layout(props: RoutesProps) {
+  const headersList = headers();
+  const info = getHeaderInDomainInfo(headersList);
   return (
-    <html lang="ko" dir="ltr" suppressHydrationWarning>
+    <html dir="ltr" lang="ko" suppressHydrationWarning>
       <PreloadResources />
       <head>
         <meta
-          name="viewport"
           content="width=device-width,initial-scale=1,maximum-scale=2,shrink-to-fit=no"
+          name="viewport"
         />
         <meta
-          name="referrer"
           content="origin-when-cross-origin"
           id="meta_referrer"
+          name="referrer"
         />
-        <meta name="color-scheme" content="light" />
-        <meta name="theme-color" content="#FFFFFF" />
+        <meta content="light" name="color-scheme" />
+        <meta content="#FFFFFF" name="theme-color" />
       </head>
-
       <body
         className={cn(
           'font-sans antialiased',
@@ -78,7 +81,19 @@ export default function Layout(props: RoutesProps) {
           fontHeading.variable,
         )}
       >
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.__ENV__ = ${JSON.stringify({
+              SITE_URL: env.NEXT_PUBLIC_SITE_URL,
+              API_HOST: env.NEXT_PUBLIC_API_HOST,
+              NODE_ENV: env.NODE_ENV,
+            })};
+            window.__DOMAIN_INFO__ = ${JSON.stringify(info)}`,
+          }}
+        />
         <Providers
+          isCORS={validateOrigin(info.domainUrl)}
           theme={{
             attribute: 'class',
             defaultTheme: 'system',
