@@ -64,6 +64,7 @@ function getOriginHeaders(reqOrigin: string | undefined, origin: StaticOrigin) {
     if (allowed && reqOrigin) {
       headers.set('Access-Control-Allow-Origin', reqOrigin);
     }
+
     headers.append('Vary', 'Origin');
   }
 
@@ -79,7 +80,6 @@ async function originHeadersFromReq(
   const reqOrigin = req.headers.get('Origin') || undefined;
   const value =
     typeof origin === 'function' ? await origin(reqOrigin, req) : origin;
-
   if (!value) return;
   return getOriginHeaders(reqOrigin, value);
 }
@@ -120,19 +120,6 @@ export const commonOriginFunc = (origin: string | undefined) => {
 
   if (env.NODE_ENV === 'development') {
     corsWhitelist.push(/^http:\/\/localhost/);
-  }
-
-  if (origin) {
-    logger.info('server', 'cors:allowedOriginsRegex', {
-      allowed: corsWhitelist.some((regex) => regex.test(origin)),
-    });
-
-    for (const regex of corsWhitelist) {
-      logger.info('server', 'cors:regex', {
-        regex: regex.toString(),
-        test: regex.test(origin),
-      });
-    }
   }
 
   if (!origin || corsWhitelist.some((regex) => regex.test(origin))) {

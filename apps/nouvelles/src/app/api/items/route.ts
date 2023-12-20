@@ -7,6 +7,7 @@ export async function GET(request: Request) {
   const response = await cors(request, new Response(), {
     origin: commonOriginFunc,
     methods: ['GET', 'HEAD', 'OPTIONS'],
+    credentials: true,
   });
 
   if (response.status === 204) {
@@ -23,20 +24,20 @@ export async function GET(request: Request) {
     const data = await itemService.getItems(query);
 
     return new Response(JSON.stringify(data), {
-      ...response,
+      headers: response.headers,
       status: 200,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
       const data = itemService.getDefaultItems();
       return new Response(JSON.stringify({ ...data, error }), {
-        ...response,
+        headers: response.headers,
         status: 400,
       });
     }
 
     return new Response(null, {
-      ...response,
+      headers: response.headers,
       status: 500,
     });
   }

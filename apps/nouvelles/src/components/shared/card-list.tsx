@@ -145,8 +145,9 @@ export default function CardList({
   });
 
   const oldPages = data?.pages ?? [];
+  const flatPages = oldPages.map((page) => page?.list).flat() ?? [];
 
-  const list = oldPages.map((page) => page?.list).flat() ?? [];
+  const list = flatPages.filter(Boolean);
 
   const loadMore = (index: number) => {
     if (index <= 0) return;
