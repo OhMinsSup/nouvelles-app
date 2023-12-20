@@ -18,3 +18,5 @@ tailwind.config.ts
 postcss.config.cjs
 .eslintrc.js
 
+# env
+env.mjs

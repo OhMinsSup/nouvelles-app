@@ -1,6 +1,7 @@
 'server-only';
 import { env } from 'env.mjs';
 import { CORS_WHITELIST } from '~/constants/constants';
+import { parseUrl } from '~/utils/parseUrl';
 
 /**
  * Multi purpose CORS lib.
@@ -75,11 +76,17 @@ async function originHeadersFromReq(
   req: Request,
   origin: StaticOrigin | OriginFn,
 ) {
-  const reqOrigin =
-    req.headers.get('Origin') ||
-    req.headers.get('X-Forwarded-Host') ||
-    req.headers.get('host') ||
-    undefined;
+  let reqOrigin: string;
+  if (req.headers.get('Origin')) {
+    reqOrigin = req.headers.get('Origin') as unknown as string;
+  } else if (env.VERCEL_URL) {
+    reqOrigin = parseUrl(env.VERCEL_URL).origin;
+  } else if (env.NEXT_PUBLIC_VERCEL_URL) {
+    reqOrigin = parseUrl(env.NEXT_PUBLIC_VERCEL_URL).origin;
+  } else {
+    reqOrigin = env.NEXT_PUBLIC_SITE_URL;
+  }
+
   const value =
     typeof origin === 'function' ? await origin(reqOrigin, req) : origin;
   if (!value) return;

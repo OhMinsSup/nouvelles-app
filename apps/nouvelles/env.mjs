@@ -9,12 +9,16 @@ export const env = createEnv({
     NEXTAUTH_SECRET: z.string().min(1),
     KAKAO_CLIENT_SECRET: z.string().min(1),
     DATABASE_URL: z.string().min(1),
+    VERCEL_URL: z.string().optional(),
+    VERCEL_ENV: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_AXIOM_TOKEN: z.string(),
     NEXT_PUBLIC_SITE_URL: z.string(),
     NEXT_PUBLIC_API_HOST: z.string(),
     NEXT_PUBLIC_ROOT_DOMAIN: z.string(),
+    NEXT_PUBLIC_VERCEL_ENV: z.string().optional(),
+    NEXT_PUBLIC_VERCEL_URL: z.string().optional(),
   },
   runtimeEnv: {
     // server
@@ -24,11 +28,16 @@ export const env = createEnv({
     KAKAO_CLIENT_SECRET: process.env.KAKAO_CLIENT_SECRET,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
+    VERCEL_URL: process.env.VERCEL_URL,
+    VERCEL_ENV: process.env.VERCEL_ENV,
     // client
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_API_HOST: process.env.NEXT_PUBLIC_API_HOST,
     NEXT_PUBLIC_ROOT_DOMAIN: process.env.NEXT_PUBLIC_ROOT_DOMAIN,
     // isomorphic
     NEXT_PUBLIC_AXIOM_TOKEN: process.env.NEXT_PUBLIC_AXIOM_TOKEN,
+    // vercel
+    NEXT_PUBLIC_VERCEL_ENV: process.env.NEXT_PUBLIC_VERCEL_ENV,
+    NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
   },
 });
