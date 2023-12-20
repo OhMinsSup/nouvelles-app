@@ -3,6 +3,8 @@ import { Inter as FontSans } from 'next/font/google';
 import localFont from 'next/font/local';
 import { headers } from 'next/headers';
 import type { Metadata } from 'next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/react';
 import { env } from 'env.mjs';
 import { SITE_CONFIG } from '~/constants/constants';
 import { Providers } from '~/app/providers';
@@ -104,6 +106,8 @@ export default function Layout(props: RoutesProps) {
           {props.children}
           {props.modal}
         </Providers>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
