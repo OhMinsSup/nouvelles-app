@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-interface Window {
+interface Window extends globalThis {
   __DOMAIN_INFO__: {
     host: string;
     protocol: string;
@@ -20,6 +20,8 @@ interface Window {
   };
 
   __ENV__: {
+    SITE_URL: string;
+    API_HOST: string;
     NODE_ENV: 'development' | 'production' | 'test';
   };
 }
