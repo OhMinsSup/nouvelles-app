@@ -51,6 +51,13 @@ export const PAGE_ENDPOINTS = {
   },
 } as const;
 
+export const CORS_WHITELIST = {
+  ORIGIN: [
+    /^https?:\/\/nouvelles-.*\.vercel\.app$/,
+    /^https?:\/\/nouvelles\.vercel\.app$/,
+  ],
+};
+
 export const SITE_CONFIG = {
   title: 'Nouvelles',
   description: 'Nouvelles 새로운 소식을 만나보세요.',

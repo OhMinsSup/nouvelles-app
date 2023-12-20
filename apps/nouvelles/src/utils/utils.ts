@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import noop from 'lodash-es/noop';
 import { twMerge } from 'tailwind-merge';
 import { isEmpty, isNull, isUndefined } from '@nouvelles/libs';
+import { CORS_WHITELIST } from '~/constants/constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -78,4 +79,12 @@ export function scheduleMicrotask(callback: () => void): void {
         throw error;
       }),
     );
+}
+
+export function validateOrigin(origin: string) {
+  const corsWhitelist: RegExp[] = CORS_WHITELIST.ORIGIN;
+
+  const isAllowed = corsWhitelist.some((regex) => regex.test(origin));
+
+  return isAllowed;
 }

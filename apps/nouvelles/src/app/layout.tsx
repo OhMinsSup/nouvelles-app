@@ -1,12 +1,14 @@
 import '~/assets/css/globals.css';
 import { Inter as FontSans } from 'next/font/google';
 import localFont from 'next/font/local';
+import { headers } from 'next/headers';
 import type { Metadata } from 'next';
 import { env } from 'env.mjs';
 import { SITE_CONFIG } from '~/constants/constants';
 import { Providers } from '~/app/providers';
 import { PreloadResources } from '~/libs/react/preload';
-import { cn } from '~/utils/utils';
+import { cn, validateOrigin } from '~/utils/utils';
+import { getHeaderInDomainInfo } from '~/libs/domain/domain.server';
 
 const url = new URL(env.NEXT_PUBLIC_SITE_URL);
 
@@ -54,6 +56,8 @@ interface RoutesProps {
 }
 
 export default function Layout(props: RoutesProps) {
+  const headersList = headers();
+  const info = getHeaderInDomainInfo(headersList);
   return (
     <html dir="ltr" lang="ko" suppressHydrationWarning>
       <PreloadResources />
@@ -77,7 +81,13 @@ export default function Layout(props: RoutesProps) {
           fontHeading.variable,
         )}
       >
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.DOMAIN_INFO = ${JSON.stringify(info)}`,
+          }}
+        />
         <Providers
+          isCORS={validateOrigin(info.domainUrl)}
           theme={{
             attribute: 'class',
             defaultTheme: 'system',

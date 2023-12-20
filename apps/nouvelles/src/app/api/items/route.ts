@@ -1,9 +1,11 @@
 import * as z from 'zod';
+import { withAxiom, type AxiomRequest } from 'next-axiom';
 import { itemService } from '~/server/items/items.server';
 import { validateQuery } from '~/server/items/items.query';
 import cors, { commonOriginFunc } from '~/server/utils/cors';
+import { $logger } from '~/libs/logger/logger.server';
 
-export async function GET(request: Request) {
+const internalGet = async (request: AxiomRequest) => {
   const response = await cors(request, new Response(), {
     origin: commonOriginFunc,
     methods: ['GET', 'HEAD', 'OPTIONS'],
@@ -36,9 +38,18 @@ export async function GET(request: Request) {
       });
     }
 
+    $logger.error({
+      error,
+      message: '[GET - /api/items]: Error while fetching items',
+      label: 'api',
+      request,
+    });
+
     return new Response(null, {
       headers: response.headers,
       status: 500,
     });
   }
-}
+};
+
+export const GET = withAxiom(internalGet);

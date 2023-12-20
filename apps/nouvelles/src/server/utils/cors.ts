@@ -1,6 +1,6 @@
 'server-only';
 import { env } from 'env.mjs';
-import logger from '~/utils/logger';
+import { CORS_WHITELIST } from '~/constants/constants';
 
 /**
  * Multi purpose CORS lib.
@@ -71,8 +71,6 @@ function getOriginHeaders(reqOrigin: string | undefined, origin: StaticOrigin) {
   return headers;
 }
 
-// originHeadersFromReq
-
 async function originHeadersFromReq(
   req: Request,
   origin: StaticOrigin | OriginFn,
@@ -108,15 +106,8 @@ function getAllowedHeaders(req: Request, allowed?: string | string[]) {
 }
 
 export const commonOriginFunc = (origin: string | undefined) => {
-  logger.info('server', 'cors:origin', {
-    origin,
-  });
-
   // nouvelles-*.vercel.app
-  const corsWhitelist: RegExp[] = [
-    /^https?:\/\/nouvelles-.*\.vercel\.app$/,
-    /^https?:\/\/nouvelles\.vercel\.app$/,
-  ];
+  const corsWhitelist: RegExp[] = CORS_WHITELIST.ORIGIN;
 
   if (env.NODE_ENV === 'development') {
     corsWhitelist.push(/^http:\/\/localhost/);
