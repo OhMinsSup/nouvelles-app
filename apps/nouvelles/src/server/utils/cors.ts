@@ -76,15 +76,11 @@ async function originHeadersFromReq(
   req: Request,
   origin: StaticOrigin | OriginFn,
 ) {
-  let reqOrigin: string;
+  let reqOrigin: string | undefined;
   if (req.headers.get('Origin')) {
     reqOrigin = req.headers.get('Origin') as unknown as string;
   } else if (env.VERCEL_URL) {
     reqOrigin = parseUrl(env.VERCEL_URL).origin;
-  } else if (env.NEXT_PUBLIC_VERCEL_URL) {
-    reqOrigin = parseUrl(env.NEXT_PUBLIC_VERCEL_URL).origin;
-  } else {
-    reqOrigin = env.NEXT_PUBLIC_SITE_URL;
   }
 
   const value =
