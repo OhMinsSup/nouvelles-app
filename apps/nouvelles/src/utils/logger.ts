@@ -1,4 +1,6 @@
+import { log } from 'next-axiom';
 import { isBrowser } from '@nouvelles/react';
+import { env } from 'env.mjs';
 
 type LogCategory =
   | 'client'
@@ -14,6 +16,11 @@ type Extra = Record<string, any>;
 
 class Logger {
   info(label: LogCategory, message: string, extra?: Extra) {
+    if (env.NODE_ENV === 'production' && env.NEXT_PUBLIC_AXIOM_TOKEN) {
+      log.info(`[${label}]:${message}`, extra);
+      return;
+    }
+
     if (isBrowser) {
       console.info(
         `%c[${label}]:${message}`,
@@ -26,6 +33,11 @@ class Logger {
   }
 
   debug(label: LogCategory, message: string, extra?: Extra) {
+    if (env.NODE_ENV === 'production' && env.NEXT_PUBLIC_AXIOM_TOKEN) {
+      log.debug(`[${label}]:${message}`, extra);
+      return;
+    }
+
     if (isBrowser) {
       console.debug(
         `%c[${label}]${message}`,
@@ -60,6 +72,10 @@ class Logger {
   }
 
   warn(message: string, extra?: Extra) {
+    if (env.NODE_ENV === 'production' && env.NEXT_PUBLIC_AXIOM_TOKEN) {
+      log.warn(`[warning]:${message}`, extra);
+      return;
+    }
     // if (sentryDSN) {
     //   Sentry.withScope(function (scope) {
     //     scope.setLevel('warning');
@@ -84,6 +100,14 @@ class Logger {
   }
 
   error(error: Error, message?: string, extra?: Extra) {
+    if (env.NODE_ENV === 'production' && env.NEXT_PUBLIC_AXIOM_TOKEN) {
+      log.error(`[error]:${error.name}`, {
+        error,
+        message,
+        extra,
+      });
+      return;
+    }
     // if (sentryDSN) {
     //   Sentry.withScope(function (scope) {
     //     scope.setLevel('error');

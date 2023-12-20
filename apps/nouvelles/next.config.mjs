@@ -1,3 +1,5 @@
+import { withAxiom } from 'next-axiom';
+
 if (process.env.SKIP_ENV_VALIDATE !== 'true') {
   const mod = await import('@nouvelles/eli');
   mod.load({
@@ -28,7 +30,7 @@ const nextConfig = {
   compiler: {
     removeConsole: isProduction
       ? {
-          exclude: ['error', 'debug', 'info'],
+          exclude: ['error'],
         }
       : false,
   },
@@ -77,4 +79,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withAxiom(nextConfig);

@@ -2,9 +2,14 @@ import type { FastifyPluginAsync } from 'fastify';
 import cors from '@fastify/cors';
 
 const corsPlugin: FastifyPluginAsync = async (fastify) => {
-  const corsWhitelist: RegExp[] = [/^http:\/\/localhost/];
+  const corsWhitelist: RegExp[] = [
+    /^https?:\/\/nouvelles-.*\.vercel\.app$/,
+    /^https?:\/\/nouvelles\.vercel\.app$/,
+  ];
 
-  // corsWhitelist.push(/^http:\/\/localhost/);
+  if (process.env.NODE_ENV === 'development') {
+    corsWhitelist.push(/^http:\/\/localhost/);
+  }
 
   fastify.register(cors, {
     credentials: true,

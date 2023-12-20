@@ -3,6 +3,7 @@ import * as z from 'zod';
 import { env } from 'env.mjs';
 import { itemService } from '~/server/items/items.server';
 import cors from '~/server/utils/cors';
+import logger from '~/utils/logger';
 
 const schema = z.object({
   cursor: z
@@ -54,32 +55,38 @@ const validateQuery = async (searchParams: URLSearchParams) => {
 };
 
 const originFn = (origin: string | undefined) => {
-  console.info('cors:origin', origin);
-  // 개발일 때는 * 로 허용 배포일 때는 특정 도메인만 허용
-  if (env.NODE_ENV === 'development') {
-    return '*';
-  }
-
-  if (!origin) {
-    return false;
-  }
+  logger.info('server', 'cors:origin', {
+    origin,
+  });
 
   // nouvelles-*.vercel.app
-  const allowedOriginsRegex = [
+  const corsWhitelist: RegExp[] = [
     /^https?:\/\/nouvelles-.*\.vercel\.app$/,
     /^https?:\/\/nouvelles\.vercel\.app$/,
   ];
 
-  console.info(
-    'cors:allowedOriginsRegex',
-    allowedOriginsRegex.some((regex) => regex.test(origin)),
-  );
-
-  for (const regex of allowedOriginsRegex) {
-    console.info('cors:regex', regex, regex.test(origin));
+  if (env.NODE_ENV === 'development') {
+    corsWhitelist.push(/^http:\/\/localhost/);
   }
 
-  return allowedOriginsRegex.some((regex) => regex.test(origin));
+  if (origin) {
+    logger.info('server', 'cors:allowedOriginsRegex', {
+      allowed: corsWhitelist.some((regex) => regex.test(origin)),
+    });
+
+    for (const regex of corsWhitelist) {
+      logger.info('server', 'cors:regex', {
+        regex: regex.toString(),
+        test: regex.test(origin),
+      });
+    }
+  }
+
+  if (!origin || corsWhitelist.some((regex) => regex.test(origin))) {
+    return true;
+  }
+
+  return false;
 };
 
 export async function GET(request: Request) {
