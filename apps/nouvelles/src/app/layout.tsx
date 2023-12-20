@@ -83,7 +83,13 @@ export default function Layout(props: RoutesProps) {
       >
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.DOMAIN_INFO = ${JSON.stringify(info)}`,
+            __html: `
+            window.__ENV__ = ${JSON.stringify({
+              SITE_URL: env.NEXT_PUBLIC_SITE_URL,
+              API_HOST: env.NEXT_PUBLIC_API_HOST,
+              NODE_ENV: env.NODE_ENV,
+            })};
+            window.__DOMAIN_INFO__ = ${JSON.stringify(info)}`,
           }}
         />
         <Providers

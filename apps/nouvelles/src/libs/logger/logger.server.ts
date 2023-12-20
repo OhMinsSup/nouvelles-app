@@ -1,11 +1,12 @@
 'server-only';
 import { getHeaderInDomainInfo } from '~/libs/domain/domain.server';
+import { env } from 'env.mjs';
 import { SentryLogger } from './logger.sentry';
 import type { LogMethodParams, LoggerService } from './types';
 
 export class ServerLogger extends SentryLogger implements LoggerService {
   info({ message, label, extra, request }: LogMethodParams) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (env.NODE_ENV !== 'production') {
       console.info(`[${label}]:${message}`, extra);
       return;
     }
@@ -13,7 +14,7 @@ export class ServerLogger extends SentryLogger implements LoggerService {
     const isServer = typeof window === 'undefined';
 
     if (isServer) {
-      if (process.env.NODE_ENV === 'production' && request) {
+      if (env.NODE_ENV === 'production' && request) {
         const { isLocalhost } = getHeaderInDomainInfo(request?.headers);
         if (request.log && !isLocalhost) {
           request.log.info(`[${label}]:${message}`, extra);
@@ -23,7 +24,7 @@ export class ServerLogger extends SentryLogger implements LoggerService {
   }
 
   debug({ message, label, extra, request }: LogMethodParams) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (env.NODE_ENV !== 'production') {
       console.debug(`[${label}]:${message}`, extra);
       return;
     }
@@ -31,7 +32,7 @@ export class ServerLogger extends SentryLogger implements LoggerService {
     const isServer = typeof window === 'undefined';
 
     if (isServer) {
-      if (process.env.NODE_ENV === 'production' && request) {
+      if (env.NODE_ENV === 'production' && request) {
         const { isLocalhost } = getHeaderInDomainInfo(request?.headers);
         if (request.log && !isLocalhost) {
           request.log.debug(`[${label}]:${message}`, extra);
@@ -45,7 +46,7 @@ export class ServerLogger extends SentryLogger implements LoggerService {
   }
 
   warn({ message, label, extra, request }: LogMethodParams) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (env.NODE_ENV !== 'production') {
       console.warn(`[${label}]:${message}`, extra);
       return;
     }
@@ -53,7 +54,7 @@ export class ServerLogger extends SentryLogger implements LoggerService {
     const isServer = typeof window === 'undefined';
 
     if (isServer) {
-      if (process.env.NODE_ENV === 'production' && request) {
+      if (env.NODE_ENV === 'production' && request) {
         const { isLocalhost } = getHeaderInDomainInfo(request?.headers);
         if (request.log && !isLocalhost) {
           request.log.warn(`[${label}]:${message}`, extra);
@@ -65,7 +66,7 @@ export class ServerLogger extends SentryLogger implements LoggerService {
   }
 
   error({ message, label, extra, error, request }: LogMethodParams) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (env.NODE_ENV !== 'production') {
       console.error(`[${label}]:${message}`, {
         error,
         extra,
@@ -76,7 +77,7 @@ export class ServerLogger extends SentryLogger implements LoggerService {
     const isServer = typeof window === 'undefined';
 
     if (isServer) {
-      if (process.env.NODE_ENV === 'production' && request) {
+      if (env.NODE_ENV === 'production' && request) {
         const { isLocalhost } = getHeaderInDomainInfo(request?.headers);
         if (request.log && !isLocalhost) {
           request.log.error(`[${label}]:${message}`, {
