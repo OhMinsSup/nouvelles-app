@@ -60,6 +60,7 @@ interface RoutesProps {
 export default function Layout(props: RoutesProps) {
   const headersList = headers();
   const info = getHeaderInDomainInfo(headersList);
+  const isCROS = validateOrigin(info.domainUrl);
   return (
     <html dir="ltr" lang="ko" suppressHydrationWarning>
       <PreloadResources />
@@ -95,7 +96,7 @@ export default function Layout(props: RoutesProps) {
           }}
         />
         <Providers
-          isCORS={validateOrigin(info.domainUrl)}
+          isCORS={isCROS}
           theme={{
             attribute: 'class',
             defaultTheme: 'system',
@@ -106,8 +107,12 @@ export default function Layout(props: RoutesProps) {
           {props.children}
           {props.modal}
         </Providers>
-        <Analytics />
-        <SpeedInsights />
+        {isCROS && env.NODE_ENV === 'production' ? (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        ) : null}
       </body>
     </html>
   );
