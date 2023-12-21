@@ -6,6 +6,8 @@ import formbody from '@fastify/formbody';
 import fastifyCron from 'fastify-cron';
 import cookie from '@fastify/cookie';
 import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import routes from '~/routes';
 
@@ -13,8 +15,9 @@ const app = Fastify({
   logger: true,
 });
 
-// eslint-disable-next-line import/no-named-as-default-member
 dayjs.extend(customParseFormat);
+dayjs.extend(timezone);
+dayjs.extend(utc);
 
 app.register(cookie, { secret: 'test' });
 app.register(formbody);

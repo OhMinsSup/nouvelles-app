@@ -13,7 +13,6 @@ export const env = createEnv({
     VERCEL_ENV: z.string().optional(),
   },
   client: {
-    NEXT_PUBLIC_AXIOM_TOKEN: z.string(),
     NEXT_PUBLIC_SITE_URL: z.string(),
     NEXT_PUBLIC_API_HOST: z.string(),
     NEXT_PUBLIC_ROOT_DOMAIN: z.string(),
@@ -34,8 +33,6 @@ export const env = createEnv({
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_API_HOST: process.env.NEXT_PUBLIC_API_HOST,
     NEXT_PUBLIC_ROOT_DOMAIN: process.env.NEXT_PUBLIC_ROOT_DOMAIN,
-    // isomorphic
-    NEXT_PUBLIC_AXIOM_TOKEN: process.env.NEXT_PUBLIC_AXIOM_TOKEN,
     // vercel
     NEXT_PUBLIC_VERCEL_ENV: process.env.NEXT_PUBLIC_VERCEL_ENV,
     NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
