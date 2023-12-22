@@ -13,9 +13,9 @@ import {
 import { isEmpty } from '@nouvelles/libs';
 import Card from '~/components/shared/card';
 import { QUERIES_KEY } from '~/constants/constants';
-import { getItemsApi } from '~/server/items/items.api';
+import { getItemsApi } from '~/server/trpc/router/items/items.api';
 import { KeyProvider } from '~/libs/providers/key';
-import type { ItemListSchema } from '~/server/items/items.model';
+import type { ItemListSchema } from '~/libs/trpc/router/items/items.model';
 
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 

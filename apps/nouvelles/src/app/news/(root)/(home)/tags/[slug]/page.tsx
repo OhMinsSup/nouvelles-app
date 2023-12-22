@@ -3,10 +3,10 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { notFound } from 'next/navigation';
 import getQueryClient from '~/services/query/get-query-client';
 import CardList from '~/components/shared/card-list';
-import { itemService } from '~/server/items/items.server';
+import { itemService } from '~/libs/trpc/router/items/items.server';
 import { QUERIES_KEY } from '~/constants/constants';
 import CategoryWithTagHeader from '~/components/shared/category-with-tag-header';
-import { tagsService } from '~/server/tags/tags.server';
+import { tagsService } from '~/libs/trpc/router/tags/tags.server';
 
 interface PageProps {
   params: { slug: string };

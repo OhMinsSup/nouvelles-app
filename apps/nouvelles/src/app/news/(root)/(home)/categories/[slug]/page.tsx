@@ -4,9 +4,9 @@ import { notFound } from 'next/navigation';
 import getQueryClient from '~/services/query/get-query-client';
 import CategoryWithTagHeader from '~/components/shared/category-with-tag-header';
 import CardList from '~/components/shared/card-list';
-import { itemService } from '~/server/items/items.server';
+import { itemService } from '~/libs/trpc/router/items/items.server';
 import { QUERIES_KEY } from '~/constants/constants';
-import { categoriesService } from '~/server/categories/categories.server';
+import { api } from '~/libs/trpc/server';
 
 interface PageProps {
   params: { slug: string };
@@ -15,7 +15,7 @@ interface PageProps {
 export default async function Pages({ params }: PageProps) {
   const name = decodeURIComponent(params.slug);
 
-  const categoryInfo = await categoriesService.findBySlug(name);
+  const categoryInfo = await api.categories.bySlug.query({ slug: name });
 
   if (!categoryInfo) {
     notFound();
