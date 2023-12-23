@@ -7,6 +7,7 @@ import { callProcedure } from '@trpc/server';
 import { observable } from '@trpc/server/observable';
 import SuperJSON from 'superjson';
 import { appRouter, createTRPCContext } from '~/libs/trpc/trpc-root';
+import { env } from 'env.mjs';
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -27,7 +28,7 @@ export const api = createTRPCClient<typeof appRouter>({
   links: [
     loggerLink({
       enabled: (op) =>
-        process.env.NODE_ENV === 'development' ||
+        env.NODE_ENV === 'development' ||
         (op.direction === 'down' && op.result instanceof Error),
     }),
     /**
