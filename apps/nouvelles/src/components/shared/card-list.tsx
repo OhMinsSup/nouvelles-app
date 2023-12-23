@@ -1,6 +1,4 @@
-/* eslint-disable react/no-unstable-nested-components */
 'use client';
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useRef, useLayoutEffect, useCallback, useMemo } from 'react';
 import last from 'lodash-es/last';
 import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
@@ -13,9 +11,9 @@ import {
 import { isEmpty } from '@nouvelles/libs';
 import Card from '~/components/shared/card';
 import { QUERIES_KEY } from '~/constants/constants';
-import { getItemsApi } from '~/server/trpc/router/items/items.api';
 import { KeyProvider } from '~/libs/providers/key';
 import type { ItemListSchema } from '~/libs/trpc/router/items/items.model';
+import { api } from '~/libs/trpc/react';
 
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 
@@ -26,6 +24,7 @@ interface CardListProps {
   q?: string;
   userId?: string;
   header?: React.ReactNode;
+  initialData?: ItemListSchema;
 }
 
 interface Restoration {
@@ -40,12 +39,24 @@ export default function CardList({
   tag,
   category,
   header,
+  initialData,
 }: CardListProps) {
-  const queryClient = useQueryClient();
+  const utils = api.useUtils();
   const $virtuoso = useRef<VirtuosoHandle>(null);
   const $restoration = useRef<Restoration | null>(null);
   const $observer = useRef<MutationObserver | null>(null);
   const $isLockFetching = useRef(false);
+
+  const input = useMemo(() => {
+    return {
+      type,
+      ...(category ? { category: decodeURIComponent(category) } : {}),
+      ...(tag ? { tag: decodeURIComponent(tag) } : {}),
+      ...(type === 'search' && q ? { q: decodeURIComponent(q) } : {}),
+      ...(userId ? { userId } : {}),
+      limit: 10,
+    };
+  }, [category, q, tag, type, userId]);
 
   const key = useMemo(() => {
     return `@items::scroll::${type}`;
@@ -79,13 +90,8 @@ export default function CardList({
   };
 
   const fetcher = (cursor: number | null) => {
-    return getItemsApi({
-      type,
-      ...(category ? { category: decodeURIComponent(category) } : {}),
-      ...(tag ? { tag: decodeURIComponent(tag) } : {}),
-      ...(type === 'search' && q ? { q: decodeURIComponent(q) } : {}),
-      ...(userId ? { userId } : {}),
-      limit: 10,
+    return utils.items.all.fetch({
+      ...input,
       cursor: cursor ? cursor : undefined,
     });
   };
@@ -117,9 +123,15 @@ export default function CardList({
     if (!prefetchData || isEmpty(prefetchData)) return;
 
     try {
-      queryClient.setQueryData(queryKey, (queryData: any) => {
-        const _oldPages = (queryData.pages ?? []) as ItemListSchema[];
-        const _oldPageParams = (queryData.pageParams ?? []) as number[];
+      utils.items.all.setInfiniteData(input, (data) => {
+        if (!data) {
+          return {
+            pages: [],
+            pageParams: [],
+          };
+        }
+        const _oldPages = data.pages;
+        const _oldPageParams = data.pageParams;
         const _nextPageParams = prefetchData.map((page) => page?.endCursor);
         return {
           pages: [..._oldPages, ...prefetchData],
@@ -133,10 +145,16 @@ export default function CardList({
     }
   };
 
-  const { data, fetchNextPage } = useInfiniteQuery({
-    queryKey,
-    queryFn: ({ pageParam }) => fetcher(pageParam),
-    initialPageParam: null as number | null,
+  const { data, fetchNextPage } = api.items.all.useInfiniteQuery(input, {
+    initialCursor: null as number | null,
+    initialData: initialData
+      ? () => {
+          return {
+            pages: [initialData],
+            pageParams: [null],
+          };
+        }
+      : undefined,
     getNextPageParam: (lastPage) => {
       return lastPage?.hasNextPage && lastPage?.endCursor
         ? lastPage?.endCursor
@@ -263,8 +281,10 @@ export default function CardList({
       <Virtuoso
         components={{
           ...(header && {
+            // eslint-disable-next-line react/no-unstable-nested-components
             Header: () => <>{header}</>,
           }),
+          // eslint-disable-next-line react/no-unstable-nested-components
           Footer: () => <div className="h-40" />,
         }}
         computeItemKey={(index, item) => {
@@ -277,6 +297,7 @@ export default function CardList({
         data-hydrating-signal
         endReached={loadMore}
         initialItemCount={list.length - 1}
+        // eslint-disable-next-line react/no-unstable-nested-components
         itemContent={(_, item) => {
           return <Card item={item} />;
         }}
