@@ -91,7 +91,7 @@ export class ItemService {
               : undefined,
           },
           select: selectByItem,
-          take: limit,
+          take: limit ?? 10,
         }),
       ]);
 
@@ -273,7 +273,7 @@ export class ItemService {
               : undefined,
           },
           select: selectByItem,
-          take: limit,
+          take: limit ?? 10,
         }),
       ]);
 
@@ -344,7 +344,7 @@ export class ItemService {
                 }
               : undefined,
           },
-          take: limit,
+          take: limit ?? 10,
           select: selectByItem,
         }),
       ]);

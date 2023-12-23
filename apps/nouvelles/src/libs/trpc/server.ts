@@ -17,7 +17,7 @@ const createContext = cache(async () => {
   heads.set('x-trpc-source', 'rsc');
 
   return createTRPCContext({
-    session: null,
+    session: await Promise.resolve(null),
     headers: heads,
   });
 });
@@ -35,9 +35,9 @@ export const api = createTRPCClient<typeof appRouter>({
      * about the complexity here, it's just wrapping `callProcedure` with an observable to make it a
      * valid ending link for tRPC.
      */
-    () =>
-      ({ op }) =>
-        observable((observer) => {
+    () => {
+      return ({ op }) => {
+        return observable((observer) => {
           createContext()
             .then((ctx) => {
               return callProcedure({
@@ -55,6 +55,8 @@ export const api = createTRPCClient<typeof appRouter>({
             .catch((cause: TRPCErrorResponse) => {
               observer.error(TRPCClientError.from(cause));
             });
-        }),
+        });
+      };
+    },
   ],
 });
