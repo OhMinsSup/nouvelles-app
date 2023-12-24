@@ -19,7 +19,7 @@ dayjs.extend(customParseFormat);
 dayjs.extend(timezone);
 dayjs.extend(utc);
 
-app.register(cookie, { secret: 'test' });
+app.register(cookie);
 app.register(formbody);
 
 app.register(fastifyCron);

@@ -15,8 +15,6 @@ export default async function Pages({ searchParams }: PageProps) {
     q,
   });
 
-  console.log(data);
-
   return (
     <CardList
       header={

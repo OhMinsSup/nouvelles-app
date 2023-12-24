@@ -10,8 +10,6 @@ import {
 } from '@nouvelles/react';
 import { isEmpty } from '@nouvelles/libs';
 import Card from '~/components/shared/card';
-import { QUERIES_KEY } from '~/constants/constants';
-import { KeyProvider } from '~/libs/providers/key';
 import type { ItemListSchema } from '~/libs/trpc/router/items/items.model';
 import { api } from '~/libs/trpc/react';
 
@@ -71,16 +69,6 @@ export default function CardList({
   }, []);
 
   const hydrating = useIsHydrating('[data-hydrating-signal]');
-
-  const queryKey = useMemo(() => {
-    if (type === 'categories' && category) {
-      return QUERIES_KEY.items.categories(category);
-    }
-    if (type === 'tags' && tag) {
-      return QUERIES_KEY.items.tags(tag);
-    }
-    return QUERIES_KEY.items.root;
-  }, [type, category, tag]);
 
   const closeMutationObserver = () => {
     if ($observer.current) {
@@ -277,35 +265,33 @@ export default function CardList({
   const lastItem = last(data?.pages ?? []);
 
   return (
-    <KeyProvider queryKey={queryKey}>
-      <Virtuoso
-        components={{
-          ...(header && {
-            // eslint-disable-next-line react/no-unstable-nested-components
-            Header: () => <>{header}</>,
-          }),
+    <Virtuoso
+      components={{
+        ...(header && {
           // eslint-disable-next-line react/no-unstable-nested-components
-          Footer: () => <div className="h-40" />,
-        }}
-        computeItemKey={(index, item) => {
-          if (!item) {
-            return `${type}-items-${index}`;
-          }
-          return `${type}-items-${item.id}-${index}`;
-        }}
-        data={list}
-        data-hydrating-signal
-        endReached={loadMore}
-        initialItemCount={list.length - 1}
+          Header: () => <>{header}</>,
+        }),
         // eslint-disable-next-line react/no-unstable-nested-components
-        itemContent={(_, item) => {
-          return <Card item={item} />;
-        }}
-        overscan={10}
-        ref={$virtuoso}
-        style={{ height: '100%' }}
-        totalCount={lastItem?.totalCount ?? 0}
-      />
-    </KeyProvider>
+        Footer: () => <div className="h-40" />,
+      }}
+      computeItemKey={(index, item) => {
+        if (!item) {
+          return `${type}-items-${index}`;
+        }
+        return `${type}-items-${item.id}-${index}`;
+      }}
+      data={list}
+      data-hydrating-signal
+      endReached={loadMore}
+      initialItemCount={list.length - 1}
+      // eslint-disable-next-line react/no-unstable-nested-components
+      itemContent={(_, item) => {
+        return <Card item={item} />;
+      }}
+      overscan={10}
+      ref={$virtuoso}
+      style={{ height: '100%' }}
+      totalCount={lastItem?.totalCount ?? 0}
+    />
   );
 }

@@ -29,6 +29,7 @@
     "@nouvelles/api": "workspace:*",
     "@nouvelles/error": "workspace:*",
     "@nouvelles/libs": "workspace:*",
+    "@nouvelles/model": "workspace:*",
     "@nouvelles/react": "workspace:*",
     "@prisma/client": "^5.7.0",
     "@radix-ui/react-aspect-ratio": "^1.0.3",

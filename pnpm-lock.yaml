@@ -59,12 +59,15 @@ importers:
       '@nouvelles/libs':
         specifier: workspace:*
         version: link:../../packages/libs
+      '@nouvelles/model':
+        specifier: workspace:*
+        version: link:../../packages/model
       '@nouvelles/react':
         specifier: workspace:*
         version: link:../../packages/react
       '@prisma/client':
         specifier: ^5.7.0
-        version: 5.7.0(prisma@5.7.0)
+        version: 5.7.0
       '@radix-ui/react-aspect-ratio':
         specifier: ^1.0.3
         version: 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
@@ -2283,6 +2286,17 @@ packages:
 
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+    dev: false
+
+  /@prisma/client@5.7.0:
+    resolution: {integrity: sha512-cZmglCrfNbYpzUtz7HscVHl38e9CrUs31nrVoGUK1nIPXGgt8hT4jj2s657UXcNdQ/jBUxDgGmHyu2Nyrq1txg==}
+    engines: {node: '>=16.13'}
+    requiresBuild: true
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
     dev: false
 
   /@prisma/client@5.7.0(prisma@5.7.0):

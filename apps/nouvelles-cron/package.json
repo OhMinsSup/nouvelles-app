@@ -7,7 +7,7 @@
     "clean": "rimraf dist",
     "dev": "tsx watch src/main.ts",
     "lint": "eslint --max-warnings 0 .",
-    "start:dev": "tsx watch src/main.ts"
+    "watch:dev": "tsx watch src/main.ts"
   },
   "dependencies": {
     "@fastify/autoload": "^5.8.0",

@@ -8,6 +8,9 @@ export const env = createEnv({
       .optional()
       .transform((v) => (v ? `https://${v}` : undefined)),
     PORT: z.coerce.number().default(3000),
+    NEXT_PUBLIC_SITE_URL: z.string(),
+    NEXT_PUBLIC_API_HOST: z.string(),
+    NEXT_PUBLIC_ROOT_DOMAIN: z.string(),
   },
   server: {
     NODE_ENV: z.enum(['development', 'test', 'production']),
@@ -17,11 +20,6 @@ export const env = createEnv({
     KAKAO_CLIENT_SECRET: z.string().min(1),
     DATABASE_URL: z.string().min(1),
     REDIS_URL: z.string().min(1),
-  },
-  client: {
-    NEXT_PUBLIC_SITE_URL: z.string(),
-    NEXT_PUBLIC_API_HOST: z.string(),
-    NEXT_PUBLIC_ROOT_DOMAIN: z.string(),
   },
   runtimeEnv: {
     // server
@@ -34,6 +32,9 @@ export const env = createEnv({
     REDIS_URL: process.env.REDIS_URL,
     VERCEL_URL: process.env.VERCEL_URL,
     PORT: process.env.PORT,
+    CI: process.env.CI,
+    SKIP_ENV_VALIDATION: process.env.SKIP_ENV_VALIDATION,
+    SKIP_ENV_VALIDATE: process.env.SKIP_ENV_VALIDATE,
     // client
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_API_HOST: process.env.NEXT_PUBLIC_API_HOST,
@@ -42,5 +43,6 @@ export const env = createEnv({
   skipValidation:
     !!process.env.CI ||
     !!process.env.SKIP_ENV_VALIDATION ||
+    !!process.env.SKIP_ENV_VALIDATE ||
     process.env.npm_lifecycle_event === 'lint',
 });
