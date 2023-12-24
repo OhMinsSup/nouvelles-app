@@ -17,12 +17,11 @@
     "db:migrate:deploy": "dotenv -- turbo run db:migrate:deploy",
     "db:migrate:dev": "dotenv -- turbo run db:migrate:dev",
     "db:push": "dotenv -- turbo run db:push",
-    "db:studio": "dotenv -- turbo run db:studio",
     "dev": "dotenv -- turbo run dev --concurrency 255",
-    "env:build": "turbo run env:build",
-    "env:watch": "turbo run env:watch",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
+    "server:build": "dotenv -- turbo run server:build",
+    "server:start": "dotenv -- turbo run server:start --concurrency 13",
     "watch": "turbo run watch --concurrency 50%"
   },
   "devDependencies": {

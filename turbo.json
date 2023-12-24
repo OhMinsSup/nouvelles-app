@@ -6,6 +6,18 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "server:build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "server:start": {
+      "cache": false,
+      "persistent": true
+    },
     "db:migrate:dev": {
       "cache": false
     },
@@ -17,10 +29,6 @@
     "env:build": {},
     "env:watch": {
       "cache": false
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
     },
     "watch": {
       "dependsOn": ["^watch"],

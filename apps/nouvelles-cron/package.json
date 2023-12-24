@@ -3,11 +3,10 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "tsup",
     "clean": "rimraf dist",
-    "dev": "tsx watch src/main.ts",
     "lint": "eslint --max-warnings 0 .",
-    "watch:dev": "tsx watch src/main.ts"
+    "server:build": "tsup",
+    "server:start": "tsx watch src/main.ts"
   },
   "dependencies": {
     "@fastify/autoload": "^5.8.0",
