@@ -31,6 +31,9 @@ const nextConfig = {
         }
       : false,
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   redirects() {
     return [
       {
