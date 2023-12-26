@@ -20,7 +20,6 @@
   "scripts": {
     "build": "tsup",
     "clean": "rimraf .turbo node_modules dist",
-    "postinstall": "tsup",
     "lint": "eslint --max-warnings 0 .",
     "dev": "tsup --watch"
   },

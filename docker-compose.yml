@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  server:
+    container_name: nouvelles-cron-server
+    build:
+      context: .
+      dockerfile: ./apps/nouvelles-cron/Dockerfile
+    env_file:
+      - .env
+    tty: true
+    stdin_open: true
+    restart: always
+    ports:
+      - 8080:8080

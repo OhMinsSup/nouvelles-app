@@ -22,7 +22,8 @@
     "dev": "dotenv -- turbo run dev --concurrency 255",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
-    "docker:build:api": "docker build -t nouvelles-cron -f ./apps/nouvelles-cron/Dockerfile .",
+    "docker:build": "turbo run docker:build",
+    "docker:build:cron": "docker build -t nouvelles-cron -f ./apps/nouvelles-cron/Dockerfile .",
     "clean:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
   },
   "devDependencies": {

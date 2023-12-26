@@ -30,7 +30,6 @@
     "generate": "prisma generate && tsup",
     "lint": "eslint --max-warnings 0 .",
     "predev": "prisma generate",
-    "postinstall": "prisma generate  && tsup",
     "db:studio": "pnpm with-env prisma studio",
     "dev": "tsup --watch"
   },
