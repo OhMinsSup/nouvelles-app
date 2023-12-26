@@ -1,6 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDotEnv": [".env"],
+  "globalDependencies": [".env"],
+  "globalEnv": [
+    "NODE_ENV",
+    "FLY_REGION",
+    "PRIMARY_REGION",
+    "CI",
+    "PORT"
+  ],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
@@ -10,24 +17,17 @@
       "cache": false,
       "persistent": true
     },
-    "server:build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
-    },
-    "server:start": {
-      "cache": false,
-      "persistent": true
+    "db:migrate:deploy": {
+      "outputs": []
     },
     "db:migrate:dev": {
-      "cache": false
+      "outputs": []
     },
-    "db:migrate:deploy": {},
-    "db:push": {},
-    "db:studio": {
-      "cache": false
+    "db:push": {
+      "outputs": []
     },
-    "env:build": {},
-    "env:watch": {
+    "db:seed": {
+      "outputs": [],
       "cache": false
     },
     "watch": {
