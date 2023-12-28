@@ -7,11 +7,9 @@
     "start": "node dist/main.js",
     "lint": "eslint --max-warnings 0 .",
     "build": "tsup",
-    "dev": "tsx watch src/main.ts",
-    "docker:build": "cd ../.. & docker build -t nouvelles-cron -f ./apps/nouvelles-cron/Dockerfile ."
+    "dev": "tsx watch src/main.ts"
   },
   "dependencies": {
-    "@fastify/autoload": "^5.8.0",
     "@fastify/cookie": "^9.2.0",
     "@fastify/cors": "^8.4.2",
     "@fastify/formbody": "^7.4.0",

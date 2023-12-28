@@ -12,7 +12,7 @@ interface Service {
 export class CommonService implements Service {
   public getServerTime() {
     const now = new Date();
-    const serverTime = dayjs(now).format('yyyy-MM-DD HH:mm:ss');
+    const serverTime = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
     return serverTime;
   }
 

@@ -2,7 +2,7 @@
 # ARG APP_PKG_NAME=nouvelles/nouvelles-cron
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=20.10.0
+ARG NODE_VERSION=18.19.0
 FROM node:${NODE_VERSION}-alpine as builder
 
 LABEL fly_launch_runtime="Node.js"
@@ -19,7 +19,8 @@ COPY . .
 RUN turbo prune --scope=nouvelles-cron --docker
 
 # remove all empty node_modules folder structure
-RUN rm -rf /app/out/full/*/*/node_modules
+RUN find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
+# RUN rm -rf /app/out/full/*/*/node_modules
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM node:${NODE_VERSION}-alpine AS installer
@@ -39,9 +40,14 @@ COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 # Install dependencies
 RUN pnpm install
 
+# prisma generate
+COPY --from=builder /app/out/full/packages/database/prisma/schema.prisma /app/packages/database/prisma/schema.prisma
+RUN pnpx prisma generate --schema /app/packages/database/prisma/schema.prisma
+
 # Build the project and its dependencies
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
+RUN pnpm run db:generate
 RUN pnpm turbo run build --filter=nouvelles-cron...
 
 FROM node:${NODE_VERSION}-alpine AS runner

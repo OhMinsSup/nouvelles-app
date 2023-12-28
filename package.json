@@ -19,12 +19,14 @@
     "db:migrate:deploy": "turbo run db:migrate:deploy",
     "db:migrate:dev": "turbo run db:migrate:dev",
     "db:push": "turbo run db:push",
+    "db:generate": "turbo run generate",
     "dev": "dotenv -- turbo run dev --concurrency 255",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "docker:build": "turbo run docker:build",
     "docker:build:cron": "docker build -t nouvelles-cron -f ./apps/nouvelles-cron/Dockerfile .",
-    "clean:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
+    "clean:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
+    "server:deploy": "fly deploy --config ./fly.toml --dockerfile ./Dockerfile"
   },
   "devDependencies": {
     "@nouvelles/lintconfig": "workspace:*",

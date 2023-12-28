@@ -1,6 +1,3 @@
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import autoload from '@fastify/autoload';
 import Fastify from 'fastify';
 import formbody from '@fastify/formbody';
 import fastifyCron from 'fastify-cron';
@@ -10,6 +7,9 @@ import timezone from 'dayjs/plugin/timezone.js';
 import utc from 'dayjs/plugin/utc.js';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import routes from '~/routes';
+import corsPlugin from '~/common/plugins/global/cors.plugin'
+import keyPlugin from '~/common/plugins/global/key-api.plugin'
+import schedulePlugin from '~/common/plugins/global/schedule.plugin'
 
 const app = Fastify({
   logger: true,
@@ -21,18 +21,10 @@ dayjs.extend(utc);
 
 app.register(cookie);
 app.register(formbody);
-
 app.register(fastifyCron);
-
-const __filename = fileURLToPath(import.meta.url);
-const splited = dirname(__filename).split('/src');
-const cwd = splited.slice(0, -1).join('/src');
-
-app.register(autoload, {
-  dir: join(cwd, './src/common/plugins/global'),
-  encapsulate: false,
-  forceESM: true,
-});
+app.register(corsPlugin);
+app.register(keyPlugin);
+app.register(schedulePlugin);
 
 app.register(routes);
 
