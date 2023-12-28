@@ -20,6 +20,7 @@ export const env = createEnv({
     KAKAO_CLIENT_SECRET: z.string().min(1),
     DATABASE_URL: z.string().min(1),
     REDIS_URL: z.string().min(1),
+    FLY_APP_URL: z.string().min(1),
   },
   runtimeEnv: {
     // server
