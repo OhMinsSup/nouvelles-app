@@ -309,6 +309,9 @@ importers:
       '@nouvelles/model':
         specifier: workspace:*
         version: link:../../packages/model
+      '@prisma/client':
+        specifier: ^5.7.0
+        version: 5.7.0(prisma@5.7.0)
       cjk-slug:
         specifier: ^0.3.1
         version: 0.3.1

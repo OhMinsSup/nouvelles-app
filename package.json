@@ -8,11 +8,14 @@
     "vercel",
     "supabase"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OhMinsSup/nouvelles-app.git"
+  },
   "license": "ISC",
-  "author": "",
+  "author": "OhMinsSup",
   "type": "module",
   "scripts": {
-    "with-env": "dotenv --",
     "build": "dotenv -- turbo run build",
     "start": "dotenv -- turbo run start",
     "clean": "turbo clean",
