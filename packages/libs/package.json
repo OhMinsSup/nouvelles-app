@@ -19,10 +19,9 @@
   ],
   "scripts": {
     "build": "tsup",
-    "clean": "rimraf dist",
-    "postinstall": "tsup",
+    "clean": "rimraf .turbo node_modules dist",
     "lint": "eslint --max-warnings 0 .",
-    "watch": "tsup --watch"
+    "dev": "tsup --watch"
   },
   "devDependencies": {
     "@nouvelles/lintconfig": "workspace:*",

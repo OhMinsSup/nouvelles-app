@@ -4,6 +4,7 @@ module.exports = {
   ...config,
   rules: {
     ...config.rules,
+    'tsdoc/syntax': 'off',
     'func-names': 'off',
     'unicorn/filename-case': 'off',
     'no-console': 'off',

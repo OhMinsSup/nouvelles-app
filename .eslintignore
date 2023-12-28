@@ -27,3 +27,5 @@ env.mjs
 eslint-*.*
 prettier.config.*
 prettier.*
+
+packages/eli/**/*

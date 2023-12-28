@@ -1,0 +1,45 @@
+*.log
+.git
+.github
+# editor
+.idea
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# testing
+coverage
+
+# next.js
+.next/
+build
+
+# packages
+build
+dist
+packages/**/dist
+
+# misc
+.DS_Store
+*.pem
+
+.turbo
+.vercel
+.cache
+.output
+apps/**/public/build
+
+cypress/screenshots
+cypress/videos
+
+packages/**/styles/tailwind.css
+
+# local env files
+.env
+
+# fly
+fly.toml
+
+# docker
+docker
