@@ -1,4 +1,10 @@
-import type { Category, Item, Newspaper, Tag } from '@nouvelles/database';
+import type {
+  Category,
+  Item,
+  Newspaper,
+  Tag,
+  PrismaClient,
+} from '@nouvelles/database';
 
 interface PaginationSchema {
   totalCount: number;
@@ -25,3 +31,8 @@ export interface ItemSchema {
 export type ItemListSchema = PaginationSchema & {
   list: ItemSchema[];
 };
+
+export interface Ctx {
+  session: Record<string, any> | null;
+  db: PrismaClient;
+}

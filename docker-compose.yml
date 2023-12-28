@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: postgres
+    image: postgres:13.1
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgrespw
+    ports:
+      - '5433:5432'
+    volumes:
+      - ./docker/data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+  redis:
+    container_name: redis
+    image: redis
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes:
+      - './docker/redis-data:/data'
+      - './docker/redis.conf:/usr/local/etc/redis/redis.conf'
+  server:
+    container_name: nouvelles-cron-server
+    build:
+      context: .
+      dockerfile: ./apps/nouvelles-cron/Dockerfile
+    env_file:
+      - ./env/.env.local
+    tty: true
+    stdin_open: true
+    restart: always
+    ports:
+      - 8080:8080

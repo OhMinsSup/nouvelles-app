@@ -1,29 +1,3 @@
-export const QUERIES_KEY = {
-  items: {
-    root: ['items'],
-    search: (q?: string) => {
-      const searchParams = new URLSearchParams();
-      if (q) searchParams.append('q', q);
-      return ['items', 'search', searchParams.toString()];
-    },
-    tags: (tagId: string | number) => ['items', 'tags', tagId],
-    categories: (categoryId: string | number) => [
-      'items',
-      'categories',
-      categoryId,
-    ],
-    today: ['items', 'today'],
-  },
-  categories: {
-    root: ['categories'],
-  },
-  tags: {
-    root: ['tags'],
-  },
-};
-
-export const MUTATIONS_KEY = {};
-
 export const API_ENDPOINTS = {
   kakao_default_message: 'https://kapi.kakao.com/v2/api/talk/memo/default/send',
   avatar: (searchParams: URLSearchParams, styles = 'notionists') => {

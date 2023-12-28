@@ -2,6 +2,16 @@ import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
 export const env = createEnv({
+  shared: {
+    VERCEL_URL: z
+      .string()
+      .optional()
+      .transform((v) => (v ? `https://${v}` : undefined)),
+    PORT: z.coerce.number().default(3000),
+    NEXT_PUBLIC_SITE_URL: z.string(),
+    NEXT_PUBLIC_API_HOST: z.string(),
+    NEXT_PUBLIC_ROOT_DOMAIN: z.string(),
+  },
   server: {
     NODE_ENV: z.enum(['development', 'test', 'production']),
     DEPLOY_GROUP: z.enum(['development', 'local', 'production']),
@@ -9,15 +19,8 @@ export const env = createEnv({
     NEXTAUTH_SECRET: z.string().min(1),
     KAKAO_CLIENT_SECRET: z.string().min(1),
     DATABASE_URL: z.string().min(1),
-    VERCEL_URL: z.string().optional(),
-    VERCEL_ENV: z.string().optional(),
-  },
-  client: {
-    NEXT_PUBLIC_SITE_URL: z.string(),
-    NEXT_PUBLIC_API_HOST: z.string(),
-    NEXT_PUBLIC_ROOT_DOMAIN: z.string(),
-    NEXT_PUBLIC_VERCEL_ENV: z.string().optional(),
-    NEXT_PUBLIC_VERCEL_URL: z.string().optional(),
+    REDIS_URL: z.string().min(1),
+    FLY_APP_URL: z.string().min(1),
   },
   runtimeEnv: {
     // server
@@ -27,14 +30,20 @@ export const env = createEnv({
     KAKAO_CLIENT_SECRET: process.env.KAKAO_CLIENT_SECRET,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
+    REDIS_URL: process.env.REDIS_URL,
     VERCEL_URL: process.env.VERCEL_URL,
-    VERCEL_ENV: process.env.VERCEL_ENV,
+    PORT: process.env.PORT,
+    CI: process.env.CI,
+    SKIP_ENV_VALIDATION: process.env.SKIP_ENV_VALIDATION,
+    SKIP_ENV_VALIDATE: process.env.SKIP_ENV_VALIDATE,
     // client
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_API_HOST: process.env.NEXT_PUBLIC_API_HOST,
     NEXT_PUBLIC_ROOT_DOMAIN: process.env.NEXT_PUBLIC_ROOT_DOMAIN,
-    // vercel
-    NEXT_PUBLIC_VERCEL_ENV: process.env.NEXT_PUBLIC_VERCEL_ENV,
-    NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
   },
+  skipValidation:
+    !!process.env.CI ||
+    !!process.env.SKIP_ENV_VALIDATION ||
+    !!process.env.SKIP_ENV_VALIDATE ||
+    process.env.npm_lifecycle_event === 'lint',
 });

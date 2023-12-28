@@ -1,30 +1,25 @@
 'server-only';
 import dayjs from 'dayjs';
 import type { Prisma } from '@nouvelles/database';
-import { db } from '@nouvelles/database';
-import { selectByItem } from '~/server/items/items.selector';
-import type { ItemQueryInput } from '~/server/items/items.query';
-import type { ItemSchema } from '~/server/items/items.model';
-
-interface FindByTagWithCategory {
-  tag?: string;
-  category?: string;
-}
+import { selectByItem } from '~/libs/trpc/router/items/items.selector';
+import type { ItemQueryInput } from '~/libs/trpc/router/items/items.query';
+import type { ItemSchema } from '~/libs/trpc/router/items/items.model';
+import type { TRPCContext } from '~/libs/trpc/trpc-root';
 
 export class ItemService {
-  getItems(query: ItemQueryInput, currentUserId?: string) {
+  all(ctx: TRPCContext, input: ItemQueryInput) {
     try {
-      switch (query.type) {
+      switch (input.type) {
         case 'search':
-          return this._getItemsBySearch(query, currentUserId);
+          return this._getItemsBySearch(ctx, input);
         case 'today':
-          return this._getItemsByToDay(query);
+          return this._getItemsByToDay(ctx, input);
         case 'tags':
-          return this._getItemsByTag(query);
+          return this._getItemsByTag(ctx, input);
         case 'categories':
-          return this._getItemsByCategory(query);
+          return this._getItemsByCategory(ctx, input);
         default:
-          return this._getItemsByCursor(query, currentUserId);
+          return this._getItemsByCursor(ctx, input);
       }
     } catch (error) {
       return Promise.resolve(this.getDefaultItems<ItemSchema>());
@@ -40,37 +35,26 @@ export class ItemService {
     };
   }
 
-  private async _findByTagWithCategory(input: FindByTagWithCategory) {
-    const categoryItem = input.category
-      ? await db.category.findFirst({
-          where: {
-            name: input.category,
-          },
-        })
-      : undefined;
-
-    const tagItem = input.tag
-      ? await db.tag.findFirst({
-          where: {
-            name: input.tag,
-          },
-        })
-      : undefined;
-
-    return {
-      categoryItem,
-      tagItem,
-    };
-  }
-
   private async _getItemsByCursor(
+    ctx: TRPCContext,
     { category, tag, cursor, limit }: ItemQueryInput,
     _?: string,
   ) {
-    const { categoryItem, tagItem } = await this._findByTagWithCategory({
-      tag,
-      category,
-    });
+    const categoryItem = category
+      ? await ctx.db.category.findFirst({
+          where: {
+            name: category,
+          },
+        })
+      : undefined;
+
+    const tagItem = tag
+      ? await ctx.db.tag.findFirst({
+          where: {
+            name: tag,
+          },
+        })
+      : undefined;
 
     const searchWhere: Prisma.ItemWhereInput = {
       ...(categoryItem && {
@@ -91,10 +75,10 @@ export class ItemService {
 
     try {
       const [totalCount, list] = await Promise.all([
-        db.item.count({
+        ctx.db.item.count({
           where: searchWhere,
         }),
-        db.item.findMany({
+        ctx.db.item.findMany({
           orderBy: {
             id: 'desc',
           },
@@ -107,7 +91,7 @@ export class ItemService {
               : undefined,
           },
           select: selectByItem,
-          take: limit,
+          take: limit ?? 10,
         }),
       ]);
 
@@ -116,7 +100,7 @@ export class ItemService {
       const endCursor = endItem?.id ?? null;
       const hasNextPage =
         endItem && endCursor
-          ? (await db.item.count({
+          ? (await ctx.db.item.count({
               orderBy: {
                 id: 'desc',
               },
@@ -140,7 +124,11 @@ export class ItemService {
     }
   }
 
-  private async _getItemsBySearch({ q }: ItemQueryInput, _?: string) {
+  private async _getItemsBySearch(
+    ctx: TRPCContext,
+    { q }: ItemQueryInput,
+    _?: string,
+  ) {
     try {
       const searchWhere: Prisma.ItemWhereInput = {
         title: {
@@ -152,10 +140,10 @@ export class ItemService {
       };
 
       const [totalCount, list] = await Promise.all([
-        db.item.count({
+        ctx.db.item.count({
           where: searchWhere,
         }),
-        db.item.findMany({
+        ctx.db.item.findMany({
           orderBy: {
             id: 'desc',
           },
@@ -175,10 +163,14 @@ export class ItemService {
     }
   }
 
-  private async _getItemsByToDay(_: ItemQueryInput, __?: string) {
+  private async _getItemsByToDay(
+    ctx: TRPCContext,
+    _: ItemQueryInput,
+    __?: string,
+  ) {
     const collectingDate = dayjs().startOf('day').toDate();
 
-    const collectingData = await db.crawlerDateCollected.findFirst({
+    const collectingData = await ctx.db.crawlerDateCollected.findFirst({
       where: {
         collectingDate,
       },
@@ -197,10 +189,10 @@ export class ItemService {
 
     try {
       const [totalCount, list] = await Promise.all([
-        db.item.count({
+        ctx.db.item.count({
           where: searchWhere,
         }),
-        db.item.findMany({
+        ctx.db.item.findMany({
           orderBy: {
             id: 'desc',
           },
@@ -214,7 +206,7 @@ export class ItemService {
       const endCursor = endItem?.id ?? null;
       const hasNextPage =
         endItem && endCursor
-          ? (await db.item.count({
+          ? (await ctx.db.item.count({
               orderBy: {
                 id: 'desc',
               },
@@ -239,11 +231,12 @@ export class ItemService {
   }
 
   private async _getItemsByTag(
+    ctx: TRPCContext,
     { tag, limit, cursor }: ItemQueryInput,
     _?: string,
   ) {
     try {
-      const tagItem = await db.tag.findFirst({
+      const tagItem = await ctx.db.tag.findFirst({
         where: {
           slug: tag,
         },
@@ -254,7 +247,7 @@ export class ItemService {
       }
 
       const [totalCount, list] = await Promise.all([
-        db.item.count({
+        ctx.db.item.count({
           where: {
             ItemTag: {
               some: {
@@ -263,7 +256,7 @@ export class ItemService {
             },
           },
         }),
-        db.item.findMany({
+        ctx.db.item.findMany({
           orderBy: {
             id: 'desc',
           },
@@ -280,7 +273,7 @@ export class ItemService {
               : undefined,
           },
           select: selectByItem,
-          take: limit,
+          take: limit ?? 10,
         }),
       ]);
 
@@ -289,7 +282,7 @@ export class ItemService {
       const endCursor = endItem?.id ?? null;
       const hasNextPage =
         endItem && endCursor
-          ? (await db.item.count({
+          ? (await ctx.db.item.count({
               orderBy: {
                 id: 'desc',
               },
@@ -318,11 +311,12 @@ export class ItemService {
   }
 
   private async _getItemsByCategory(
+    ctx: TRPCContext,
     { category, limit, cursor }: ItemQueryInput,
     _?: string,
   ) {
     try {
-      const categoryItem = await db.category.findFirst({
+      const categoryItem = await ctx.db.category.findFirst({
         where: {
           slug: category,
         },
@@ -333,12 +327,12 @@ export class ItemService {
       }
 
       const [totalCount, list] = await Promise.all([
-        db.item.count({
+        ctx.db.item.count({
           where: {
             categoryId: categoryItem.id,
           },
         }),
-        db.item.findMany({
+        ctx.db.item.findMany({
           orderBy: {
             id: 'desc',
           },
@@ -350,7 +344,7 @@ export class ItemService {
                 }
               : undefined,
           },
-          take: limit,
+          take: limit ?? 10,
           select: selectByItem,
         }),
       ]);
@@ -360,7 +354,7 @@ export class ItemService {
       const endCursor = endItem?.id ?? null;
       const hasNextPage =
         endItem && endCursor
-          ? (await db.item.count({
+          ? (await ctx.db.item.count({
               orderBy: {
                 id: 'desc',
               },

@@ -1,19 +1,19 @@
 import { container } from 'tsyringe';
 import type { FastifyPluginCallback } from 'fastify';
-import { CommonService } from '~/services/common.service';
 import items from './items';
+import { CommonService } from '~/services/common.service';
 
 const api: FastifyPluginCallback = (fastify, opts, done) => {
   const commonService = container.resolve(CommonService);
 
   fastify.register(items, { prefix: '/items' });
 
-  fastify.get('/ping', (request, reply) => {
+  fastify.get('/ping', (_request, reply) => {
     const serverTime = commonService.getServerTime();
     reply.send({ serverTime });
   });
 
-  fastify.get('/healthcheck', async (request, reply) => {
+  fastify.get('/healthcheck', async (_request, reply) => {
     try {
       await commonService.healthcheck();
       reply.send({ ok: true });
@@ -27,7 +27,7 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
 };
 
 const routes: FastifyPluginCallback = (fastify, opts, done) => {
-  fastify.get('/', (request, reply) => {
+  fastify.get('/', (_request, reply) => {
     reply.send({ ok: true });
   });
 

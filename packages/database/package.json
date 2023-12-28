@@ -18,20 +18,20 @@
     "dist"
   ],
   "scripts": {
+    "with-env": "dotenv -e ../../.env --",
     "prebuild": "prisma generate",
     "build": "tsup",
-    "clean": "rimraf dist",
-    "db:format": "prisma format",
-    "db:migrate:deploy": "prisma migrate deploy",
-    "db:migrate:dev": "prisma migrate dev",
-    "db:push": "prisma db push",
-    "db:seed": "tsx src/seed.ts",
-    "db:studio": "prisma studio",
+    "clean": "rimraf .turbo node_modules dist",
+    "db:format": "pnpm with-env prisma format",
+    "db:migrate:deploy": "pnpm with-env prisma migrate deploy",
+    "db:migrate:dev": "pnpm with-env prisma migrate dev",
+    "db:push": "pnpm with-env prisma db push",
+    "db:seed": "pnpm with-env tsx src/seed.ts",
     "generate": "prisma generate && tsup",
-    "postinstall": "prisma generate && tsup",
     "lint": "eslint --max-warnings 0 .",
     "predev": "prisma generate",
-    "watch": "tsup --watch"
+    "db:studio": "pnpm with-env prisma studio",
+    "dev": "tsup --watch"
   },
   "dependencies": {
     "@prisma/client": "^5.7.0"
@@ -40,6 +40,7 @@
     "@nouvelles/lintconfig": "workspace:*",
     "@nouvelles/tsconfig": "workspace:*",
     "@types/node": "^20.10.4",
+    "dotenv-cli": "^7.3.0",
     "eslint": "^8.55.0",
     "prisma": "^5.7.0",
     "rimraf": "^5.0.5",
