@@ -42,8 +42,8 @@ kill_timeout = "5s"
     grace_period = "1s"
 
   [[services.http_checks]]
-    interval = "10s"
-    timeout = "2s"
+    interval = "1m"
+    timeout = "10s"
     grace_period = "5s"
     method = "get"
     path = "/api/healthcheck"
