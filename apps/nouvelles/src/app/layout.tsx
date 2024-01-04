@@ -15,7 +15,7 @@ import { cn, validateOrigin } from '~/utils/utils';
 import { getHeaderInDomainInfo } from '~/libs/domain/domain.server';
 import { TRPCReactProvider } from '~/libs/trpc/react';
 
-const url = new URL(env.NEXT_PUBLIC_SITE_URL);
+const url = new URL(env.SITE_URL);
 
 export const metadata: Metadata = {
   title: SITE_CONFIG.title,
@@ -94,8 +94,7 @@ export default async function Layout(props: RoutesProps) {
           dangerouslySetInnerHTML={{
             __html: `
             window.__ENV__ = ${JSON.stringify({
-              SITE_URL: env.NEXT_PUBLIC_SITE_URL,
-              API_HOST: env.NEXT_PUBLIC_API_HOST,
+              SITE_URL: env.SITE_URL,
               NODE_ENV: env.NODE_ENV,
             })};
             window.__DOMAIN_INFO__ = ${JSON.stringify(info)}`,
