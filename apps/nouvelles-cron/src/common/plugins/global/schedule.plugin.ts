@@ -13,9 +13,10 @@ const schedulePlugin: FastifyPluginCallback = (fastify, _opts, done) => {
 
   const jobInfo: JobInfo = {
     name: 'item job in every AM 08:00',
-    cronTime:
-      // 매일 오전 8시에 실행
-      process.env.NODE_ENV === 'production' ? '0 0 8 * * *' : '*/5 * * * *',
+    // cronTime:
+    //   // 매일 오전 8시에 실행
+    //   process.env.NODE_ENV === 'production' ? '0 0 8 * * *' : '*/5 * * * *',
+    cronTime: '*/5 * * * *',
     jobService: job,
   };
 

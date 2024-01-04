@@ -1,10 +1,10 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  splitting: true,
-  entry: ['src/main.ts'],
+  splitting: false,
+  entry: ['src/**/*.ts'],
   format: 'esm',
   clean: true,
-  dts: true,
-  platform: 'node',
+  sourcemap: true,
+  target: 'es2022',
 });

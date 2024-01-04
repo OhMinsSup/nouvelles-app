@@ -12,6 +12,13 @@ export class ItemsJob extends JobProgress implements Job {
     console.log('Starting items job');
     const today = dayjs().startOf('day').toDate();
 
+    const executablePath =
+      process.env.NODE_ENV === 'production' ? '/usr/bin/chromium' : undefined;
+
+    const test = new NeusralSite();
+    const testData = await test.run(executablePath);
+    console.log('[result] ====>', testData);
+
     const has = await itemsService.hasCrawlerCollectedToday(today);
     if (has) {
       console.log('Already has today item');
@@ -23,7 +30,7 @@ export class ItemsJob extends JobProgress implements Job {
     const result: Awaited<ReturnType<typeof site.run>> = [];
 
     try {
-      const data = await site.run();
+      const data = await site.run(executablePath);
       result.push(...data);
       console.log('Completed items job');
     } catch (error) {
