@@ -129,7 +129,7 @@ export default function Card({ item }: CardProps) {
                       customClassName="p-0"
                       debouncedUpdatesEnabled={false}
                       editable={false}
-                      name="thraed-text"
+                      name="thread-text"
                       noBorder
                       value={item?.description ? item?.description : ''}
                     />

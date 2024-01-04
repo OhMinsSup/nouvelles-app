@@ -8,19 +8,20 @@ interface JobInfo {
   jobService: ItemsJob;
 }
 
-const schedulePlugin: FastifyPluginCallback = (fastfiy, _opts, done) => {
+const schedulePlugin: FastifyPluginCallback = (fastify, _opts, done) => {
   const job = container.resolve(ItemsJob);
 
   const jobInfo: JobInfo = {
     name: 'item job in every AM 08:00',
     cronTime:
-      process.env.NODE_ENV === 'production' ? '0 0 8 * * *' : '0 0 * * * *',
+      // 매일 오전 8시에 실행
+      process.env.NODE_ENV === 'production' ? '0 0 8 * * *' : '*/5 * * * *',
     jobService: job,
   };
 
   const { name, cronTime, jobService } = jobInfo;
 
-  const cron = fastfiy.cron.createJob({
+  const cron = fastify.cron.createJob({
     name,
     cronTime,
     onTick: async () => {

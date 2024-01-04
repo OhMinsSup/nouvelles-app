@@ -1,4 +1,4 @@
-import { FetchError, NouvellesError, ErrorType } from '@nouvelles/error';
+import { FetchError, BaseError, ErrorType } from '@nouvelles/error';
 import {
   encodeMethodCallBody,
   httpResponseBodyParse,
@@ -38,7 +38,7 @@ export async function defaultFetchHandler(
       throw e;
     }
 
-    throw new NouvellesError(
+    throw new BaseError(
       ErrorType.ResponseError,
       `Unexpected error while fetching ${opts.method} ${opts.uri}`,
     );

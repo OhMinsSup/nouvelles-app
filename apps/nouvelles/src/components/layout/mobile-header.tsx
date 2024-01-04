@@ -1,10 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  getTargetElement,
-  getWindowScrollTop,
-  useEventListener,
-} from '@nouvelles/react';
+import { getTargetElement, getWindowScrollTop } from '@nouvelles/react';
+import { useEventListener } from '@nouvelles/react-hooks';
 import { optimizeAnimation } from '~/utils/utils';
 
 interface HeaderMobileProps {

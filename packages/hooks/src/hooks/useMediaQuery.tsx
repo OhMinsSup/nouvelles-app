@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { isBrowser } from '../utils/assertion';
+import { isBrowser } from '@nouvelles/react';
 import { useMemoizedFn } from './useMemoizedFn';
 
 export const MEDIA_QUERY = {

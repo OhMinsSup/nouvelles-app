@@ -1,5 +1,6 @@
-import { type BasicTarget, getTargetElement } from '../utils/dom';
-import { useIsomorphicLayoutEffectWithTarget } from '../libs/createEffectWithTarget';
+'use client';
+import { type BasicTarget, getTargetElement } from '@nouvelles/react';
+import { useIsomorphicLayoutEffectWithTarget } from './createEffectWithTarget';
 import { useLatest } from './useLatest';
 
 export function useMutationObserver(

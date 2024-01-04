@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { isBrowser } from '../utils/assertion';
+import { isBrowser } from '@nouvelles/react';
 
 export function useIsHydrating(queryString: string) {
   // eslint-disable-next-line react/hook-use-state

@@ -1,9 +1,12 @@
 'use client';
 import React from 'react';
-import { depsAreSame } from '../utils/depsAreSame';
-import { type BasicTarget, getTargetElement } from '../utils/dom';
-import { useUnmount } from '../hooks/useUnmount';
-import { isBrowser } from '../utils/assertion';
+import {
+  depsAreSame,
+  isBrowser,
+  type BasicTarget,
+  getTargetElement,
+} from '@nouvelles/react';
+import { useUnmount } from './useUnmount';
 
 const createEffectWithTarget = (
   useEffectType: typeof React.useEffect | typeof React.useLayoutEffect,

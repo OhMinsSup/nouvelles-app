@@ -5,9 +5,9 @@ import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
 import {
   useBeforeUnload,
   useIsHydrating,
-  isBrowser,
   useUnmount,
-} from '@nouvelles/react';
+} from '@nouvelles/react-hooks';
+import { isBrowser } from '@nouvelles/react';
 import { isEmpty } from '@nouvelles/libs';
 import Card from '~/components/shared/card';
 import type { ItemListSchema } from '~/libs/trpc/router/items/items.model';

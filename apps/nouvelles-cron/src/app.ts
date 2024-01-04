@@ -7,9 +7,9 @@ import timezone from 'dayjs/plugin/timezone.js';
 import utc from 'dayjs/plugin/utc.js';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import routes from '~/routes';
-import corsPlugin from '~/common/plugins/global/cors.plugin'
-import keyPlugin from '~/common/plugins/global/key-api.plugin'
-import schedulePlugin from '~/common/plugins/global/schedule.plugin'
+import corsPlugin from '~/common/plugins/global/cors.plugin';
+import keyPlugin from '~/common/plugins/global/key-api.plugin';
+import schedulePlugin from '~/common/plugins/global/schedule.plugin';
 
 const app = Fastify({
   logger: true,

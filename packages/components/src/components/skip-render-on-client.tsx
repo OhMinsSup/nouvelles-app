@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useIsFirstRender } from '../hooks/useIsFirstRender';
+import { useIsFirstRender } from '@nouvelles/react-hooks';
 
 /**
  * `SkipRenderOnClient` is a SSR performance hack that allows you to

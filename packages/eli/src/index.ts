@@ -1,2 +1,2 @@
-export { load } from "./load";
-export type { EnvType } from "./constants";
+export { load } from './load';
+export type { EnvType } from './constants';

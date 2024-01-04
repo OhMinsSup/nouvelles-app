@@ -1,6 +1,6 @@
-import { EnvType } from './constants';
+import type { EnvType } from './constants';
 
-export type Options = {
+export interface Options {
   /** @internal Used in CI. */
   envType: EnvType;
   /** @internal Used in CI. */
@@ -15,7 +15,7 @@ export type Options = {
   onSuccess?: (...args: any) => void;
   /** @internal Used in CI */
   onError?: (...args: any) => void;
-};
+}
 
 const noop = () => {};
 

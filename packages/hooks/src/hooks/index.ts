@@ -8,3 +8,5 @@ export * from './useUnmount';
 export * from './useUpdate';
 export * from './useMutationObserver';
 export * from './useIsFirstRender';
+export * from './context';
+export * from './createEffectWithTarget';

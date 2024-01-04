@@ -143,4 +143,5 @@ env/.env.production
 # turbo
 .turbo
 
+# fly
 fly.toml

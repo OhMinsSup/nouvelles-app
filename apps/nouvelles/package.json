@@ -14,8 +14,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next",
-    "start": "next start",
     "lint": "next lint",
+    "start": "next start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "browserslist": [
@@ -29,8 +29,11 @@
     "@nouvelles/api": "workspace:*",
     "@nouvelles/error": "workspace:*",
     "@nouvelles/libs": "workspace:*",
+    "@nouvelles/logger": "workspace:*",
     "@nouvelles/model": "workspace:*",
     "@nouvelles/react": "workspace:*",
+    "@nouvelles/react-components": "workspace:*",
+    "@nouvelles/react-hooks": "workspace:*",
     "@prisma/client": "^5.7.0",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -90,7 +93,6 @@
     "@anansi/browserslist-config": "^1.4.3",
     "@next/eslint-plugin-next": "^14.0.4",
     "@nouvelles/database": "workspace:*",
-    "@nouvelles/eli": "workspace:*",
     "@nouvelles/lintconfig": "workspace:*",
     "@nouvelles/tailwind": "workspace:*",
     "@nouvelles/tsconfig": "workspace:*",

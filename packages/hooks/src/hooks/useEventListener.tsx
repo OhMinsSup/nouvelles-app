@@ -1,6 +1,6 @@
 'use client';
-import { type BasicTarget, getTargetElement } from '../utils';
-import { useEffectWithTarget } from '../libs/createEffectWithTarget';
+import { type BasicTarget, getTargetElement } from '@nouvelles/react';
+import { useEffectWithTarget } from './createEffectWithTarget';
 import { useLatest } from './useLatest';
 
 type NoopHandler = (...p: any) => void;
