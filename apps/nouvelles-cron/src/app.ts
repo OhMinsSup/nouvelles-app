@@ -9,11 +9,10 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone.js';
 import utc from 'dayjs/plugin/utc.js';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
-import routes from '~/routes';
 import { envVars } from './env';
 
 const app = Fastify({
-  logger: envVars.NODE_ENV === 'development',
+  logger: true,
 });
 
 app.register(fastifyCron);
@@ -37,6 +36,10 @@ app.register(autoload, {
   forceESM: true,
 });
 
-app.register(routes);
+app.register(autoload, {
+  dir: join(cwd, `./${__source}/routes`),
+  encapsulate: false,
+  forceESM: true,
+});
 
 export default app;

@@ -4,18 +4,23 @@ import dayjs from 'dayjs';
 import { ItemsService } from '~/services/items.service';
 import { type Job, JobProgress } from '~/jobs/job';
 import { envVars } from '~/env';
+import { logger } from '~/common/logging/logger';
 
 @injectable()
 @singleton()
 export class ItemsJob extends JobProgress implements Job {
   public async runner() {
-    const itemsService = container.resolve(ItemsService);
-    console.log('Starting items job');
     const today = dayjs().startOf('day').toDate();
+    const itemsService = container.resolve(ItemsService);
+    logger.info('Starting items job', { job: 'items', type: 'debug', today });
 
     const has = await itemsService.hasCrawlerCollectedToday(today);
     if (has) {
-      console.log('Already has today item');
+      logger.info('Already has today item', {
+        job: 'items',
+        type: 'debug',
+        today,
+      });
       return;
     }
 
@@ -31,20 +36,31 @@ export class ItemsJob extends JobProgress implements Job {
             : undefined,
       });
       result.push(...data);
-      console.log('Completed items job');
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        logger.error(error, { job: 'items', type: 'error', today });
+      }
     } finally {
-      site.close();
-      console.log('Completed items job');
+      await site.close();
+      logger.info('Completed items job', {
+        job: 'items',
+        type: 'debug',
+        today,
+      });
     }
 
     try {
       await itemsService.generateItems(result, today);
-      console.log('Completed generateItems');
     } catch (error) {
-      console.error(error);
-      console.log('Failed generateItems');
+      if (error instanceof Error) {
+        logger.error(error, { job: 'items', type: 'error', today });
+      }
+    } finally {
+      logger.info('Completed generateItems', {
+        job: 'items',
+        type: 'debug',
+        today,
+      });
     }
   }
 }

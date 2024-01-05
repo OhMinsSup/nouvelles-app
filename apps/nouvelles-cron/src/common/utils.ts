@@ -43,8 +43,12 @@ export function generateImageURL({
     return image;
   }
 
-  const nextURL = new URL(realLink, image);
-  return nextURL.toString();
+  try {
+    const nextURL = new URL(realLink, image);
+    return nextURL.toString();
+  } catch (error) {
+    return null;
+  }
 }
 
 export function generateDate(date: string | undefined) {

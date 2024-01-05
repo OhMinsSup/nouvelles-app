@@ -5,6 +5,7 @@ import { TagsService } from '~/services/tags.service';
 import { CategoriesService } from '~/services/categories.service';
 import { NewspapersService } from '~/services/newspapers.service';
 import { generateImageURL, generateDate } from '~/common/utils';
+import { logger } from '~/common/logging/logger';
 
 export interface InputCreate {
   id: string;
@@ -53,7 +54,11 @@ export class ItemsService implements Service {
 
         await Promise.all(tags.map((tag) => tagsService.findOrCreate(tag)));
       } catch (error) {
-        console.error(error);
+        if (error instanceof Error) {
+          logger.error(error, {
+            type: 'error',
+          });
+        }
       }
 
       try {
@@ -64,7 +69,11 @@ export class ItemsService implements Service {
           categories.map((item) => categoriesService.findOrCreate(item)),
         );
       } catch (error) {
-        console.error(error);
+        if (error instanceof Error) {
+          logger.error(error, {
+            type: 'error',
+          });
+        }
       }
 
       try {
@@ -75,7 +84,11 @@ export class ItemsService implements Service {
           newspapers.map((item) => newspapersService.findOrCreate(item)),
         );
       } catch (error) {
-        console.error(error);
+        if (error instanceof Error) {
+          logger.error(error, {
+            type: 'error',
+          });
+        }
       }
 
       const collectedData = await db.crawlerDateCollected.create({
@@ -88,7 +101,7 @@ export class ItemsService implements Service {
         input.map((item) => this.create(item, collectedData.id)),
       );
 
-      return items;
+      return items.filter(Boolean);
     }
 
     return [];
@@ -133,53 +146,62 @@ export class ItemsService implements Service {
       image,
     });
 
-    const data = await db.item.create({
-      data: {
-        neusralId,
-        title,
-        link,
-        realLink,
-        description,
-        publishedAt,
-        image: imageURL || null,
-        ...(collectedId && {
-          CrawlerDateCollected: {
-            connect: {
-              id: collectedId,
+    try {
+      const data = await db.item.create({
+        data: {
+          neusralId,
+          title,
+          link,
+          realLink,
+          description,
+          publishedAt,
+          image: imageURL || null,
+          ...(collectedId && {
+            CrawlerDateCollected: {
+              connect: {
+                id: collectedId,
+              },
             },
-          },
-        }),
-        ...(newspaperItem && {
-          Newspaper: {
-            connect: {
-              id: newspaperItem.id,
+          }),
+          ...(newspaperItem && {
+            Newspaper: {
+              connect: {
+                id: newspaperItem.id,
+              },
             },
-          },
-        }),
-        ...(categoryItem && {
-          Category: {
-            connect: {
-              id: categoryItem.id,
+          }),
+          ...(categoryItem && {
+            Category: {
+              connect: {
+                id: categoryItem.id,
+              },
             },
-          },
-        }),
-        ...(tagItem && {
-          ItemTag: {
-            create: [
-              {
-                tag: {
-                  connect: {
-                    id: tagItem.id,
+          }),
+          ...(tagItem && {
+            ItemTag: {
+              create: [
+                {
+                  tag: {
+                    connect: {
+                      id: tagItem.id,
+                    },
                   },
                 },
-              },
-            ],
-          },
-        }),
-      },
-    });
+              ],
+            },
+          }),
+        },
+      });
 
-    return data;
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        logger.error(error, {
+          type: 'error',
+        });
+      }
+      return null;
+    }
   }
 
   public async hasCrawlerCollectedToday(date: Date) {

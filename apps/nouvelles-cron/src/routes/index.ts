@@ -18,7 +18,6 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
       await commonService.healthcheck();
       reply.send({ ok: true });
     } catch (error) {
-      console.error(error);
       reply.status(500).send({ ok: false });
     }
   });

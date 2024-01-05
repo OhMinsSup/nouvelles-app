@@ -13,6 +13,7 @@ const schema = z.object({
     .enum(['development', 'production'])
     .optional()
     .default('development'),
+  SENTRY_DSN: z.string().optional(),
   BLESS_URL: z.string().optional(),
   BLESS_TOKEN: z.string().optional(),
   PORT: z.string().optional().default('8080').transform(Number),
@@ -23,6 +24,7 @@ type Schema = z.infer<typeof schema>;
 
 const processEnv = {
   NODE_ENV: env.NODE_ENV,
+  SENTRY_DSN: env.SENTRY_DSN,
   BLESS_URL: env.BLESS_URL,
   BLESS_TOKEN: env.BLESS_TOKEN,
   PORT: env.PORT,
