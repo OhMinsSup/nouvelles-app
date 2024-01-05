@@ -327,6 +327,9 @@ importers:
       cjk-slug:
         specifier: ^0.3.1
         version: 0.3.1
+      close-with-grace:
+        specifier: ^1.2.0
+        version: 1.2.0
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
@@ -348,6 +351,9 @@ importers:
       tsyringe:
         specifier: 4.8.0
         version: 4.8.0
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
     devDependencies:
       '@flydotio/dockerfile':
         specifier: ^0.5.0
@@ -5334,6 +5340,10 @@ packages:
   /clone@1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
     engines: {node: '>=0.8'}
+
+  /close-with-grace@1.2.0:
+    resolution: {integrity: sha512-Xga0jyAb4fX98u5pZAgqlbqHP8cHuy5M3Wto0k0L/36aP2C25Cjp51XfPw3Hz7dNC2L2/hF/PK/KJhO275L+VA==}
+    dev: false
 
   /clsx@2.0.0:
     resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}

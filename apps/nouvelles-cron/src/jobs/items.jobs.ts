@@ -1,9 +1,9 @@
-import process from 'node:process';
 import { NeusralSite } from '@nouvelles/model';
 import { injectable, singleton, container } from 'tsyringe';
 import dayjs from 'dayjs';
 import { ItemsService } from '~/services/items.service';
 import { type Job, JobProgress } from '~/jobs/job';
+import { envVars } from '~/env';
 
 @injectable()
 @singleton()
@@ -26,8 +26,8 @@ export class ItemsJob extends JobProgress implements Job {
     try {
       const data = await site.run({
         browserWSEndpoint:
-          process.env.NODE_ENV === 'production'
-            ? `${process.env.BLESS_URL}?token=${process.env.BLESS_TOKEN}`
+          envVars.NODE_ENV === 'production'
+            ? `${envVars.BLESS_URL}?token=${envVars.BLESS_TOKEN}`
             : undefined,
       });
       result.push(...data);

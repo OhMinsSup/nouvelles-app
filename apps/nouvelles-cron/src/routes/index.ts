@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 import type { FastifyPluginCallback } from 'fastify';
-import items from './items';
 import { CommonService } from '~/services/common.service';
+import items from './items';
 
 const api: FastifyPluginCallback = (fastify, opts, done) => {
   const commonService = container.resolve(CommonService);
