@@ -1,26 +1,32 @@
 import puppeteer, { type Browser } from 'puppeteer';
 import { NeusralPage } from './neusral-page.model';
+import type { NeusralSiteConstructorOptions } from './neusral.types';
 
 export class NeusralSite {
   private _browser: Browser | undefined;
 
   private _page: NeusralPage | undefined;
 
-  async run(executablePath?: string) {
-    // make sure to pass the `--no-sandbox` option
-    this._browser = await puppeteer.launch({
-      executablePath,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-      ],
-      ignoreDefaultArgs: ['--disable-extensions'],
-      headless: 'new',
-      timeout: 0,
-      ignoreHTTPSErrors: true,
-    });
+  async run(opts?: NeusralSiteConstructorOptions) {
+    if (opts?.browserWSEndpoint) {
+      this._browser = await puppeteer.connect({
+        browserWSEndpoint: opts.browserWSEndpoint,
+        ignoreHTTPSErrors: true,
+      });
+    } else {
+      // make sure to pass the `--no-sandbox` option
+      this._browser = await puppeteer.launch({
+        executablePath: opts?.executablePath,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+        ],
+        headless: 'new',
+        timeout: 0,
+        ignoreHTTPSErrors: true,
+      });
+    }
 
     try {
       this._page = new NeusralPage();
