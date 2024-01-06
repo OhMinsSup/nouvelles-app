@@ -36,8 +36,8 @@ export const env = createEnv({
     CI: process.env.CI,
     SKIP_ENV_VALIDATION: process.env.SKIP_ENV_VALIDATION,
     // client
-    SITE_URL: process.env.SITE_URL,
-    API_PREFIX: process.env.API_PREFIX,
+    SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    API_PREFIX: process.env.NEXT_PUBLIC_API_PREFIX,
   },
   skipValidation:
     !!process.env.CI ||
