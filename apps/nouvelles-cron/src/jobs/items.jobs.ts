@@ -1,6 +1,6 @@
 import { NeusralSite } from '@nouvelles/model';
 import { injectable, singleton, container } from 'tsyringe';
-import dayjs from 'dayjs';
+import { startOfDate } from '@nouvelles/date';
 import { ItemsService } from '~/services/items.service';
 import { type Job, JobProgress } from '~/jobs/job';
 import { envVars } from '~/env';
@@ -10,7 +10,7 @@ import { logger } from '~/common/logging/logger';
 @singleton()
 export class ItemsJob extends JobProgress implements Job {
   public async runner() {
-    const today = dayjs().startOf('day').toDate();
+    const today = startOfDate(new Date(), 'day');
     const itemsService = container.resolve(ItemsService);
     logger.info('Starting items job', { job: 'items', type: 'debug', today });
 

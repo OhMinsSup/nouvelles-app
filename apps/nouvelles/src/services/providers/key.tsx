@@ -72,7 +72,6 @@ function KeyProvider({ children, queryKey = [] }: KeyProviderProps) {
     [state],
   );
 
-  // @ts-expect-error children is typescript error issue ??
   return <Provider value={actions}>{children}</Provider>;
 }
 

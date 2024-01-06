@@ -68,8 +68,11 @@ export default function CardList({
     if (type === 'tags' && tag) {
       return QUERIES_KEY.items.tags(tag);
     }
+    if (type === 'search') {
+      return QUERIES_KEY.items.search(q);
+    }
     return QUERIES_KEY.items.root;
-  }, [type, category, tag]);
+  }, [type, category, tag, q]);
 
   const closeMutationObserver = () => {
     if ($observer.current) {
@@ -81,9 +84,9 @@ export default function CardList({
   const fetcher = (cursor: number | null) => {
     return getItemsApi({
       type,
-      ...(category ? { category: decodeURIComponent(category) } : {}),
-      ...(tag ? { tag: decodeURIComponent(tag) } : {}),
-      ...(type === 'search' && q ? { q: decodeURIComponent(q) } : {}),
+      ...(category ? { category } : {}),
+      ...(tag ? { tag } : {}),
+      ...(type === 'search' && q ? { q } : {}),
       ...(userId ? { userId } : {}),
       limit: 10,
       cursor: cursor ? cursor : undefined,
@@ -144,15 +147,20 @@ export default function CardList({
     },
   });
 
+  console.log('data', data);
+
   const oldPages = data?.pages ?? [];
   const flatPages = oldPages.map((page) => page?.list).flat() ?? [];
 
   const list = flatPages.filter(Boolean);
 
   const loadMore = (index: number) => {
+    console.log('loadMore', index);
     if (index <= 0) return;
 
     const lastData = last(data?.pages ?? []);
+
+    console.log('lastData', lastData);
 
     if (lastData?.endCursor && lastData?.hasNextPage) {
       void fetchNextPage();

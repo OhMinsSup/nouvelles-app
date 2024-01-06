@@ -1,10 +1,11 @@
 import { db } from '@nouvelles/database';
 import { isEmpty } from '@nouvelles/libs';
+import { formatForNeusralDate } from '@nouvelles/date';
 import { injectable, singleton, container } from 'tsyringe';
 import { TagsService } from '~/services/tags.service';
 import { CategoriesService } from '~/services/categories.service';
 import { NewspapersService } from '~/services/newspapers.service';
-import { generateImageURL, generateDate } from '~/common/utils';
+import { generateImageURL } from '~/common/utils';
 import { logger } from '~/common/logging/logger';
 
 export interface InputCreate {
@@ -139,7 +140,18 @@ export class ItemsService implements Service {
       newspaper: reporter,
     });
 
-    const publishedAt = generateDate(input.date);
+    let publishedAt: Date | undefined;
+    if (input.date) {
+      try {
+        publishedAt = formatForNeusralDate(input.date);
+      } catch (error) {
+        if (error instanceof Error) {
+          logger.error(error, {
+            type: 'error',
+          });
+        }
+      }
+    }
 
     const imageURL = generateImageURL({
       realLink,

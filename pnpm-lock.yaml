@@ -56,6 +56,9 @@ importers:
       '@nouvelles/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@nouvelles/date':
+        specifier: workspace:*
+        version: link:../../packages/date
       '@nouvelles/error':
         specifier: workspace:*
         version: link:../../packages/error
@@ -315,6 +318,9 @@ importers:
       '@fastify/formbody':
         specifier: ^7.4.0
         version: 7.4.0
+      '@nouvelles/date':
+        specifier: workspace:*
+        version: link:../../packages/date
       '@nouvelles/libs':
         specifier: workspace:*
         version: link:../../packages/libs
@@ -502,9 +508,9 @@ importers:
       '@nouvelles/error':
         specifier: workspace:*
         version: link:../error
-      date-fns:
-        specifier: ^3.0.6
-        version: 3.0.6
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
     devDependencies:
       '@nouvelles/lintconfig':
         specifier: workspace:*
@@ -5761,10 +5767,6 @@ packages:
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.0.0
     dev: true
-
-  /date-fns@3.0.6:
-    resolution: {integrity: sha512-W+G99rycpKMMF2/YD064b2lE7jJGUe+EjOES7Q8BIGY8sbNdbgcs9XFTZwvzc9Jx1f3k7LB7gZaZa7f8Agzljg==}
-    dev: false
 
   /dateformat@4.6.3:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}

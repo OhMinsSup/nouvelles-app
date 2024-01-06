@@ -32,6 +32,7 @@ export const env = createEnv({
     REDIS_URL: process.env.REDIS_URL,
     VERCEL_URL: process.env.VERCEL_URL,
     PORT: process.env.PORT,
+    FLY_APP_URL: process.env.FLY_APP_URL,
     CI: process.env.CI,
     SKIP_ENV_VALIDATION: process.env.SKIP_ENV_VALIDATION,
     // client

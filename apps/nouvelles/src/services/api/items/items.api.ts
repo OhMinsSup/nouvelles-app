@@ -3,6 +3,8 @@ import type { ItemQueryInput } from './items.query';
 import type { ItemListSchema } from './items.model';
 
 export const getItemsApi = async (query?: ItemQueryInput) => {
-  const { body } = await agent.getItems(query as Record<string, any>);
-  return body as ItemListSchema;
+  const typeSafeQuery = query as Record<string, any>;
+  const response = await agent.getItems(typeSafeQuery);
+  const body: Awaited<ItemListSchema> = await response.body;
+  return body;
 };

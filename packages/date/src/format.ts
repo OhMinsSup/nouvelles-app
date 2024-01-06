@@ -1,4 +1,4 @@
-import { format, type FormatOptions } from 'date-fns/format';
+import dayjs from 'dayjs';
 import { BaseError, ErrorType } from '@nouvelles/error';
 
 export const defaultFormat = 'YYYY-MM-DD HH:mm:ss';
@@ -6,7 +6,6 @@ export const defaultFormat = 'YYYY-MM-DD HH:mm:ss';
 export function formatDate(
   date: Date | number | string,
   formatStr = defaultFormat,
-  opts?: FormatOptions,
 ): string {
   if (typeof date === 'string') {
     const newDate = new Date(date);
@@ -30,5 +29,17 @@ export function formatDate(
     }
   }
 
-  return format(date, formatStr, opts);
+  return dayjs(date).format(formatStr);
+}
+
+export function formatForNeusralDate(
+  str: string | undefined,
+  formatStr = defaultFormat,
+) {
+  const dateStr = dayjs(str, 'YY.MM.DD').format(formatStr);
+  const time = dayjs(dateStr).toDate();
+  if (isNaN(time.getTime())) {
+    throw new BaseError(ErrorType.DateError, `Invalid date string: ${str}`);
+  }
+  return time;
 }

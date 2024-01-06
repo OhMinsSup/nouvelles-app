@@ -1,6 +1,6 @@
 import { NeusralSite } from '@nouvelles/model';
 import { container } from 'tsyringe';
-import dayjs from 'dayjs';
+import { startOfDate } from '@nouvelles/date';
 import type { FastifyPluginCallback, FastifyRequest } from 'fastify';
 import { ItemsService } from '~/services/items.service';
 import { envVars } from '~/env';
@@ -10,7 +10,7 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
   const itemsService = container.resolve(ItemsService);
 
   fastify.post('/collect/neusral', async (request: FastifyRequest, reply) => {
-    const today = dayjs().startOf('day').toDate();
+    const today = startOfDate(new Date(), 'day');
 
     const has = await itemsService.hasCrawlerCollectedToday(today);
     if (has) {

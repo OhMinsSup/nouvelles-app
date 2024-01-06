@@ -120,7 +120,7 @@ export const commonOriginFunc = (origin: string | undefined) => {
   const corsWhitelist: RegExp[] = CORS_WHITELIST.ORIGIN;
 
   if (env.NODE_ENV === 'development') {
-    corsWhitelist.push(/^http:\/\/localhost/);
+    corsWhitelist.push(/^https?:\/\/localhost/);
   }
 
   if (!origin || corsWhitelist.some((regex) => regex.test(origin))) {

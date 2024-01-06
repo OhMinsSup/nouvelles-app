@@ -13,7 +13,7 @@ interface PageProps {
 export default async function Pages({ searchParams }: PageProps) {
   const queryClient = getQueryClient();
 
-  const q = searchParams?.q ? decodeURIComponent(searchParams.q) : undefined;
+  const q = searchParams?.q;
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: QUERIES_KEY.items.search(q),
@@ -31,7 +31,7 @@ export default async function Pages({ searchParams }: PageProps) {
       <CardList
         header={
           <section className="my-5 md:my-8 px-6">
-            <SearchForm />
+            <SearchForm initialValue={q} />
           </section>
         }
         q={q}

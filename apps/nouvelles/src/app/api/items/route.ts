@@ -8,8 +8,12 @@ import { logger } from '~/services/logger/logger';
 
 const getParsedQuery = (searchParams: URLSearchParams) => {
   return {
-    cursor: searchParams.get('cursor') ?? undefined,
-    limit: searchParams.get('limit') ?? undefined,
+    cursor: searchParams.get('cursor')
+      ? Number(searchParams.get('cursor'))
+      : undefined,
+    limit: searchParams.get('limit')
+      ? Number(searchParams.get('limit'))
+      : undefined,
     type: searchParams.get('type') ?? undefined,
     category: searchParams.get('category') ?? undefined,
     tag: searchParams.get('tag') ?? undefined,

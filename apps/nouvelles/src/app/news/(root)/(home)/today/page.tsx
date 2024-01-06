@@ -14,7 +14,6 @@ export default async function Pages() {
     initialPageParam: null,
     queryFn: async () => {
       return itemService.all({
-        limit: 10,
         type: 'today',
       });
     },

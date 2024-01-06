@@ -1,5 +1,5 @@
 'server-only';
-import dayjs from 'dayjs';
+import { startOfDate } from '@nouvelles/date';
 import type { Prisma } from '@nouvelles/database';
 import { db } from '@nouvelles/database';
 import { selectByItem } from '~/services/api/items/items.selector';
@@ -125,6 +125,7 @@ export class ItemService {
 
   private async _getItemsBySearch({ q }: ItemQueryInput, _?: string) {
     try {
+      console.log(q);
       const searchWhere: Prisma.ItemWhereInput = {
         title: {
           search: q,
@@ -159,7 +160,7 @@ export class ItemService {
   }
 
   private async _getItemsByToDay(_: ItemQueryInput, __?: string) {
-    const collectingDate = dayjs().startOf('day').toDate();
+    const collectingDate = startOfDate(new Date(), 'day');
 
     const collectingData = await db.crawlerDateCollected.findFirst({
       where: {

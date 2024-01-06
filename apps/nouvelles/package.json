@@ -27,6 +27,7 @@
     "@dicebear/core": "^7.0.1",
     "@hookform/resolvers": "^3.3.2",
     "@nouvelles/api": "workspace:*",
+    "@nouvelles/date": "workspace:*",
     "@nouvelles/error": "workspace:*",
     "@nouvelles/libs": "workspace:*",
     "@nouvelles/logger": "workspace:*",

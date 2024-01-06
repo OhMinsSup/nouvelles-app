@@ -8,11 +8,21 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
 import { cache } from 'react';
 import { getHeaderInDomainInfo } from '@nouvelles/libs';
+import utc from 'dayjs/plugin/utc.js';
+import timezone from 'dayjs/plugin/timezone.js';
+import customParseFormat from 'dayjs/plugin/customParseFormat.js';
+import dayjs from 'dayjs';
 import { env } from 'env.mjs';
 import { PAGE_ENDPOINTS, SITE_CONFIG } from '~/constants/constants';
 import { Providers } from '~/app/providers';
 import { PreloadResources } from '~/services/react/preload';
 import { cn, validateOrigin } from '~/utils/utils';
+import 'dayjs/locale/ko'; //한국어
+
+dayjs.locale('ko');
+dayjs.extend(customParseFormat);
+dayjs.extend(timezone);
+dayjs.extend(utc);
 
 const fontSans = FontSans({
   subsets: ['latin'],
