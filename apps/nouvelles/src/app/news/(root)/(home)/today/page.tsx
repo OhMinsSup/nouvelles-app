@@ -1,25 +1,42 @@
 import React from 'react';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import getQueryClient from '~/services/query/get-query-client';
 import CardList from '~/components/shared/card-list';
+import { itemService } from '~/services/api/items/items.server';
+import { QUERIES_KEY } from '~/constants/constants';
 import TodayHeader from '~/components/shared/today-header';
-import { api } from '~/libs/trpc/server';
 
 export default async function Pages() {
-  const data = await api.items.all.query({
-    limit: 10,
-    type: 'today',
+  const queryClient = getQueryClient();
+
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: QUERIES_KEY.items.today,
+    initialPageParam: null,
+    queryFn: async () => {
+      return itemService.all({
+        limit: 10,
+        type: 'today',
+      });
+    },
   });
 
-  const isEmptyData = data?.totalCount === 0;
+  const data = await queryClient.getQueryData<any>(QUERIES_KEY.items.today);
+
+  const totalCount =
+    data?.pages
+      ?.map((page: any) => page?.totalCount)
+      .flat()
+      ?.at(0) ?? 0;
+
+  const isEmptyData = totalCount === 0;
 
   if (isEmptyData) {
     return <>Empty</>;
   }
 
   return (
-    <CardList
-      header={<TodayHeader count={data.totalCount} />}
-      initialData={data}
-      type="today"
-    />
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <CardList header={<TodayHeader count={totalCount} />} type="today" />
+    </HydrationBoundary>
   );
 }

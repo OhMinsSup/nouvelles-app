@@ -11,7 +11,7 @@ import {
   TooltipTrigger,
 } from '~/components/ui/tooltip';
 import { cn } from '~/utils/utils';
-import type { ItemSchema } from '~/libs/trpc/router/items/items.model';
+import type { ItemSchema } from '~/services/api/items/items.model';
 import { TipTapEditor } from '~/components/editor/tiptap-editor';
 import { buttonVariants } from '~/components/ui/button';
 import { AspectRatio } from '~/components/ui/aspect-ratio';

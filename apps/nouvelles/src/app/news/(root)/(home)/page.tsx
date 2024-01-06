@@ -1,17 +1,48 @@
 import React from 'react';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import getQueryClient from '~/services/query/get-query-client';
 import CardList from '~/components/shared/card-list';
-import { api } from '~/libs/trpc/server';
+import { itemService } from '~/services/api/items/items.server';
+import { QUERIES_KEY } from '~/constants/constants';
 
-export default async function Pages() {
-  const data = await api.items.all.query({
-    limit: 10,
+interface PageProps {
+  searchParams: { category: string | undefined; tag: string | undefined };
+}
+
+export default async function Pages({ searchParams }: PageProps) {
+  const queryClient = getQueryClient();
+
+  const category = searchParams?.category ?? undefined;
+  const tag = searchParams?.tag ?? undefined;
+
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: QUERIES_KEY.items.root,
+    initialPageParam: null,
+    queryFn: async () => {
+      return itemService.all({
+        category,
+        tag,
+      });
+    },
   });
 
-  const isEmptyData = data?.totalCount === 0;
+  const data = await queryClient.getQueryData<any>(QUERIES_KEY.items.root);
+
+  const totalCount =
+    data?.pages
+      ?.map((page: any) => page?.totalCount)
+      .flat()
+      ?.at(0) ?? 0;
+
+  const isEmptyData = totalCount === 0;
 
   if (isEmptyData) {
     return <>Empty</>;
   }
 
-  return <CardList initialData={data} type="root" />;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <CardList category={category} tag={tag} type="root" />
+    </HydrationBoundary>
+  );
 }

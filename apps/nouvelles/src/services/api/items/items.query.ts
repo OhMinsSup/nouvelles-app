@@ -2,7 +2,7 @@ import * as z from 'zod';
 
 const _internalPaginationSchema = z.object({
   cursor: z.number().nullable().optional(),
-  limit: z.number().nullable().optional().default(10),
+  limit: z.number().nullable().default(10).optional(),
 });
 
 export type PaginationInput = z.infer<typeof _internalPaginationSchema>;

@@ -1,7 +1,7 @@
 'use client';
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useMemo, useReducer } from 'react';
-import { createContext } from '@nouvelles/react';
+import { createContext } from '@nouvelles/react-hooks';
 
 enum Action {
   SET_QUERY_KEY = 'SET_QUERY_KEY',
@@ -35,7 +35,7 @@ const [Provider, useKeyContext] = createContext<keyContext>({
   defaultValue: initialState as keyContext,
 });
 
-interface Props {
+interface KeyProviderProps {
   children: React.ReactNode;
   queryKey?: any[];
 }
@@ -53,7 +53,7 @@ function reducer(state = initialState, action: KeyAction) {
   }
 }
 
-function KeyProvider({ children, queryKey = [] }: Props) {
+function KeyProvider({ children, queryKey = [] }: KeyProviderProps) {
   const [state, dispatch] = useReducer(reducer, { ...initialState, queryKey });
 
   const setQueryKey = (payload: SetQueryKeyAction['payload']) => {
@@ -72,6 +72,7 @@ function KeyProvider({ children, queryKey = [] }: Props) {
     [state],
   );
 
+  // @ts-expect-error children is typescript error issue ??
   return <Provider value={actions}>{children}</Provider>;
 }
 

@@ -1,7 +1,7 @@
 'use client';
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useMemo, useReducer } from 'react';
-import { createContext } from '@nouvelles/react';
+import { createContext } from '@nouvelles/react-hooks';
 
 enum Action {
   FORCED_UPDATE = 'FORCED_UPDATE',
@@ -43,7 +43,7 @@ const [Provider, useAppContext] = createContext<AppContext>({
   defaultValue: initialState as AppContext,
 });
 
-interface Props {
+interface AppProviderProps {
   children: React.ReactNode;
 }
 
@@ -65,7 +65,7 @@ function reducer(state = initialState, action: AppAction) {
   }
 }
 
-function AppProvider({ children }: Props) {
+function AppProvider({ children }: AppProviderProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const forcedUpdate = () => {
@@ -86,6 +86,7 @@ function AppProvider({ children }: Props) {
     [state],
   );
 
+  // @ts-expect-error children is typescript error issue ??
   return <Provider value={actions}>{children}</Provider>;
 }
 

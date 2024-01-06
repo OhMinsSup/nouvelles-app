@@ -1,49 +1,18 @@
 import '~/assets/css/globals.css';
 import { Inter as FontSans } from 'next/font/google';
 import localFont from 'next/font/local';
+import { AxiomWebVitals } from 'next-axiom';
 import { headers } from 'next/headers';
 import type { Metadata } from 'next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { cache } from 'react';
+import { getHeaderInDomainInfo } from '@nouvelles/libs';
 import { env } from 'env.mjs';
-import { SITE_CONFIG } from '~/constants/constants';
+import { PAGE_ENDPOINTS, SITE_CONFIG } from '~/constants/constants';
 import { Providers } from '~/app/providers';
-import { PreloadResources } from '~/libs/react/preload';
+import { PreloadResources } from '~/services/react/preload';
 import { cn, validateOrigin } from '~/utils/utils';
-import { getHeaderInDomainInfo } from '~/libs/domain/domain.server';
-import { TRPCReactProvider } from '~/libs/trpc/react';
-
-const url = new URL(env.SITE_URL);
-
-export const metadata: Metadata = {
-  title: SITE_CONFIG.title,
-  description: SITE_CONFIG.description,
-  keywords: [
-    'Next.js',
-    'React',
-    'Tailwind CSS',
-    'Server Components',
-    'Radix UI',
-  ],
-  icons: {
-    icon: SITE_CONFIG.favicon,
-  },
-  metadataBase: url,
-  manifest: SITE_CONFIG.manifest,
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    title: SITE_CONFIG.title,
-    description: SITE_CONFIG.description,
-    url: url.href,
-    siteName: SITE_CONFIG.title,
-    locale: 'ko_KR',
-    type: 'article',
-  },
-};
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -54,6 +23,39 @@ const fontHeading = localFont({
   src: '../assets/fonts/CalSans-SemiBold.woff2',
   variable: '--font-heading',
 });
+
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await getHeaders();
+  const info = getHeaderInDomainInfo(headersList);
+  const metadataBase = new URL(info.domainUrl);
+  return {
+    title: SITE_CONFIG.title,
+    description: SITE_CONFIG.description,
+    keywords: [
+      'Next.js',
+      'React',
+      'Tailwind CSS',
+      'Server Components',
+      'Radix UI',
+    ],
+    icons: {
+      icon: SITE_CONFIG.favicon,
+    },
+    metadataBase,
+    manifest: SITE_CONFIG.manifest,
+    alternates: {
+      canonical: PAGE_ENDPOINTS.NEWS.ROOT,
+    },
+    openGraph: {
+      title: SITE_CONFIG.title,
+      description: SITE_CONFIG.description,
+      url: metadataBase.href,
+      siteName: SITE_CONFIG.title,
+      locale: 'ko_KR',
+      type: 'article',
+    },
+  };
+}
 
 interface RoutesProps {
   children: React.ReactNode;
@@ -66,7 +68,7 @@ const getHeaders = cache(() => Promise.resolve(headers()));
 export default async function Layout(props: RoutesProps) {
   const headersList = await getHeaders();
   const info = getHeaderInDomainInfo(headersList);
-  const isCROS = validateOrigin(info.domainUrl);
+  const isCORS = validateOrigin(info.domainUrl);
   return (
     <html dir="ltr" lang="ko" suppressHydrationWarning>
       <PreloadResources />
@@ -95,28 +97,26 @@ export default async function Layout(props: RoutesProps) {
             __html: `
             window.__ENV__ = ${JSON.stringify({
               SITE_URL: env.SITE_URL,
-              NODE_ENV: env.NODE_ENV,
+              API_HOST: env.API_PREFIX,
             })};
             window.__DOMAIN_INFO__ = ${JSON.stringify(info)}`,
           }}
         />
-        <TRPCReactProvider headersPromise={getHeaders()}>
-          <Providers
-            isCORS={isCROS}
-            theme={{
-              attribute: 'class',
-              defaultTheme: 'system',
-              enableSystem: true,
-              disableTransitionOnChange: true,
-            }}
-          >
-            {props.children}
-            {props.modal}
-          </Providers>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </TRPCReactProvider>
-        {isCROS && env.NODE_ENV === 'production' ? (
+
+        <Providers
+          isCORS={isCORS}
+          theme={{
+            attribute: 'class',
+            defaultTheme: 'system',
+            enableSystem: true,
+            disableTransitionOnChange: true,
+          }}
+        >
+          {props.children}
+        </Providers>
+        {isCORS && env.NODE_ENV === 'production' ? (
           <>
+            <AxiomWebVitals />
             <Analytics />
             <SpeedInsights />
           </>
