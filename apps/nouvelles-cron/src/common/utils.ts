@@ -1,6 +1,4 @@
 import slugifyCJK from 'cjk-slug';
-import dayjs from 'dayjs';
-import { isInvaliDate } from '@nouvelles/libs';
 
 function replaceSlash(slug: string) {
   return slug.replace(/\//g, '-');
@@ -43,18 +41,10 @@ export function generateImageURL({
     return image;
   }
 
-  const nextURL = new URL(realLink, image);
-  return nextURL.toString();
-}
-
-export function generateDate(date: string | undefined) {
-  if (!date) {
-    return undefined;
+  try {
+    const nextURL = new URL(realLink, image);
+    return nextURL.toString();
+  } catch (error) {
+    return null;
   }
-  const dateString = dayjs(date, 'YY.MM.DD').format('YYYY-MM-DD HH:mm:ss');
-  const dateTime = dayjs(dateString).toDate();
-  if (isInvaliDate(dateTime)) {
-    return undefined;
-  }
-  return dateTime;
 }

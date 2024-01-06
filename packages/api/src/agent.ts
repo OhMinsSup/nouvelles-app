@@ -1,4 +1,4 @@
-import { NouvellesError, ErrorType } from '@nouvelles/error';
+import { BaseError, ErrorType } from '@nouvelles/error';
 import { defaultFetchHandler } from './fetch';
 import { BaseClient } from './client';
 
@@ -35,7 +35,7 @@ export class Agent {
 
   private async _fetch(opts: FetchHandlerOptions) {
     if (!Agent.fetch) {
-      throw new NouvellesError(
+      throw new BaseError(
         ErrorType.AgentError,
         'AtpAgent fetch() method not configured',
       );

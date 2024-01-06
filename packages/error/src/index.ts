@@ -1,3 +1,3 @@
-export { NouvellesError } from './base-error';
+export { BaseError } from './base-error';
 export { FetchError } from './fetch-error';
 export { ErrorType } from './constants';

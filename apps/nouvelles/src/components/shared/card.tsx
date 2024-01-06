@@ -1,8 +1,7 @@
 'use client';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
-import dayjs from 'dayjs';
-import { getDateFormatted } from '@nouvelles/libs';
+import { formatDate } from '@nouvelles/date';
 import Avatars from '~/components/shared/avatars';
 import {
   Tooltip,
@@ -11,11 +10,12 @@ import {
   TooltipTrigger,
 } from '~/components/ui/tooltip';
 import { cn } from '~/utils/utils';
-import type { ItemSchema } from '~/libs/trpc/router/items/items.model';
+import type { ItemSchema } from '~/services/api/items/items.model';
 import { TipTapEditor } from '~/components/editor/tiptap-editor';
 import { buttonVariants } from '~/components/ui/button';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { PAGE_ENDPOINTS } from '~/constants/constants';
+import 'dayjs/locale/ko'; //한국어
 
 interface CardProps {
   item: ItemSchema;
@@ -26,8 +26,7 @@ export default function Card({ item }: CardProps) {
     if (!item) return null;
     if (!item.publishedAt) return null;
     return {
-      formatted: getDateFormatted(item.publishedAt),
-      relative: dayjs(item.publishedAt).format('YYYY-MM-DD HH:mm:ss'),
+      formatted: formatDate(item.publishedAt, 'YYYY년 MM월 DD일'),
     };
   }, [item]);
 
@@ -89,14 +88,13 @@ export default function Card({ item }: CardProps) {
               <Tooltip>
                 <TooltipTrigger>
                   <Link
-                    aria-label={date?.relative}
                     className="truncate max-w-full text-sm font-normal text-muted-foreground underline-offset-4 hover:underline"
                     href={link.href}
                   >
                     {date?.formatted}
                   </Link>
                 </TooltipTrigger>
-                <TooltipContent>{date?.relative}</TooltipContent>
+                <TooltipContent>{date?.formatted}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
@@ -129,7 +127,7 @@ export default function Card({ item }: CardProps) {
                       customClassName="p-0"
                       debouncedUpdatesEnabled={false}
                       editable={false}
-                      name="thraed-text"
+                      name="thread-text"
                       noBorder
                       value={item?.description ? item?.description : ''}
                     />

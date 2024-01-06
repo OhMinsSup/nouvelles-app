@@ -19,9 +19,12 @@
   ],
   "scripts": {
     "build": "tsup",
+    "build:libs": "tsup",
     "clean": "rimraf .turbo node_modules dist",
+    "dev": "tsup --watch",
+    "fix:eslint": "eslint --max-warnings 0 --fix .",
     "lint": "eslint --max-warnings 0 .",
-    "dev": "tsup --watch"
+    "lint:typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@nouvelles/error": "workspace:*",

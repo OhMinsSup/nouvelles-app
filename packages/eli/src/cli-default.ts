@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { main } from "./cli-main";
+import { main } from './cli-main';
 
 main()
   .then(() => process.exit(0))

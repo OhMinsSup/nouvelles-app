@@ -1,30 +1,42 @@
 import React from 'react';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { QUERIES_KEY } from '~/constants/constants';
+import { itemService } from '~/services/api/items/items.server';
+import getQueryClient from '~/services/query/get-query-client';
 import CardList from '~/components/shared/card-list';
 import SearchForm from '~/components/shared/search-form';
-import { api } from '~/libs/trpc/server';
 
 interface PageProps {
   searchParams?: { q: string | undefined };
 }
 
 export default async function Pages({ searchParams }: PageProps) {
-  const q = searchParams?.q ? decodeURIComponent(searchParams.q) : undefined;
+  const queryClient = getQueryClient();
 
-  const data = await api.items.all.query({
-    type: 'search',
-    q,
+  const q = searchParams?.q;
+
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: QUERIES_KEY.items.search(q),
+    initialPageParam: null,
+    queryFn: async () => {
+      return itemService.all({
+        type: 'search',
+        q,
+      });
+    },
   });
 
   return (
-    <CardList
-      header={
-        <section className="my-5 md:my-8 px-6">
-          <SearchForm />
-        </section>
-      }
-      initialData={data}
-      q={q}
-      type="search"
-    />
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <CardList
+        header={
+          <section className="my-5 md:my-8 px-6">
+            <SearchForm initialValue={q} />
+          </section>
+        }
+        q={q}
+        type="search"
+      />
+    </HydrationBoundary>
   );
 }

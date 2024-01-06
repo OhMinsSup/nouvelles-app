@@ -1,20 +1,26 @@
 import { NeusralSite } from '@nouvelles/model';
 import { injectable, singleton, container } from 'tsyringe';
-import dayjs from 'dayjs';
+import { startOfDate } from '@nouvelles/date';
 import { ItemsService } from '~/services/items.service';
 import { type Job, JobProgress } from '~/jobs/job';
+import { envVars } from '~/env';
+import { logger } from '~/common/logging/logger';
 
 @injectable()
 @singleton()
 export class ItemsJob extends JobProgress implements Job {
   public async runner() {
+    const today = startOfDate(new Date(), 'day');
     const itemsService = container.resolve(ItemsService);
-    console.log('Starting items job');
-    const today = dayjs().startOf('day').toDate();
+    logger.info('Starting items job', { job: 'items', type: 'debug', today });
 
     const has = await itemsService.hasCrawlerCollectedToday(today);
     if (has) {
-      console.log('Already has today item');
+      logger.info('Already has today item', {
+        job: 'items',
+        type: 'debug',
+        today,
+      });
       return;
     }
 
@@ -23,22 +29,38 @@ export class ItemsJob extends JobProgress implements Job {
     const result: Awaited<ReturnType<typeof site.run>> = [];
 
     try {
-      const data = await site.run();
+      const data = await site.run({
+        browserWSEndpoint:
+          envVars.NODE_ENV === 'production'
+            ? `${envVars.BLESS_URL}?token=${envVars.BLESS_TOKEN}`
+            : undefined,
+      });
       result.push(...data);
-      console.log('Completed items job');
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        logger.error(error, { job: 'items', type: 'error', today });
+      }
     } finally {
-      site.close();
-      console.log('Completed items job');
+      await site.close();
+      logger.info('Completed items job', {
+        job: 'items',
+        type: 'debug',
+        today,
+      });
     }
 
     try {
       await itemsService.generateItems(result, today);
-      console.log('Completed generateItems');
     } catch (error) {
-      console.error(error);
-      console.log('Failed generateItems');
+      if (error instanceof Error) {
+        logger.error(error, { job: 'items', type: 'error', today });
+      }
+    } finally {
+      logger.info('Completed generateItems', {
+        job: 'items',
+        type: 'debug',
+        today,
+      });
     }
   }
 }

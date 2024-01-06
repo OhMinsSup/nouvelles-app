@@ -15,42 +15,53 @@
   "license": "ISC",
   "author": "OhMinsSup",
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "build": "dotenv -- turbo run build",
-    "start": "dotenv -- turbo run start",
+    "build:env": "turbo run build:env",
+    "build:libs": "turbo run build:libs",
     "clean": "turbo clean",
+    "clean:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
+    "db:generate": "turbo run generate",
     "db:migrate:deploy": "dotenv -- turbo run db:migrate:deploy",
     "db:migrate:dev": "dotenv -- turbo run db:migrate:dev",
     "db:push": "dotenv -- turbo run db:push",
-    "db:generate": "turbo run generate",
+    "predev": "eli --env-type local",
     "dev": "dotenv -- turbo run dev --concurrency 255",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "lint": "turbo run lint",
+    "dev:cron": "dotenv -- pnpm run dev --filter nouvelles-cron",
+    "dev:web": "dotenv -- pnpm run dev --filter nouvelles-app",
     "docker:build:cron": "docker build -t nouvelles-cron -f ./apps/nouvelles-cron/Dockerfile .",
-    "server:deploy": "fly deploy --config ./apps/nouvelles-cron/fly.toml --dockerfile ./apps/nouvelles-cron/Dockerfile",
-    "clean:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
+    "eli": "eli",
+    "fix:eslint": "turbo run fix:eslint",
+    "fix:prettier": "pnpm lint:prettier --write",
+    "lint": "turbo run lint",
+    "lint:prettier": "prettier --check --ignore-unknown '**/*'",
+    "lint:spellcheck": "cspell --no-progress --relative '**/*'",
+    "lint:syncpack": "syncpack lint",
+    "lint:typecheck": "turbo run lint:typecheck",
+    "server:deploy": "fly deploy --config ./apps/nouvelles-cron/fly.toml --dockerfile ./apps/nouvelles-cron/Dockerfile"
   },
   "devDependencies": {
+    "@nouvelles/eli": "workspace:*",
     "@nouvelles/lintconfig": "workspace:*",
     "@nouvelles/tsconfig": "workspace:*",
-    "cspell": "^8.1.3",
+    "cspell": "^8.3.2",
     "dotenv-cli": "^7.3.0",
-    "eslint": "^8.55.0",
+    "eslint": "^8.56.0",
     "prettier": "^3.1.1",
-    "syncpack": "^11.2.1",
+    "syncpack": "^12.3.0",
     "turbo": "^1.11.2",
     "typescript": "^5.3.3"
   },
   "packageManager": "pnpm@8.12.1",
   "engines": {
-    "bun": "1.x",
-    "node": "18.x || 20.x"
+    "bun": ">=1.0",
+    "node": ">=18.0"
   },
   "prisma": {
     "schema": "packages/database/prisma/schema.prisma"
-  },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  }
 }

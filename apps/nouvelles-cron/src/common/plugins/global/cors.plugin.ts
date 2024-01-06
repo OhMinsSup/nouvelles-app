@@ -1,5 +1,6 @@
 import type { FastifyPluginAsync } from 'fastify';
 import cors from '@fastify/cors';
+import { envVars } from '~/env';
 
 const corsPlugin: FastifyPluginAsync = async (fastify) => {
   const corsWhitelist: RegExp[] = [
@@ -7,7 +8,7 @@ const corsPlugin: FastifyPluginAsync = async (fastify) => {
     /^https?:\/\/nouvelles\.vercel\.app$/,
   ];
 
-  if (process.env.NODE_ENV === 'development') {
+  if (envVars.NODE_ENV === 'development') {
     corsWhitelist.push(/^http:\/\/localhost/);
   }
 

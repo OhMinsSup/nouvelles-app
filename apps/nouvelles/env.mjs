@@ -8,12 +8,11 @@ export const env = createEnv({
       .optional()
       .transform((v) => (v ? `https://${v}` : undefined)),
     PORT: z.coerce.number().default(3000),
-    NEXT_PUBLIC_SITE_URL: z.string(),
-    NEXT_PUBLIC_API_HOST: z.string(),
-    NEXT_PUBLIC_ROOT_DOMAIN: z.string(),
+    SITE_URL: z.string().min(1).default('http://localhost:3000'),
+    API_PREFIX: z.string().min(1).default('/api'),
+    NODE_ENV: z.enum(['development', 'test', 'production']),
   },
   server: {
-    NODE_ENV: z.enum(['development', 'test', 'production']),
     DEPLOY_GROUP: z.enum(['development', 'local', 'production']),
     KAKAO_CLIENT_ID: z.string().min(1),
     NEXTAUTH_SECRET: z.string().min(1),
@@ -33,17 +32,15 @@ export const env = createEnv({
     REDIS_URL: process.env.REDIS_URL,
     VERCEL_URL: process.env.VERCEL_URL,
     PORT: process.env.PORT,
+    FLY_APP_URL: process.env.FLY_APP_URL,
     CI: process.env.CI,
     SKIP_ENV_VALIDATION: process.env.SKIP_ENV_VALIDATION,
-    SKIP_ENV_VALIDATE: process.env.SKIP_ENV_VALIDATE,
     // client
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-    NEXT_PUBLIC_API_HOST: process.env.NEXT_PUBLIC_API_HOST,
-    NEXT_PUBLIC_ROOT_DOMAIN: process.env.NEXT_PUBLIC_ROOT_DOMAIN,
+    SITE_URL: process.env.SITE_URL,
+    API_PREFIX: process.env.API_PREFIX,
   },
   skipValidation:
     !!process.env.CI ||
     !!process.env.SKIP_ENV_VALIDATION ||
-    !!process.env.SKIP_ENV_VALIDATE ||
     process.env.npm_lifecycle_event === 'lint',
 });

@@ -9,12 +9,11 @@ declare global {
       DATABASE_URL: string;
       REDIS_URL: string;
 
-      NEXT_PUBLIC_SITE_URL: string;
-      NEXT_PUBLIC_API_HOST: string;
-      NEXT_PUBLIC_ROOT_DOMAIN: string;
+      SITE_URL: string;
+      API_PREFIX: string;
 
       SKIP_ENV_VALIDATION: string | undefined;
-      SKIP_ENV_VALIDATE: string | undefined;
+
       CI: string | undefined;
       PORT: string | undefined;
       VERCEL_URL: string | undefined;
@@ -32,7 +31,6 @@ interface Window extends globalThis {
 
   __ENV__: {
     SITE_URL: string;
-    API_HOST: string;
     NODE_ENV: 'development' | 'production' | 'test';
   };
 }
