@@ -1,3 +1,4 @@
+import { withAxiom } from 'next-axiom';
 const isProduction = process.env.NODE_ENV === 'production';
 
 /**
@@ -70,4 +71,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withAxiom(nextConfig);
