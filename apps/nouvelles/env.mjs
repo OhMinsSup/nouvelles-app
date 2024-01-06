@@ -7,9 +7,9 @@ export const env = createEnv({
       .string()
       .optional()
       .transform((v) => (v ? `https://${v}` : undefined)),
-    PORT: z.coerce.number(),
-    SITE_URL: z.string().min(1),
-    API_PREFIX: z.string().min(1),
+    PORT: z.coerce.number().default(3000),
+    SITE_URL: z.string().min(1).default('http://localhost:3000'),
+    API_PREFIX: z.string().min(1).default('/api'),
     NODE_ENV: z.enum(['development', 'test', 'production']),
   },
   server: {
@@ -36,8 +36,8 @@ export const env = createEnv({
     CI: process.env.CI,
     SKIP_ENV_VALIDATION: process.env.SKIP_ENV_VALIDATION,
     // client
-    SITE_URL: process.env.SITE_URL,
-    API_PREFIX: process.env.API_PREFIX,
+    SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    API_PREFIX: process.env.NEXT_PUBLIC_API_PREFIX,
   },
   skipValidation:
     !!process.env.CI ||
