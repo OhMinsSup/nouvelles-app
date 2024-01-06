@@ -1,17 +1,17 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [".env"],
-  "globalEnv": [
-    "NODE_ENV",
-    "FLY_REGION",
-    "PRIMARY_REGION",
-    "CI",
-    "PORT"
-  ],
+  "globalEnv": ["NODE_ENV", "FLY_REGION", "PRIMARY_REGION", "CI", "PORT"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "build:libs": {
+      "dependsOn": ["^build:libs"]
+    },
+    "build:env": {
+      "dependsOn": ["^build:env"]
     },
     "dev": {
       "cache": false,
@@ -26,14 +26,21 @@
     "db:push": {
       "outputs": []
     },
-    "db:seed": {
-      "outputs": [],
-      "cache": false
-    },
     "generate": {
       "dependsOn": ["^generate"]
     },
-    "lint": {},
+    "fix:eslint": {
+      "dependsOn": ["^fix:eslint"],
+      "cache": false
+    },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "cache": false
+    },
+    "lint:typecheck": {
+      "dependsOn": ["^lint:typecheck"],
+      "cache": false
+    },
     "clean": {
       "cache": false
     },

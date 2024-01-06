@@ -1,5 +1,4 @@
-import { isString, isUndefined, isFunction, isNull } from '@nouvelles/libs';
-import { NouvellesError, ErrorType } from '@nouvelles/error';
+import { BaseError, ErrorType } from '@nouvelles/error';
 import type { QueryParams } from './types';
 
 export const getSearchParams = (
@@ -9,18 +8,19 @@ export const getSearchParams = (
   if (!params) {
     return url;
   }
-  const textSearchParams = isString(params)
-    ? params.replace(/^\?/, '')
-    : new URLSearchParams(params).toString();
+  const textSearchParams =
+    typeof params === 'string'
+      ? params.replace(/^\?/, '')
+      : new URLSearchParams(params).toString();
   const searchParams = '?' + textSearchParams;
-  const toStringUrl = isString(url) ? url : url.toString();
+  const toStringUrl = typeof url === 'string' ? url : url.toString();
   return toStringUrl.replace(/(?:\?.*?)?(?=#|$)/, searchParams);
 };
 
 export function normalizeHeaders(
   headers: Headers | Record<string, string> | undefined,
 ): Headers | undefined {
-  if (isUndefined(headers)) {
+  if (typeof headers === 'undefined') {
     return undefined;
   }
 
@@ -36,14 +36,15 @@ export function encodeMethodCallBody(
   headers: Headers | undefined,
   data?: any,
 ): ArrayBuffer | undefined {
-  if (isUndefined(headers)) {
+  if (typeof headers === 'undefined') {
     return undefined;
   }
 
   const contentType = headers.get('content-type');
-  if (!contentType || isUndefined(data)) {
+  if (!contentType || typeof data === 'undefined') {
     return undefined;
   }
+
   if (data instanceof ArrayBuffer) {
     return data;
   }
@@ -64,7 +65,9 @@ export function normalizeResponseHeaders(
 ): Record<string, string> {
   // headers.entries() returns an iterator of key, value pairs
   // Object.fromEntries() turns this into an object
-  const supportEntries = 'entries' in headers && isFunction(headers.entries);
+  const supportEntries =
+    'entries' in headers && typeof headers.entries === 'function';
+
   if (supportEntries) {
     // @ts-expect-error TS2339: Property 'entries' does not exist on type 'Headers'.
     return Object.fromEntries(headers.entries() as unknown);
@@ -86,7 +89,7 @@ export async function httpResponseBodyParse(
       try {
         return res.json();
       } catch (e) {
-        throw new NouvellesError(
+        throw new BaseError(
           ErrorType.ResponseError,
           `Failed to parse response body: ${String(e)}`,
         );
@@ -96,7 +99,7 @@ export async function httpResponseBodyParse(
       try {
         return res.text();
       } catch (e) {
-        throw new NouvellesError(
+        throw new BaseError(
           ErrorType.ResponseError,
           `Failed to parse response body: ${String(e)}`,
         );
@@ -106,7 +109,7 @@ export async function httpResponseBodyParse(
     try {
       return res.blob();
     } catch (error) {
-      throw new NouvellesError(
+      throw new BaseError(
         ErrorType.ResponseError,
         `Failed to parse response body: ${String(error)}`,
       );
@@ -126,7 +129,7 @@ export function constructMethodCallUri(
 
   if (params) {
     for (const [key, value] of Object.entries(params)) {
-      if (!isNull(value) || !isUndefined(value)) {
+      if (value !== null || typeof value !== 'undefined') {
         if (Array.isArray(value)) {
           uri.searchParams.append(
             key,

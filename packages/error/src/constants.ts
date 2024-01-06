@@ -1,7 +1,8 @@
 export enum ErrorType {
-  NouvellesError = 'NouvellesError',
+  BaseError = 'BaseError',
   HTTPError = 'HTTPError',
   ResponseError = 'ResponseError',
   AgentError = 'AgentError',
   InvalidArgument = 'InvalidArgumentError',
+  DateError = 'DateError',
 }

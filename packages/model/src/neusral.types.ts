@@ -17,3 +17,8 @@ export type PageCloseOptions =
       runBeforeUnload?: boolean | undefined;
     }
   | undefined;
+
+export interface NeusralSiteConstructorOptions {
+  executablePath?: string | undefined;
+  browserWSEndpoint?: string | undefined;
+}

@@ -1,20 +1,23 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from 'tsup';
 
 export default defineConfig([
   {
     clean: true,
     entry: {
-      index: "src/index.ts",
+      index: 'src/index.ts',
     },
-    format: ["esm", "cjs"],
+    format: ['esm', 'cjs'],
     dts: true,
+    minify: true,
+    external: [/^\$/],
   },
   {
     clean: true,
     entry: {
-      "cli-default": "src/cli-default.ts",
+      'cli-default': 'src/cli-default.ts',
     },
-    format: ["esm", "cjs"],
+    format: ['esm', 'cjs'],
     dts: true,
+    external: [/^\$/],
   },
 ]);

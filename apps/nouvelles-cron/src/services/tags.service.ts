@@ -15,7 +15,6 @@ interface Service {
 export class TagsService implements Service {
   public async findOrCreate(name: string): Promise<Tag> {
     const slug = getSlug(name);
-    console.log('tags => slug', slug);
     const data = await db.tag.findUnique({
       where: {
         name,

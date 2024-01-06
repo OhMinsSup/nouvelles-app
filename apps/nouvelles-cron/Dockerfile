@@ -4,23 +4,23 @@
 # Adjust NODE_VERSION as desired
 ARG NODE_VERSION=18.19.0
 FROM node:${NODE_VERSION}-alpine as builder
-
 LABEL fly_launch_runtime="Node.js"
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
+
 RUN apk update
 RUN corepack enable
 
 # Node.js app lives here
 WORKDIR /app
 RUN npm install turbo --global
+RUN npm install puppeteer --global
 COPY . .
 RUN turbo prune --scope=nouvelles-cron --docker
 
 # remove all empty node_modules folder structure
 RUN find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
-# RUN rm -rf /app/out/full/*/*/node_modules
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM node:${NODE_VERSION}-alpine AS installer

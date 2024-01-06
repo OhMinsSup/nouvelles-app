@@ -1,5 +1,5 @@
 import { db } from '@nouvelles/database';
-import dayjs from 'dayjs';
+import { formatDate } from '@nouvelles/date';
 import { injectable, singleton } from 'tsyringe';
 
 interface Service {
@@ -11,9 +11,12 @@ interface Service {
 @injectable()
 export class CommonService implements Service {
   public getServerTime() {
-    const now = new Date();
-    const serverTime = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
-    return serverTime;
+    try {
+      const serverTime = new Date();
+      return formatDate(serverTime);
+    } catch (error) {
+      return 'Invalid date instance';
+    }
   }
 
   public async healthcheck() {

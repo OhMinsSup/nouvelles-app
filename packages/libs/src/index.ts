@@ -1,2 +1,7 @@
 export * from './assertion';
-export { getDateFormatted } from './date';
+export {
+  parseUrl,
+  getHeaderInDomainInfo,
+  getLocationInDomainInfo,
+  getRequestInDomainInfo,
+} from './url';

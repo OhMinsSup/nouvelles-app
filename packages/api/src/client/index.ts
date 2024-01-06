@@ -1,5 +1,4 @@
 import { defaultFetchHandler } from '../fetch';
-import { isString } from '@nouvelles/libs';
 import { constructMethodCallUri } from '../fetch/utils';
 import type { AgentFetchHandler } from '../types';
 import type { CallOptions } from './types';
@@ -26,7 +25,8 @@ export class ServiceClient {
     prefix?: string,
   ) {
     this._baseClient = baseClient;
-    this.uri = isString(serviceUri) ? new URL(serviceUri) : serviceUri;
+    this.uri =
+      typeof serviceUri === 'string' ? new URL(serviceUri) : serviceUri;
     this.prefix = prefix;
     this.app = new AppNamespace(this);
   }

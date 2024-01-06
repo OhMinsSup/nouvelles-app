@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import chalk from "chalk";
+import chalk from 'chalk';
 
 export type Logger = ReturnType<typeof createLogger>;
 
