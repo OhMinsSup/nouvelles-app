@@ -7,9 +7,9 @@ export const env = createEnv({
       .string()
       .optional()
       .transform((v) => (v ? `https://${v}` : undefined)),
-    PORT: z.coerce.number().default(3000),
-    SITE_URL: z.string().min(1).default('http://localhost:3000'),
-    API_PREFIX: z.string().min(1).default('/api'),
+    PORT: z.coerce.number(),
+    SITE_URL: z.string().min(1),
+    API_PREFIX: z.string().min(1),
     NODE_ENV: z.enum(['development', 'test', 'production']),
   },
   server: {
