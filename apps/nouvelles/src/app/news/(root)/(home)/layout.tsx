@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { Icons } from '~/components/icons';
-import { Button } from '~/components/ui/button';
+// import { Icons } from '~/components/icons';
+// import { Button } from '~/components/ui/button';
 import { PAGE_ENDPOINTS } from '~/constants/constants';
 
 interface LayoutProps {
@@ -18,9 +18,9 @@ export default function Layout({ children }: LayoutProps) {
           >
             Nouvelles
           </Link>
-          <Button variant="ghost">
+          {/* <Button variant="ghost">
             <Icons.settings />
-          </Button>
+          </Button> */}
         </div>
       </div>
       {children}

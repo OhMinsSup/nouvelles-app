@@ -41,13 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: SITE_CONFIG.title,
     description: SITE_CONFIG.description,
-    keywords: [
-      'Next.js',
-      'React',
-      'Tailwind CSS',
-      'Server Components',
-      'Radix UI',
-    ],
+    keywords: SITE_CONFIG.keywords,
     icons: {
       icon: SITE_CONFIG.favicon,
     },

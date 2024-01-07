@@ -70,12 +70,7 @@ export default function Card({ item }: CardProps) {
                 rel="noopener"
                 target="_blank"
               >
-                {item?.Newspaper?.name} &nbsp;
-                {url?.hostname ? (
-                  <span className="truncate max-w-full text-sm font-normal text-muted-foreground">
-                    {url?.hostname}
-                  </span>
-                ) : null}
+                {item?.Newspaper?.name}
               </a>
             </div>
             <div
@@ -183,7 +178,7 @@ export default function Card({ item }: CardProps) {
                   className={buttonVariants({
                     variant: 'secondary',
                     size: 'xxs',
-                    className: 'text-xs',
+                    className: 'text-xs truncate',
                   })}
                   href={PAGE_ENDPOINTS.NEWS.CATEGORIES.ID(item.Category.slug)}
                 >
@@ -195,6 +190,7 @@ export default function Card({ item }: CardProps) {
                   className={buttonVariants({
                     variant: 'secondary',
                     size: 'xxs',
+                    className: 'truncate',
                   })}
                   href={PAGE_ENDPOINTS.NEWS.TAGS.ID(data.tag.slug)}
                   key={data.tag.id}
@@ -209,3 +205,66 @@ export default function Card({ item }: CardProps) {
     </div>
   );
 }
+
+Card.Placeholder = function CardPlaceholder() {
+  return (
+    <div className=" pr-[15px] pl-[10px] border-b cursor-pointer overflow-hidden">
+      <div className="my-2" />
+      <div className="mt-[1px] gap-[10px] flex flex-row">
+        <div className="pl-2">
+          <div className="w-12 h-12 bg-gray-200 rounded-full animate-pulse" />
+        </div>
+        <div className="flex-1">
+          <div className="z-[1] gap-1 flex-1 flex-row flex items-center pb-[2px]">
+            <div className="max-w-[80%]">
+              <div className="w-24 h-4 bg-gray-200 rounded-full animate-pulse" />
+            </div>
+            <div className="text-sm font-normal text-muted-foreground">·</div>
+            <div className="w-24 h-4 bg-gray-200 rounded-full animate-pulse" />
+          </div>
+          <div className="flex flex-col gap-4 md:gap-5 w-full">
+            <div className="w-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 justify-between">
+              <div className="flex flex-col gap-1 ">
+                <div>
+                  <div className="w-24 h-4 bg-gray-200 rounded-full animate-pulse" />
+                </div>
+                <div className="hidden md:block">
+                  <div className="w-24 h-4 bg-gray-200 rounded-full animate-pulse" />
+                </div>
+              </div>
+              <div className="w-full rounded-xl md:rounded-lg bg-slate-100 dark:bg-slate-800 relative cursor-pointer md:basis-[180px] md:h-[108px] md:shrink-0">
+                <div className="md:hidden">
+                  <AspectRatio ratio={16 / 9}>
+                    <div className="w-full h-full overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:dark:ring-offset-slate-800">
+                      <div className="w-full h-full bg-gray-200 rounded-xl md:rounded-lg animate-pulse" />
+                    </div>
+                  </AspectRatio>
+                </div>
+                <div className="hidden md:block w-full h-full">
+                  <div className="w-full h-full overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:dark:ring-offset-slate-800">
+                    <div className="w-full h-full bg-gray-200 rounded-xl md:rounded-lg animate-pulse" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-end space-x-4 py-4">
+            <div className="flex items-center space-x-1">
+              <div className="w-24 h-4 bg-gray-200 rounded-full animate-pulse" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+Card.End = function CardEnd() {
+  return (
+    <div className="w-full py-5">
+      <p className="text-md text-center text-slate-700 dark:text-slate-300">
+        더 이상의 콘텐츠가 없습니다. 👋
+      </p>
+    </div>
+  );
+};

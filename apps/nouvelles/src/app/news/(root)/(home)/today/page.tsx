@@ -5,6 +5,7 @@ import CardList from '~/components/shared/card-list';
 import { itemService } from '~/services/api/items/items.server';
 import { QUERIES_KEY } from '~/constants/constants';
 import TodayHeader from '~/components/shared/today-header';
+import ContentCenterLayout from '~/components/shared/content-center-layout';
 
 export default async function Pages() {
   const queryClient = getQueryClient();
@@ -30,7 +31,13 @@ export default async function Pages() {
   const isEmptyData = totalCount === 0;
 
   if (isEmptyData) {
-    return <>Empty</>;
+    return (
+      <ContentCenterLayout>
+        <span className="truncate max-w-full text-sm font-normal text-muted-foreground underline-offset-4">
+          오늘의 뉴스가 없습니다.
+        </span>
+      </ContentCenterLayout>
+    );
   }
 
   return (
