@@ -4,6 +4,7 @@ import getQueryClient from '~/services/query/get-query-client';
 import CardList from '~/components/shared/card-list';
 import { itemService } from '~/services/api/items/items.server';
 import { QUERIES_KEY } from '~/constants/constants';
+import ContentCenterLayout from '~/components/shared/content-center-layout';
 
 interface PageProps {
   searchParams: { category: string | undefined; tag: string | undefined };
@@ -37,7 +38,13 @@ export default async function Pages({ searchParams }: PageProps) {
   const isEmptyData = totalCount === 0;
 
   if (isEmptyData) {
-    return <>Empty</>;
+    return (
+      <ContentCenterLayout>
+        <span className="truncate max-w-full text-sm font-normal text-muted-foreground underline-offset-4">
+          뉴스가 없습니다.
+        </span>
+      </ContentCenterLayout>
+    );
   }
 
   return (

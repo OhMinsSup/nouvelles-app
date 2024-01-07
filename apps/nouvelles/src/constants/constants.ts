@@ -59,6 +59,15 @@ export const CORS_WHITELIST = {
 export const SITE_CONFIG = {
   title: 'Nouvelles',
   description: 'Nouvelles 새로운 소식을 만나보세요.',
+  keywords: [
+    'Nouvelles',
+    '뉴벨',
+    '뉴벨 프로젝트',
+    '뉴스',
+    '새로운 소식',
+    'neusral',
+    '뉴스럴',
+  ],
   ogImage: undefined,
   favicon: '/favicon.ico',
   logo: '/icons/icon.png',
