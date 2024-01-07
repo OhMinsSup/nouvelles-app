@@ -1,6 +1,7 @@
 import React from 'react';
 import { Icons } from '~/components/icons';
 import { Button } from '~/components/ui/button';
+import CopyButton from '~/components/shared/copy-button';
 
 interface CategoryWithTagHeaderProps {
   type: 'tags' | 'categories';
@@ -20,9 +21,7 @@ export default function CategoryWithTagHeader({
     <div className="w-full relative flex flex-col gap-1 items-start p-6 overflow-hidden border-b">
       <div className="sm:hidden flex flex-row justify-end w-full items-start">
         <div className="flex flex-row gap-2 justify-end z-10">
-          <Button size="icon" variant="outline">
-            <Icons.link />
-          </Button>
+          <CopyButton />
           <a href="/n/design/rss" target="_blank">
             <Button size="icon" variant="outline">
               <Icons.rss />
@@ -56,9 +55,7 @@ export default function CategoryWithTagHeader({
       <div className="flex flex-row gap-2 items-center z-10 w-full">
         <div className="sm:flex hidden w-full">
           <div className="flex flex-row gap-2 justify-end z-10 w-full">
-            <Button size="icon" variant="outline">
-              <Icons.link />
-            </Button>
+            <CopyButton />
             <Button size="icon" variant="outline">
               <Icons.rss />
             </Button>

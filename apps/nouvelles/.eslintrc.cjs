@@ -24,5 +24,6 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-unnecessary-condition': 'off',
     'import/no-named-as-default-member': 'off',
+    '@typescript-eslint/no-misused-promises': 'off',
   },
 };
