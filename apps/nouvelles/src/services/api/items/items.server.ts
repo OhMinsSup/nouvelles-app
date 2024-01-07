@@ -125,7 +125,6 @@ export class ItemService {
 
   private async _getItemsBySearch({ q }: ItemQueryInput, _?: string) {
     try {
-      console.log(q);
       const searchWhere: Prisma.ItemWhereInput = {
         title: {
           search: q,
@@ -227,6 +226,7 @@ export class ItemService {
     _?: string,
   ) {
     try {
+      console.log('tag!!!!!!!!', tag);
       const tagItem = await db.tag.findFirst({
         where: {
           slug: tag,
@@ -237,12 +237,15 @@ export class ItemService {
         return this.getDefaultItems<ItemSchema>();
       }
 
+      console.log('tag~~~~~~~', tagItem);
+      const tagId = tagItem.id;
+
       const [totalCount, list] = await Promise.all([
         db.item.count({
           where: {
             ItemTag: {
               some: {
-                tagId: tagItem.id,
+                tagId,
               },
             },
           },
@@ -254,7 +257,7 @@ export class ItemService {
           where: {
             ItemTag: {
               some: {
-                tagId: tagItem.id,
+                tagId,
               },
             },
             id: cursor
@@ -316,10 +319,12 @@ export class ItemService {
         return this.getDefaultItems<ItemSchema>();
       }
 
+      const categoryId = categoryItem.id;
+
       const [totalCount, list] = await Promise.all([
         db.item.count({
           where: {
-            categoryId: categoryItem.id,
+            categoryId,
           },
         }),
         db.item.findMany({
@@ -327,7 +332,7 @@ export class ItemService {
             id: 'desc',
           },
           where: {
-            categoryId: categoryItem.id,
+            categoryId,
             id: cursor
               ? {
                   lt: cursor,

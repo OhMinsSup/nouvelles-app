@@ -92,7 +92,7 @@ NavigationArea.GithubLink = function Item({ type }: GithubLinkProps) {
       className={cn(
         buttonVariants({
           variant: 'ghost',
-          className: 'rounded-md space-x-2 w-full justify-start',
+          className: 'rounded-md space-x-2 w-full justify-start px-3 py-2',
         }),
       )}
       href={SITE_CONFIG.github}

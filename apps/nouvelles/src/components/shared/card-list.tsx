@@ -147,20 +147,15 @@ export default function CardList({
     },
   });
 
-  console.log('data', data);
-
   const oldPages = data?.pages ?? [];
   const flatPages = oldPages.map((page) => page?.list).flat() ?? [];
 
   const list = flatPages.filter(Boolean);
 
   const loadMore = (index: number) => {
-    console.log('loadMore', index);
     if (index <= 0) return;
 
     const lastData = last(data?.pages ?? []);
-
-    console.log('lastData', lastData);
 
     if (lastData?.endCursor && lastData?.hasNextPage) {
       void fetchNextPage();
@@ -273,7 +268,24 @@ export default function CardList({
           ...(header && {
             Header: () => <>{header}</>,
           }),
-          Footer: () => <div className="h-40" />,
+          Footer: () => {
+            // 더이상 가져올 데이터가 없을 때
+            if (lastItem && !lastItem.hasNextPage) {
+              return (
+                <div className="h-[300px]">
+                  <Card.End />
+                </div>
+              );
+            }
+            return (
+              <>
+                {Array.from({ length: 3 }).map((_, index) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <Card.Placeholder key={`card-placeholder-${index}`} />
+                ))}
+              </>
+            );
+          },
         }}
         computeItemKey={(index, item) => {
           if (!item) {
