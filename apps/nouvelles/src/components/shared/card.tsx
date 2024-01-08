@@ -85,6 +85,7 @@ export default function Card({ item }: CardProps) {
                   <Link
                     className="truncate max-w-full text-sm font-normal text-muted-foreground underline-offset-4 hover:underline"
                     href={link.href}
+                    scroll={false}
                   >
                     {date?.formatted}
                   </Link>
@@ -140,13 +141,7 @@ export default function Card({ item }: CardProps) {
                         rel="noopener"
                         target="_blank"
                       >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          alt={item?.title ?? undefined}
-                          className="object-cover w-full h-full rounded-xl md:rounded-lg"
-                          loading="lazy"
-                          src={item?.image ?? undefined}
-                        />
+                        <Card.Image item={item} />
                       </a>
                     </AspectRatio>
                   </div>
@@ -158,13 +153,7 @@ export default function Card({ item }: CardProps) {
                       rel="noopener"
                       target="_blank"
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        alt={item?.title ?? undefined}
-                        className="object-cover w-full h-full rounded-xl md:rounded-lg"
-                        loading="lazy"
-                        src={item?.image ?? undefined}
-                      />
+                      <Card.Image item={item} />
                     </a>
                   </div>
                 </div>
@@ -181,6 +170,7 @@ export default function Card({ item }: CardProps) {
                     className: 'text-xs truncate',
                   })}
                   href={PAGE_ENDPOINTS.NEWS.CATEGORIES.ID(item.Category.slug)}
+                  scroll={false}
                 >
                   {item.Category.name}
                 </Link>
@@ -194,6 +184,7 @@ export default function Card({ item }: CardProps) {
                   })}
                   href={PAGE_ENDPOINTS.NEWS.TAGS.ID(data.tag.slug)}
                   key={data.tag.id}
+                  scroll={false}
                 >
                   {data.tag.name}
                 </Link>
@@ -266,5 +257,17 @@ Card.End = function CardEnd() {
         더 이상의 콘텐츠가 없습니다. 👋
       </p>
     </div>
+  );
+};
+
+Card.Image = function CardImage({ item }: CardProps) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      alt={item?.title ?? 'No image'}
+      className="object-cover w-full h-full rounded-xl md:rounded-lg"
+      loading="lazy"
+      src={item?.image ? `/api/assets/image?url=${item.image}` : undefined}
+    />
   );
 };

@@ -26,6 +26,9 @@
     "lint": "eslint --max-warnings 0 .",
     "lint:typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "@axiomhq/js": "^1.0.0-rc.1"
+  },
   "devDependencies": {
     "@nouvelles/lintconfig": "workspace:*",
     "@nouvelles/tsconfig": "workspace:*",

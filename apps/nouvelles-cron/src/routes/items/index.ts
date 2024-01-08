@@ -12,6 +12,14 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
   fastify.post('/collect/neusral', async (request: FastifyRequest, reply) => {
     const today = startOfDate(new Date(), 'day');
 
+    const loggingOpts = {
+      job: 'items',
+      type: 'debug',
+      today,
+    } as const;
+
+    logger.info('Starting items job', loggingOpts);
+
     const has = await itemsService.hasCrawlerCollectedToday(today);
     if (has) {
       reply.status(200).send({
@@ -27,6 +35,7 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
     const result: Awaited<ReturnType<typeof site.run>> = [];
 
     try {
+      logger.info('Starting crawler', loggingOpts);
       const data = await site.run({
         browserWSEndpoint:
           envVars.NODE_ENV === 'production'
@@ -34,18 +43,13 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
             : undefined,
       });
       result.push(...data);
-      console.log('Completed items job');
     } catch (error) {
       if (error instanceof Error) {
-        logger.error(error, { job: 'items', type: 'error', today });
+        logger.error(error, { ...loggingOpts, type: 'error' });
       }
     } finally {
       await site.close();
-      logger.info('Completed items job', {
-        job: 'items',
-        type: 'debug',
-        today,
-      });
+      logger.info('Completed items job', loggingOpts);
     }
 
     try {
@@ -57,7 +61,7 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
       });
     } catch (error) {
       if (error instanceof Error) {
-        logger.error(error, { job: 'items', type: 'error', today });
+        logger.error(error, { ...loggingOpts, type: 'error' });
       }
       reply.status(500).send({
         ok: false,
@@ -65,11 +69,7 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
         message: 'Failed items job',
       });
     } finally {
-      logger.info('Completed generateItems', {
-        job: 'items',
-        type: 'debug',
-        today,
-      });
+      logger.info('Completed generateItems', loggingOpts);
     }
   });
 

@@ -107,17 +107,7 @@ export default async function Layout(props: RoutesProps) {
           }}
         />
 
-        <Providers
-          isCORS={isCORS}
-          theme={{
-            attribute: 'class',
-            defaultTheme: 'system',
-            enableSystem: true,
-            disableTransitionOnChange: true,
-          }}
-        >
-          {props.children}
-        </Providers>
+        <Providers isCORS={isCORS}>{props.children}</Providers>
         {isCORS && env.NODE_ENV === 'production' ? (
           <>
             <AxiomWebVitals />
