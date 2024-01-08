@@ -16,6 +16,8 @@ const schema = z.object({
   SENTRY_DSN: z.string().optional(),
   BLESS_URL: z.string().optional(),
   BLESS_TOKEN: z.string().optional(),
+  AXIOM_TOKEN: z.string().optional(),
+  AXIOM_ORG_ID: z.string().optional(),
   PORT: z.string().optional().default('8080').transform(Number),
   SERVER_HOSTNAME: z.string().optional().default('::'),
 });
@@ -27,6 +29,8 @@ const processEnv = {
   SENTRY_DSN: env.SENTRY_DSN,
   BLESS_URL: env.BLESS_URL,
   BLESS_TOKEN: env.BLESS_TOKEN,
+  AXIOM_TOKEN: env.AXIOM_TOKEN,
+  AXIOM_ORG_ID: env.AXIOM_ORG_ID,
   PORT: env.PORT,
   SERVER_HOSTNAME: env.SERVER_HOSTNAME,
 };

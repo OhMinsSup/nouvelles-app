@@ -12,15 +12,18 @@ export class ItemsJob extends JobProgress implements Job {
   public async runner() {
     const today = startOfDate(new Date(), 'day');
     const itemsService = container.resolve(ItemsService);
-    logger.info('Starting items job', { job: 'items', type: 'debug', today });
+
+    const opts = {
+      job: 'items',
+      type: 'debug',
+      today,
+    } as const;
+
+    logger.info('Starting items job', opts);
 
     const has = await itemsService.hasCrawlerCollectedToday(today);
     if (has) {
-      logger.info('Already has today item', {
-        job: 'items',
-        type: 'debug',
-        today,
-      });
+      logger.info('Already has today item', opts);
       return;
     }
 
@@ -29,6 +32,7 @@ export class ItemsJob extends JobProgress implements Job {
     const result: Awaited<ReturnType<typeof site.run>> = [];
 
     try {
+      logger.info('Starting crawler', opts);
       const data = await site.run({
         browserWSEndpoint:
           envVars.NODE_ENV === 'production'
@@ -38,29 +42,21 @@ export class ItemsJob extends JobProgress implements Job {
       result.push(...data);
     } catch (error) {
       if (error instanceof Error) {
-        logger.error(error, { job: 'items', type: 'error', today });
+        logger.error(error, { ...opts, type: 'error' });
       }
     } finally {
       await site.close();
-      logger.info('Completed items job', {
-        job: 'items',
-        type: 'debug',
-        today,
-      });
+      logger.info('Completed items job', opts);
     }
 
     try {
       await itemsService.generateItems(result, today);
     } catch (error) {
       if (error instanceof Error) {
-        logger.error(error, { job: 'items', type: 'error', today });
+        logger.error(error, { ...opts, type: 'error' });
       }
     } finally {
-      logger.info('Completed generateItems', {
-        job: 'items',
-        type: 'debug',
-        today,
-      });
+      logger.info('Completed generateItems', opts);
     }
   }
 }
