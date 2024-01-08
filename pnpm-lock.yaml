@@ -185,9 +185,15 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
+      lru-cache:
+        specifier: ^10.1.0
+        version: 10.1.0
       lucide-react:
         specifier: ^0.295.0
         version: 0.295.0(react@18.2.0)
+      mime-tree:
+        specifier: ^0.1.4
+        version: 0.1.4
       next:
         specifier: ^14.0.4
         version: 14.0.4(@babel/core@7.23.6)(react-dom@18.2.0)(react@18.2.0)
@@ -8012,7 +8018,6 @@ packages:
   /lru-cache@10.1.0:
     resolution: {integrity: sha512-/1clY/ui8CzjKFyjdvwPWJUYKiFVXG2I2cY0ssG7h4+hwk+XOIX7ZSG9Q7TW8TW3Kp3BUSqgFWBLgL4PJ+Blag==}
     engines: {node: 14 || >=16.14}
-    dev: true
 
   /lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
@@ -8093,6 +8098,11 @@ packages:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
     engines: {node: '>= 0.6'}
     dev: true
+
+  /mime-tree@0.1.4:
+    resolution: {integrity: sha512-Be6LoCmwb8LBVixLsCr5rE+Z1LWMUnOKeAL9HT4HLvI880xoUi9q9OR7gM7UZdvMt7wbE7fvEynZEXvqJaim5A==}
+    engines: {node: '>=10'}
+    dev: false
 
   /mime-types@2.1.35:
     resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}

@@ -141,13 +141,7 @@ export default function Card({ item }: CardProps) {
                         rel="noopener"
                         target="_blank"
                       >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          alt={item?.title ?? undefined}
-                          className="object-cover w-full h-full rounded-xl md:rounded-lg"
-                          loading="lazy"
-                          src={item?.image ?? undefined}
-                        />
+                        <Card.Image item={item} />
                       </a>
                     </AspectRatio>
                   </div>
@@ -159,13 +153,7 @@ export default function Card({ item }: CardProps) {
                       rel="noopener"
                       target="_blank"
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        alt={item?.title ?? undefined}
-                        className="object-cover w-full h-full rounded-xl md:rounded-lg"
-                        loading="lazy"
-                        src={item?.image ?? undefined}
-                      />
+                      <Card.Image item={item} />
                     </a>
                   </div>
                 </div>
@@ -269,5 +257,17 @@ Card.End = function CardEnd() {
         더 이상의 콘텐츠가 없습니다. 👋
       </p>
     </div>
+  );
+};
+
+Card.Image = function CardImage({ item }: CardProps) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      alt={item?.title ?? 'No image'}
+      className="object-cover w-full h-full rounded-xl md:rounded-lg"
+      loading="lazy"
+      src={item?.image ? `/api/assets/image?url=${item.image}` : undefined}
+    />
   );
 };
