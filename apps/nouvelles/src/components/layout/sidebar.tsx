@@ -78,6 +78,12 @@ export function SidebarTablet() {
 }
 
 export function SidebarDesktop() {
+  const { setTheme, theme } = useTheme();
+
+  const onClick = useCallback(() => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  }, [setTheme, theme]);
+
   return (
     <div className="absolute top-[10px] left-desktop-sidebar h-full">
       {/* <div className="flex items-center space-x-2 mb-5 py-2 px-3">
@@ -98,6 +104,26 @@ export function SidebarDesktop() {
         <MainNav type="desktop" />
       </div>
       <div className="absolute bottom-[30px] w-full">
+        <Button
+          className="w-full"
+          onClick={onClick}
+          size="icon"
+          type="button"
+          variant="ghost"
+        >
+          <ClientOnly>
+            <SkipRenderOnClient
+              shouldRenderOnClient={() => Boolean(theme) && theme === 'light'}
+            >
+              <Icons.moon />
+            </SkipRenderOnClient>
+            <SkipRenderOnClient
+              shouldRenderOnClient={() => Boolean(theme) && theme === 'dark'}
+            >
+              <Icons.sun />
+            </SkipRenderOnClient>
+          </ClientOnly>
+        </Button>
         <MainNav.GithubLink type="desktop" />
       </div>
     </div>
