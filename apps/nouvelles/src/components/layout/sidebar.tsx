@@ -116,11 +116,13 @@ export function SidebarDesktop() {
               shouldRenderOnClient={() => Boolean(theme) && theme === 'light'}
             >
               <Icons.moon />
+              <span className="ml-2">라이트 모드</span>
             </SkipRenderOnClient>
             <SkipRenderOnClient
               shouldRenderOnClient={() => Boolean(theme) && theme === 'dark'}
             >
               <Icons.sun />
+              <span className="ml-2">다크 모드</span>
             </SkipRenderOnClient>
           </ClientOnly>
         </Button>
