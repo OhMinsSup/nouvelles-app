@@ -26,6 +26,7 @@ export interface ItemSchema {
     tag: Pick<Tag, 'id' | 'name' | 'slug'>;
   }[];
   Newspaper: Pick<Newspaper, 'id' | 'name' | 'slug'>;
+  createdAt: Item['createdAt'];
 }
 
 export type ItemListSchema = PaginationSchema & {

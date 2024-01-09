@@ -10,6 +10,7 @@ export const selectByItem = Prisma.validator<Prisma.ItemSelect>()({
   description: true,
   publishedAt: true,
   image: true,
+  createdAt: true,
   Newspaper: {
     select: {
       id: true,

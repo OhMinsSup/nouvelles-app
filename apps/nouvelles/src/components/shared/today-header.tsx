@@ -1,7 +1,6 @@
 import React from 'react';
-import { Icons } from '~/components/icons';
-import { Button } from '~/components/ui/button';
 import CopyButton from './copy-button';
+import RssFeedButton from './rss-feed-button';
 
 interface TodayHeaderProps {
   count: number;
@@ -13,11 +12,7 @@ export default function TodayHeader({ count }: TodayHeaderProps) {
       <div className="sm:hidden flex flex-row justify-end w-full items-start">
         <div className="flex flex-row gap-2 justify-end z-10">
           <CopyButton />
-          <a href="/n/design/rss" target="_blank">
-            <Button size="icon" variant="outline">
-              <Icons.rss />
-            </Button>
-          </a>
+          <RssFeedButton type="today" />
         </div>
       </div>
       <div className="flex flex-row justify-between items-center w-full">
@@ -41,9 +36,7 @@ export default function TodayHeader({ count }: TodayHeaderProps) {
         <div className="sm:flex hidden w-full">
           <div className="flex flex-row gap-2 justify-end z-10 w-full">
             <CopyButton />
-            <Button size="icon" variant="outline">
-              <Icons.rss />
-            </Button>
+            <RssFeedButton type="today" />
           </div>
         </div>
       </div>

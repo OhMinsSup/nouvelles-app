@@ -40,6 +40,11 @@ export const API_ENDPOINTS = {
     }
     return url.href;
   },
+  rss: {
+    today: '/rss/today',
+    categories: (slug: string) => `/rss/categories/${slug}`,
+    tags: (slug: string) => `/rss/tags/${slug}`,
+  },
 };
 
 export const ASSET_URL = {};

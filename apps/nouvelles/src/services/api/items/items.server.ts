@@ -26,6 +26,126 @@ export class ItemService {
     }
   }
 
+  async getRssFeedCategories(slug: string) {
+    const category = await db.category.findFirst({
+      where: {
+        slug,
+      },
+    });
+
+    if (!category) {
+      return [];
+    }
+
+    const items = await db.item.findMany({
+      where: {
+        categoryId: category.id,
+        description: {
+          not: null,
+        },
+        title: {
+          not: null,
+        },
+        publishedAt: {
+          not: null,
+        },
+        realLink: {
+          not: null,
+        },
+      },
+      orderBy: {
+        publishedAt: 'desc',
+      },
+      select: selectByItem,
+      take: 30,
+    });
+
+    return items as unknown as ItemSchema[];
+  }
+
+  async getRssFeedTags(slug: string) {
+    const tag = await db.tag.findFirst({
+      where: {
+        slug,
+      },
+    });
+
+    if (!tag) {
+      return [];
+    }
+
+    const items = await db.item.findMany({
+      where: {
+        ItemTag: {
+          some: {
+            tagId: tag.id,
+          },
+        },
+        description: {
+          not: null,
+        },
+        title: {
+          not: null,
+        },
+        publishedAt: {
+          not: null,
+        },
+        realLink: {
+          not: null,
+        },
+      },
+      orderBy: {
+        publishedAt: 'desc',
+      },
+      select: selectByItem,
+      take: 30,
+    });
+
+    return items as unknown as ItemSchema[];
+  }
+
+  async getRssFeedToday() {
+    const collectingDate = startOfDate(new Date(), 'day');
+
+    const collectingData = await db.crawlerDateCollected.findFirst({
+      where: {
+        collectingDate,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+
+    if (!collectingData) {
+      return [];
+    }
+
+    const items = await db.item.findMany({
+      where: {
+        collectingDateId: collectingData.id,
+        description: {
+          not: null,
+        },
+        title: {
+          not: null,
+        },
+        publishedAt: {
+          not: null,
+        },
+        realLink: {
+          not: null,
+        },
+      },
+      orderBy: {
+        publishedAt: 'desc',
+      },
+      select: selectByItem,
+      take: 30,
+    });
+
+    return items as unknown as ItemSchema[];
+  }
+
   getDefaultItems<Data = any>() {
     return {
       totalCount: 0 as number,
@@ -226,7 +346,6 @@ export class ItemService {
     _?: string,
   ) {
     try {
-      console.log('tag!!!!!!!!', tag);
       const tagItem = await db.tag.findFirst({
         where: {
           slug: tag,
@@ -237,7 +356,6 @@ export class ItemService {
         return this.getDefaultItems<ItemSchema>();
       }
 
-      console.log('tag~~~~~~~', tagItem);
       const tagId = tagItem.id;
 
       const [totalCount, list] = await Promise.all([
