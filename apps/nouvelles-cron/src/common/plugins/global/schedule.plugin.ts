@@ -13,11 +13,12 @@ interface JobInfo {
 const schedulePlugin: FastifyPluginCallback = (fastify, _opts, done) => {
   const job = container.resolve(ItemsJob);
 
+  // 크론 표현식 매일 오전 8시에 실행
+  const time = envVars.NODE_ENV === 'production' ? '0 8 * * *' : '*/5 * * * *';
+
   const jobInfo: JobInfo = {
     name: 'item job in every AM 08:00',
-    cronTime:
-      // 매일 오전 8시에 실행
-      envVars.NODE_ENV === 'production' ? '0 0 8 * * *' : '*/5 * * * *',
+    cronTime: time,
     jobService: job,
   };
 
