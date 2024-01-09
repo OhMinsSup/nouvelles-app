@@ -56,9 +56,7 @@ export class ItemsService implements Service {
         await Promise.all(tags.map((tag) => tagsService.findOrCreate(tag)));
       } catch (error) {
         if (error instanceof Error) {
-          logger.error(error, {
-            type: 'error',
-          });
+          logger.error(error);
         }
       }
 
@@ -71,9 +69,7 @@ export class ItemsService implements Service {
         );
       } catch (error) {
         if (error instanceof Error) {
-          logger.error(error, {
-            type: 'error',
-          });
+          logger.error(error);
         }
       }
 
@@ -86,9 +82,7 @@ export class ItemsService implements Service {
         );
       } catch (error) {
         if (error instanceof Error) {
-          logger.error(error, {
-            type: 'error',
-          });
+          logger.error(error);
         }
       }
 
@@ -146,9 +140,7 @@ export class ItemsService implements Service {
         publishedAt = formatForNeusralDate(input.date);
       } catch (error) {
         if (error instanceof Error) {
-          logger.error(error, {
-            type: 'error',
-          });
+          logger.error(error);
         }
       }
     }
@@ -208,9 +200,7 @@ export class ItemsService implements Service {
       return data;
     } catch (error) {
       if (error instanceof Error) {
-        logger.error(error, {
-          type: 'error',
-        });
+        logger.error(error);
       }
       return null;
     }

@@ -40,29 +40,24 @@ const internalGet = async (request: AxiomRequest) => {
     const { searchParams } = new URL(request.url);
     const query = schema.safeParse(getParsedQuery(searchParams));
     if (!query.success) {
-      logger.error('Error while parsing query', {
-        type: 'http',
-        error: query.error,
-        url: request.url,
-      });
-      return itemService.getDefaultItems();
+      return NextResponse.json(itemService.getDefaultItems());
     }
     const data = await itemService.all(query.data);
     return NextResponse.json(data);
   } catch (error) {
-    if (env.NODE_ENV === 'production') {
-      request.log.error('Error while getting items', {
+    if (error instanceof Error) {
+      const loggingOpts = {
+        type: 'http' as const,
         error,
         url: request.url,
-      });
-    } else {
-      logger.error('Error while getting items', {
-        type: 'http',
-        error,
-        url: request.url,
-      });
+      };
+      if (env.NODE_ENV === 'production') {
+        request.log.error('[API - /api/items]', loggingOpts);
+      } else {
+        logger.error('[API - /api/items]', loggingOpts);
+      }
     }
-    return new Response(null, { status: 500 });
+    return NextResponse.json(itemService.getDefaultItems());
   }
 };
 

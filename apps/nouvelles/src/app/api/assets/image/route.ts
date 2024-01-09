@@ -17,27 +17,30 @@ export const imageResponse = (
   status: number,
   contentType: string,
   cacheControl: string,
-): Response =>
-  new Response(file, {
+): Response => {
+  return new Response(file, {
     status,
     headers: {
       'Content-Type': contentType,
       'Cache-Control': cacheControl,
     },
   });
+};
 
-export const redirectResponse = (location: string): Response =>
-  new Response(null, {
+export const redirectResponse = (location: string): Response => {
+  return new Response(null, {
     status: 302,
     headers: {
       Location: location,
     },
   });
+};
 
-export const textResponse = (status: number, message = ''): Response =>
-  new Response(message, {
+export const textResponse = (status: number, message = ''): Response => {
+  return new Response(message, {
     status,
   });
+};
 
 const cache = new MemoryCache({
   maxSize: 5e7,
