@@ -40,6 +40,18 @@ export class ItemService {
     const items = await db.item.findMany({
       where: {
         categoryId: category.id,
+        description: {
+          not: null,
+        },
+        title: {
+          not: null,
+        },
+        publishedAt: {
+          not: null,
+        },
+        realLink: {
+          not: null,
+        },
       },
       orderBy: {
         publishedAt: 'desc',
@@ -68,6 +80,18 @@ export class ItemService {
           some: {
             tagId: tag.id,
           },
+        },
+        description: {
+          not: null,
+        },
+        title: {
+          not: null,
+        },
+        publishedAt: {
+          not: null,
+        },
+        realLink: {
+          not: null,
         },
       },
       orderBy: {
@@ -99,6 +123,18 @@ export class ItemService {
     const items = await db.item.findMany({
       where: {
         collectingDateId: collectingData.id,
+        description: {
+          not: null,
+        },
+        title: {
+          not: null,
+        },
+        publishedAt: {
+          not: null,
+        },
+        realLink: {
+          not: null,
+        },
       },
       orderBy: {
         publishedAt: 'desc',

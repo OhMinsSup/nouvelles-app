@@ -1,34 +1,46 @@
+import { getRequestInDomainInfo } from '@nouvelles/libs';
 import { itemService } from '~/services/api/items/items.server';
 import type { ItemSchema } from '~/services/api/items/items.model';
+import { PAGE_ENDPOINTS, SITE_CONFIG } from '~/constants/constants';
+import { escapeHTMLEntities } from '~/utils/utils';
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { domainUrl } = getRequestInDomainInfo(request);
+  const pathnames = PAGE_ENDPOINTS.NEWS.TODAY;
+  const url = new URL(pathnames, domainUrl);
+
   const feeds = await itemService.getRssFeedToday();
+  const generateRssItem = (item: ItemSchema) => {
+    const tit = item?.title?.slice(0, 200) as unknown as string;
 
-  const generateRssItem = (item: ItemSchema) => `
+    const desc = item?.description?.slice(0, 200) as unknown as string;
+
+    const link = encodeURIComponent(item?.realLink as unknown as string);
+
+    const pubDate = new Date(item.publishedAt as unknown as Date).toUTCString();
+    return `
     <item>
-      <guid>${item.id}</guid>
-      <title>${item.title}</title>
-      <link>${item.link}</link>
-      <description>${item.description}</description>
-      <pubDate>${new Date(
-        item.publishedAt ?? item.createdAt,
-      ).toUTCString()}</pubDate>
-    </item>
+    <guid>${item.id}</guid>
+    <title>${escapeHTMLEntities(tit)}</title>
+    <link>${link}</link>
+    <description>${escapeHTMLEntities(desc)}</description>
+    <pubDate>${pubDate}</pubDate>
+  </item>
   `;
+  };
 
-  const rssItems = feeds
-    .filter((i) => i.publishedAt)
-    .map(generateRssItem)
-    .join('');
+  const rssItems = feeds.map(generateRssItem).join('');
+
+  const link = decodeURIComponent(url.toString());
 
   const rss = `
     <rss version="2.0">
       <channel>
-        <title>Les nouvelles</title>
-        <link>https://lesnouvelles.cc</link>
-        <description>Les nouvelles</description>
-        <language>fr</language>
-        <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+      <title>${SITE_CONFIG.title}</title>
+      <link>${link}</link>
+      <description>${SITE_CONFIG.description}</description>
+      <language>ko</language>
+      <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
         ${rssItems}
       </channel>
     </rss>
