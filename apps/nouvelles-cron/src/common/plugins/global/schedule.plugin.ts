@@ -1,5 +1,6 @@
 import type { FastifyPluginCallback } from 'fastify';
 import { container } from 'tsyringe';
+import { logger } from '~/common/logging/logger';
 import { envVars } from '~/env';
 import { ItemsJob } from '~/jobs/items.jobs';
 
@@ -25,7 +26,13 @@ const schedulePlugin: FastifyPluginCallback = (fastify, _opts, done) => {
   const cron = fastify.cron.createJob({
     name,
     cronTime,
+    startWhenReady: true,
     onTick: async () => {
+      logger.log('[schedulePlugin] onTick ->', {
+        isProgressing: jobService.isProgressing,
+        timestamp: new Date().toISOString(),
+      });
+
       if (jobService.isProgressing) return;
 
       jobService.start();

@@ -11,18 +11,19 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
 
   fastify.post('/collect/neusral', async (request: FastifyRequest, reply) => {
     const today = startOfDate(new Date(), 'day');
-
     const loggingOpts = {
-      job: 'items',
-      type: 'debug',
-      today,
-    } as const;
+      type: 'info' as const,
+      jobTime: today.toISOString(),
+    };
 
-    logger.log('Starting items job', loggingOpts);
+    logger.log('[API - /collect/neusral] Starting items job', loggingOpts);
 
     const has = await itemsService.hasCrawlerCollectedToday(today);
     if (has) {
-      logger.log('Already has today item', loggingOpts);
+      logger.log(
+        '[API - /collect/neusral] Already has today item',
+        loggingOpts,
+      );
       reply.status(200).send({
         ok: true,
         items: [],
@@ -36,7 +37,7 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
     const result: Awaited<ReturnType<typeof site.run>> = [];
 
     try {
-      logger.log('Starting crawler', loggingOpts);
+      logger.log('[API - /collect/neusral] Starting crawler', loggingOpts);
       const data = await site.run({
         browserWSEndpoint:
           envVars.NODE_ENV === 'production'
@@ -46,11 +47,11 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
       result.push(...data);
     } catch (error) {
       if (error instanceof Error) {
-        logger.error(error, { ...loggingOpts, type: 'error' });
+        logger.error(error, loggingOpts);
       }
     } finally {
       await site.close();
-      logger.log('Completed items job', loggingOpts);
+      logger.log('[API - /collect/neusral] Completed items job', loggingOpts);
     }
 
     try {
@@ -62,7 +63,7 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
       });
     } catch (error) {
       if (error instanceof Error) {
-        logger.error(error, { ...loggingOpts, type: 'error' });
+        logger.error(error, loggingOpts);
       }
       reply.status(500).send({
         ok: false,
@@ -70,7 +71,7 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
         message: 'Failed items job',
       });
     } finally {
-      logger.log('Completed generateItems', loggingOpts);
+      logger.log('[API - /collect/neusral] Completed items job', loggingOpts);
     }
   });
 

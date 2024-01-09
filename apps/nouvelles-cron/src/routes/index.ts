@@ -1,9 +1,9 @@
 import { container } from 'tsyringe';
 import type { FastifyPluginCallback } from 'fastify';
 import { CommonService } from '~/services/common.service';
-import items from './items';
 import Sentry from '~/common/logging/sentry';
 import { logger } from '~/common/logging/logger';
+import items from './items';
 
 const api: FastifyPluginCallback = (fastify, opts, done) => {
   const commonService = container.resolve(CommonService);
@@ -38,6 +38,9 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
 
   fastify.get('/ping', (_request, reply) => {
     const serverTime = commonService.getServerTime();
+    logger.log('[API - /ping] serverTime ->', {
+      serverTime,
+    });
     reply.send({ serverTime });
   });
 
