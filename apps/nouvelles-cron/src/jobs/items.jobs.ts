@@ -19,11 +19,11 @@ export class ItemsJob extends JobProgress implements Job {
       today,
     } as const;
 
-    logger.info('Starting items job', opts);
+    logger.log('Starting items job', opts);
 
     const has = await itemsService.hasCrawlerCollectedToday(today);
     if (has) {
-      logger.info('Already has today item', opts);
+      logger.log('Already has today item', opts);
       return;
     }
 
@@ -32,7 +32,7 @@ export class ItemsJob extends JobProgress implements Job {
     const result: Awaited<ReturnType<typeof site.run>> = [];
 
     try {
-      logger.info('Starting crawler', opts);
+      logger.log('Starting crawler', opts);
       const data = await site.run({
         browserWSEndpoint:
           envVars.NODE_ENV === 'production'
@@ -46,7 +46,7 @@ export class ItemsJob extends JobProgress implements Job {
       }
     } finally {
       await site.close();
-      logger.info('Completed items job', opts);
+      logger.log('Completed items job', opts);
     }
 
     try {
@@ -56,7 +56,7 @@ export class ItemsJob extends JobProgress implements Job {
         logger.error(error, { ...opts, type: 'error' });
       }
     } finally {
-      logger.info('Completed generateItems', opts);
+      logger.log('Completed generateItems', opts);
     }
   }
 }

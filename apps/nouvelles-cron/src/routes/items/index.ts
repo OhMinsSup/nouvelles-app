@@ -18,10 +18,11 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
       today,
     } as const;
 
-    logger.info('Starting items job', loggingOpts);
+    logger.log('Starting items job', loggingOpts);
 
     const has = await itemsService.hasCrawlerCollectedToday(today);
     if (has) {
+      logger.log('Already has today item', loggingOpts);
       reply.status(200).send({
         ok: true,
         items: [],
@@ -35,7 +36,7 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
     const result: Awaited<ReturnType<typeof site.run>> = [];
 
     try {
-      logger.info('Starting crawler', loggingOpts);
+      logger.log('Starting crawler', loggingOpts);
       const data = await site.run({
         browserWSEndpoint:
           envVars.NODE_ENV === 'production'
@@ -49,7 +50,7 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
       }
     } finally {
       await site.close();
-      logger.info('Completed items job', loggingOpts);
+      logger.log('Completed items job', loggingOpts);
     }
 
     try {
@@ -69,7 +70,7 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
         message: 'Failed items job',
       });
     } finally {
-      logger.info('Completed generateItems', loggingOpts);
+      logger.log('Completed generateItems', loggingOpts);
     }
   });
 
