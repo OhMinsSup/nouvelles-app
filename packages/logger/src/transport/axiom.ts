@@ -57,12 +57,16 @@ export const axiomTransport =
         },
       ]);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      void axiom.ingestRaw(
-        dataset,
-        data,
-        ContentType.JSON,
-        ContentEncoding.Identity,
-      );
+      try {
+        void axiom.ingestRaw(
+          dataset,
+          data,
+          ContentType.JSON,
+          ContentEncoding.Identity,
+        );
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -94,12 +98,17 @@ function sendQueuedMessages(axiom: AxiomWithoutBatching) {
           ...ctx,
         },
       ]);
-      void axiom.ingestRaw(
-        dataset,
-        data,
-        ContentType.JSON,
-        ContentEncoding.Identity,
-      );
+
+      try {
+        void axiom.ingestRaw(
+          dataset,
+          data,
+          ContentType.JSON,
+          ContentEncoding.Identity,
+        );
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 }

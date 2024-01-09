@@ -16,6 +16,6 @@ if (envVars.SENTRY_DSN) {
   logger.addTransport(sentryTransport(Sentry));
 }
 
-if (envVars.AXIOM_TOKEN && envVars.AXIOM_ORG_ID) {
+if (axiom) {
   logger.addTransport(axiomTransport(axiom));
 }
