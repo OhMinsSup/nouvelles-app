@@ -26,6 +26,90 @@ export class ItemService {
     }
   }
 
+  async getRssFeedCategories(slug: string) {
+    const category = await db.category.findFirst({
+      where: {
+        slug,
+      },
+    });
+
+    if (!category) {
+      return [];
+    }
+
+    const items = await db.item.findMany({
+      where: {
+        categoryId: category.id,
+      },
+      orderBy: {
+        publishedAt: 'desc',
+      },
+      select: selectByItem,
+      take: 30,
+    });
+
+    return items as unknown as ItemSchema[];
+  }
+
+  async getRssFeedTags(slug: string) {
+    const tag = await db.tag.findFirst({
+      where: {
+        slug,
+      },
+    });
+
+    if (!tag) {
+      return [];
+    }
+
+    const items = await db.item.findMany({
+      where: {
+        ItemTag: {
+          some: {
+            tagId: tag.id,
+          },
+        },
+      },
+      orderBy: {
+        publishedAt: 'desc',
+      },
+      select: selectByItem,
+      take: 30,
+    });
+
+    return items as unknown as ItemSchema[];
+  }
+
+  async getRssFeedToday() {
+    const collectingDate = startOfDate(new Date(), 'day');
+
+    const collectingData = await db.crawlerDateCollected.findFirst({
+      where: {
+        collectingDate,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+
+    if (!collectingData) {
+      return [];
+    }
+
+    const items = await db.item.findMany({
+      where: {
+        collectingDateId: collectingData.id,
+      },
+      orderBy: {
+        publishedAt: 'desc',
+      },
+      select: selectByItem,
+      take: 30,
+    });
+
+    return items as unknown as ItemSchema[];
+  }
+
   getDefaultItems<Data = any>() {
     return {
       totalCount: 0 as number,

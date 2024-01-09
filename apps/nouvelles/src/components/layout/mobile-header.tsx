@@ -52,7 +52,8 @@ HeaderMobile.Internal = function Item({ children }: HeaderMobileProps) {
 
   return (
     <header
-      className="sticky top-0 z-40 block md:hidden"
+      // className="sticky top-0 z-40 block md:hidden"
+      className="relative top-0 z-40 block md:hidden"
       data-name="mobile-header"
       ref={ref}
       style={{

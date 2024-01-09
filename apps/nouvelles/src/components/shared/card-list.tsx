@@ -234,7 +234,7 @@ export default function CardList({
       }
 
       for (const _ of result.cusors) {
-        $virtuoso.current?.scrollTo({
+        $virtuoso.current?.scrollBy({
           top: result.top,
           behavior: 'smooth',
         });
