@@ -310,7 +310,6 @@ export class ItemService {
     _?: string,
   ) {
     try {
-      console.log('tag!!!!!!!!', tag);
       const tagItem = await db.tag.findFirst({
         where: {
           slug: tag,
@@ -321,7 +320,6 @@ export class ItemService {
         return this.getDefaultItems<ItemSchema>();
       }
 
-      console.log('tag~~~~~~~', tagItem);
       const tagId = tagItem.id;
 
       const [totalCount, list] = await Promise.all([
