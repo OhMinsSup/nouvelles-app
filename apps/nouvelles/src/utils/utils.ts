@@ -88,3 +88,19 @@ export function validateOrigin(origin: string) {
 
   return isAllowed;
 }
+
+export function escapeHTMLEntities(str: string) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .trim();
+}
+
+export function truncate(str: string, maxLength: number) {
+  if (str.length <= maxLength) return str;
+
+  return `${str.slice(0, maxLength)}...`;
+}

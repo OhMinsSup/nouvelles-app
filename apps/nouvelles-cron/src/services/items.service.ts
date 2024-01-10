@@ -117,9 +117,7 @@ export class ItemsService implements Service {
 
     const exists = await db.item.findFirst({
       where: {
-        neusralId,
         title,
-        link,
         realLink,
       },
     });
