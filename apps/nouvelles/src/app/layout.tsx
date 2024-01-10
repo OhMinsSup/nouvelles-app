@@ -19,10 +19,10 @@ import { PreloadResources } from '~/services/react/preload';
 import { cn, validateOrigin } from '~/utils/utils';
 import 'dayjs/locale/ko'; //한국어
 
-dayjs.extend(customParseFormat);
-dayjs.extend(timezone);
-dayjs.extend(utc);
 dayjs.locale('ko');
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.tz.setDefault('Asia/Seoul');
 
 const fontSans = FontSans({
