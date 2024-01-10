@@ -24,7 +24,7 @@ export class ItemsJob extends JobProgress implements Job {
 
     const has = await itemsService.hasCrawlerCollectedToday(date);
     if (has) {
-      logger.log('[ItemsJob] Already has today item', loggingOpts);
+      logger.log('[ItemsJob] Already has today item');
       return;
     }
 
@@ -33,7 +33,7 @@ export class ItemsJob extends JobProgress implements Job {
     const result: Awaited<ReturnType<typeof site.run>> = [];
 
     try {
-      logger.log('[ItemsJob] Starting crawler', loggingOpts);
+      logger.log('[ItemsJob] Starting crawler');
       const data = await site.run({
         browserWSEndpoint:
           envVars.NODE_ENV === 'production'
@@ -41,26 +41,25 @@ export class ItemsJob extends JobProgress implements Job {
             : undefined,
       });
       result.push(...data);
-      console.log(result);
-      logger.log('[ItemsJob] Completed items job', loggingOpts);
+
+      await site.close();
+
+      logger.log('[ItemsJob] Completed crawler');
     } catch (error) {
+      await site.close();
       if (error instanceof Error) {
         logger.error(error, loggingOpts);
       }
-    } finally {
-      await site.close();
-      site.cleanup();
-      logger.log('[ItemsJob] closed crawler', loggingOpts);
     }
 
     try {
+      logger.log('[ItemsJob] Starting database insert');
       await itemsService.generateItems(result, date);
+      logger.log('[ItemsJob] Completed database insert');
     } catch (error) {
       if (error instanceof Error) {
         logger.error(error, loggingOpts);
       }
-    } finally {
-      logger.log('[ItemsJob] Completed database insert', loggingOpts);
     }
   }
 }

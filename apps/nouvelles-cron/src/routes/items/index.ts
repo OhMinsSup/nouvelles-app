@@ -22,10 +22,7 @@ const routes: FastifyPluginCallback = (fastify, opts, done) => {
 
     const has = await itemsService.hasCrawlerCollectedToday(date);
     if (has) {
-      logger.log(
-        '[API - /collect/neusral] Already has today item',
-        loggingOpts,
-      );
+      logger.log('[API - /collect/neusral] Already has today item');
       reply.status(200).send({
         ok: true,
         items: [],
@@ -39,7 +36,7 @@ const routes: FastifyPluginCallback = (fastify, opts, done) => {
     const result: Awaited<ReturnType<typeof site.run>> = [];
 
     try {
-      logger.log('[API - /collect/neusral] Starting crawler', loggingOpts);
+      logger.log('[API - /collect/neusral] Starting crawler');
       const data = await site.run({
         browserWSEndpoint:
           envVars.NODE_ENV === 'production'
@@ -50,21 +47,18 @@ const routes: FastifyPluginCallback = (fastify, opts, done) => {
 
       await site.close();
 
-      logger.log('[API - /collect/neusral] Completed crawler', loggingOpts);
+      logger.log('[API - /collect/neusral] Completed crawler');
     } catch (error) {
       await site.close();
       if (error instanceof Error) {
-        logger.error(error, loggingOpts);
+        logger.error(error);
       }
     }
 
     try {
-      logger.log(
-        '[API - /collect/neusral] Starting database insert',
-        loggingOpts,
-      );
+      logger.log('[API - /collect/neusral] Starting database insert');
       const data = await itemsService.generateItems(result, date);
-      logger.log('[API - /collect/neusral] Completed data insert', loggingOpts);
+      logger.log('[API - /collect/neusral] Completed database insert');
       reply.status(200).send({
         ok: true,
         items: data,
@@ -72,7 +66,7 @@ const routes: FastifyPluginCallback = (fastify, opts, done) => {
       });
     } catch (error) {
       if (error instanceof Error) {
-        logger.error(error, loggingOpts);
+        logger.error(error);
       }
       reply.status(500).send({
         ok: false,
