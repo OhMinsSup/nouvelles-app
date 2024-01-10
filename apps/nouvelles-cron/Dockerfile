@@ -21,6 +21,8 @@ RUN turbo prune --scope=nouvelles-cron --docker
 
 # remove all empty node_modules folder structure
 RUN find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
+# remove apps/nouvelles folder
+RUN rm -rf apps/nouvelles
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM node:${NODE_VERSION}-alpine AS installer

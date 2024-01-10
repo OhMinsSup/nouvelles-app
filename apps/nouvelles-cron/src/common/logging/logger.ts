@@ -12,10 +12,10 @@ export const logger = new Logger();
 
 logger.addTransport(consoleTransport);
 
-if (envVars.SENTRY_DSN) {
+if (envVars.SENTRY_DSN && envVars.NODE_ENV === 'production') {
   logger.addTransport(sentryTransport(Sentry));
 }
 
-if (axiom) {
+if (axiom && envVars.NODE_ENV === 'production') {
   logger.addTransport(axiomTransport(axiom));
 }

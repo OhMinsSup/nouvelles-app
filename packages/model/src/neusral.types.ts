@@ -19,6 +19,10 @@ export type PageCloseOptions =
   | undefined;
 
 export interface NeusralSiteConstructorOptions {
+  timezone?: string | undefined;
+}
+
+export interface NeusralSiteOptions {
   executablePath?: string | undefined;
   browserWSEndpoint?: string | undefined;
 }

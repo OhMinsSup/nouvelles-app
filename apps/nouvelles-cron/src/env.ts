@@ -20,6 +20,7 @@ const schema = z.object({
   AXIOM_ORG_ID: z.string().optional(),
   PORT: z.string().optional().default('8080').transform(Number),
   SERVER_HOSTNAME: z.string().optional().default('::'),
+  TZ: z.string().optional(),
 });
 
 type Schema = z.infer<typeof schema>;
@@ -33,6 +34,7 @@ const processEnv = {
   AXIOM_ORG_ID: env.AXIOM_ORG_ID,
   PORT: env.PORT,
   SERVER_HOSTNAME: env.SERVER_HOSTNAME,
+  TZ: env.TZ,
 };
 
 // eslint-disable-next-line import/no-mutable-exports

@@ -3,6 +3,7 @@ import type { FastifyPluginCallback } from 'fastify';
 import { CommonService } from '~/services/common.service';
 import Sentry from '~/common/logging/sentry';
 import { logger } from '~/common/logging/logger';
+import { envVars } from '~/env';
 import items from './items';
 
 const api: FastifyPluginCallback = (fastify, opts, done) => {
@@ -10,7 +11,29 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
 
   fastify.register(items, { prefix: '/items' });
 
-  fastify.post('/error-test', async (_request, reply) => {
+  fastify.get('/ping', (_request, reply) => {
+    const serverTime = commonService.getServerTime();
+    const tzTime = commonService.getTimezoneServerTime();
+
+    logger.log('[API - /ping] serverTime ->', {
+      serverTime,
+      tzTime,
+      timezone: envVars.TZ,
+    });
+
+    reply.send({ serverTime, tzTime, timezone: envVars.TZ });
+  });
+
+  fastify.get('/healthcheck', async (_request, reply) => {
+    try {
+      await commonService.healthcheck();
+      reply.send({ ok: true });
+    } catch (error) {
+      reply.status(500).send({ ok: false });
+    }
+  });
+
+  fastify.post('/error-test', (_request, reply) => {
     try {
       const transaction = Sentry.startTransaction({
         op: 'test',
@@ -36,31 +59,10 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
     }
   });
 
-  fastify.get('/ping', (_request, reply) => {
-    const serverTime = commonService.getServerTime();
-    logger.log('[API - /ping] serverTime ->', {
-      serverTime,
-    });
-    reply.send({ serverTime });
-  });
-
-  fastify.get('/healthcheck', async (_request, reply) => {
-    try {
-      await commonService.healthcheck();
-      reply.send({ ok: true });
-    } catch (error) {
-      reply.status(500).send({ ok: false });
-    }
-  });
-
   done();
 };
 
 const routes: FastifyPluginCallback = (fastify, opts, done) => {
-  fastify.get('/', (_request, reply) => {
-    reply.send({ ok: true });
-  });
-
   fastify.register(api, {
     prefix: '/api',
   });
