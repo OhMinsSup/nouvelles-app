@@ -71,6 +71,9 @@ export default function CardList({
     if (type === 'search') {
       return QUERIES_KEY.items.search(q);
     }
+    if (type === 'today') {
+      return QUERIES_KEY.items.today;
+    }
     return QUERIES_KEY.items.root;
   }, [type, category, tag, q]);
 
