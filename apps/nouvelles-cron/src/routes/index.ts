@@ -3,6 +3,7 @@ import type { FastifyPluginCallback } from 'fastify';
 import { CommonService } from '~/services/common.service';
 import Sentry from '~/common/logging/sentry';
 import { logger } from '~/common/logging/logger';
+import { envVars } from '~/env';
 import items from './items';
 
 const api: FastifyPluginCallback = (fastify, opts, done) => {
@@ -38,10 +39,15 @@ const api: FastifyPluginCallback = (fastify, opts, done) => {
 
   fastify.get('/ping', (_request, reply) => {
     const serverTime = commonService.getServerTime();
+    const tzTime = commonService.getTimezoneServerTime();
+
     logger.log('[API - /ping] serverTime ->', {
       serverTime,
+      tzTime,
+      timezone: envVars.TZ,
     });
-    reply.send({ serverTime });
+
+    reply.send({ serverTime, tzTime, timezone: envVars.TZ });
   });
 
   fastify.get('/healthcheck', async (_request, reply) => {

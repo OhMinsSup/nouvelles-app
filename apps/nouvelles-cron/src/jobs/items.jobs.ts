@@ -1,26 +1,28 @@
 import { NeusralSite } from '@nouvelles/model';
 import { injectable, singleton, container } from 'tsyringe';
-import { startOfDate } from '@nouvelles/date';
+import { formatDate } from '@nouvelles/date';
 import { ItemsService } from '~/services/items.service';
 import { type Job, JobProgress } from '~/jobs/job';
 import { envVars } from '~/env';
 import { logger } from '~/common/logging/logger';
+import { CommonService } from '~/services/common.service';
 
 @injectable()
 @singleton()
 export class ItemsJob extends JobProgress implements Job {
   public async runner() {
-    const today = startOfDate(new Date(), 'day');
+    const commonService = container.resolve(CommonService);
+    const itemsService = container.resolve(ItemsService);
+
+    const date = commonService.getStartOfDate(new Date(), 'day');
     const loggingOpts = {
       type: 'info' as const,
-      jobTime: today.toISOString(),
+      jobTime: formatDate(date),
     };
-
-    const itemsService = container.resolve(ItemsService);
 
     logger.log('[ItemsJob] Starting items job', loggingOpts);
 
-    const has = await itemsService.hasCrawlerCollectedToday(today);
+    const has = await itemsService.hasCrawlerCollectedToday(date);
     if (has) {
       logger.log('[ItemsJob] Already has today item', loggingOpts);
       return;
@@ -49,7 +51,7 @@ export class ItemsJob extends JobProgress implements Job {
     }
 
     try {
-      await itemsService.generateItems(result, today);
+      await itemsService.generateItems(result, date);
     } catch (error) {
       if (error instanceof Error) {
         logger.error(error, loggingOpts);

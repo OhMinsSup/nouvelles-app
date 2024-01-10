@@ -1,24 +1,26 @@
 import { NeusralSite } from '@nouvelles/model';
 import { container } from 'tsyringe';
-import { startOfDate } from '@nouvelles/date';
+import { formatDate } from '@nouvelles/date';
 import type { FastifyPluginCallback, FastifyRequest } from 'fastify';
 import { ItemsService } from '~/services/items.service';
+import { CommonService } from '~/services/common.service';
 import { envVars } from '~/env';
 import { logger } from '~/common/logging/logger';
 
 const items: FastifyPluginCallback = (fastify, opts, done) => {
   const itemsService = container.resolve(ItemsService);
+  const commonService = container.resolve(CommonService);
 
   fastify.post('/collect/neusral', async (request: FastifyRequest, reply) => {
-    const today = startOfDate(new Date(), 'day');
+    const date = commonService.getStartOfDate(new Date(), 'day');
     const loggingOpts = {
       type: 'info' as const,
-      jobTime: today.toISOString(),
+      jobTime: formatDate(date),
     };
 
     logger.log('[API - /collect/neusral] Starting items job', loggingOpts);
 
-    const has = await itemsService.hasCrawlerCollectedToday(today);
+    const has = await itemsService.hasCrawlerCollectedToday(date);
     if (has) {
       logger.log(
         '[API - /collect/neusral] Already has today item',
@@ -55,7 +57,7 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
     }
 
     try {
-      const data = await itemsService.generateItems(result, today);
+      const data = await itemsService.generateItems(result, date);
       reply.status(200).send({
         ok: true,
         items: data,

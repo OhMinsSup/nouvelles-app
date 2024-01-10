@@ -10,16 +10,19 @@ import timezone from 'dayjs/plugin/timezone.js';
 import utc from 'dayjs/plugin/utc.js';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import { envVars } from './env';
+import { DEFAULT_TIME_ZONE } from './common/constants/constants';
+
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+dayjs.tz.setDefault(DEFAULT_TIME_ZONE);
 
 const app = Fastify({
   logger: true,
 });
 
 app.register(fastifyCron);
-
-dayjs.extend(customParseFormat);
-dayjs.extend(timezone);
-dayjs.extend(utc);
 
 app.register(cookie);
 app.register(formbody);

@@ -1,5 +1,6 @@
 import { db } from '@nouvelles/database';
-import { formatDate } from '@nouvelles/date';
+import dayjs from 'dayjs';
+import { formatDate, startOfDate } from '@nouvelles/date';
 import { injectable, singleton } from 'tsyringe';
 
 interface Service {
@@ -17,6 +18,27 @@ export class CommonService implements Service {
     } catch (error) {
       return 'Invalid date instance';
     }
+  }
+
+  public getTimezoneServerTime() {
+    try {
+      const serverTime = new Date();
+      const timezone = dayjs(serverTime).tz().toDate();
+      return formatDate(timezone);
+    } catch (error) {
+      return 'Invalid date instance';
+    }
+  }
+
+  public getStartOfDate(date: Date | number | string, unit: dayjs.UnitType) {
+    const nextDate = dayjs(date).tz().toDate();
+    const nextStartOfDate = startOfDate(nextDate, unit);
+    return nextStartOfDate;
+  }
+
+  public getDate(date: Date | number | string) {
+    const nextDate = dayjs(date).tz().toDate();
+    return nextDate;
   }
 
   public async healthcheck() {
