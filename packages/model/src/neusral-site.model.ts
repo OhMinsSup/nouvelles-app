@@ -1,13 +1,29 @@
 import puppeteer, { type Browser } from 'puppeteer';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat.js';
+import timezone from 'dayjs/plugin/timezone.js';
+import utc from 'dayjs/plugin/utc.js';
+
+import { DEFAULT_TIME_ZONE } from './constants';
 import { NeusralPage } from './neusral-page.model';
-import type { NeusralSiteConstructorOptions } from './neusral.types';
+import type {
+  NeusralSiteConstructorOptions,
+  NeusralSiteOptions,
+} from './neusral.types';
 
 export class NeusralSite {
   private _browser: Browser | undefined;
 
   private _page: NeusralPage | undefined;
 
-  async run(opts?: NeusralSiteConstructorOptions) {
+  constructor(opts?: NeusralSiteConstructorOptions) {
+    dayjs.extend(customParseFormat);
+    dayjs.extend(utc);
+    dayjs.extend(timezone);
+    dayjs.tz.setDefault(opts?.timezone || DEFAULT_TIME_ZONE);
+  }
+
+  async run(opts?: NeusralSiteOptions) {
     if (opts?.browserWSEndpoint) {
       this._browser = await puppeteer.connect({
         browserWSEndpoint: opts.browserWSEndpoint,
@@ -34,22 +50,18 @@ export class NeusralSite {
       return items;
     } catch (error) {
       console.error(error);
-      return [];
+      throw error;
     }
   }
 
   async close() {
-    if (this._page) await this._page.close();
-    if (this._browser) await this._browser.close();
-  }
-
-  cleanup() {
     if (this._page) {
-      this._page.cleanup();
+      await this._page.close();
       this._page = undefined;
     }
 
     if (this._browser) {
+      await this._browser.close();
       this._browser = undefined;
     }
   }

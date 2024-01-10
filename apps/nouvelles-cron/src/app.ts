@@ -6,16 +6,16 @@ import formbody from '@fastify/formbody';
 import fastifyCron from 'fastify-cron';
 import cookie from '@fastify/cookie';
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import timezone from 'dayjs/plugin/timezone.js';
 import utc from 'dayjs/plugin/utc.js';
-import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import { envVars } from './env';
 import { DEFAULT_TIME_ZONE } from './common/constants/constants';
+import routes from './routes';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 dayjs.extend(timezone);
-
 dayjs.tz.setDefault(DEFAULT_TIME_ZONE);
 
 const app = Fastify({
@@ -39,10 +39,6 @@ app.register(autoload, {
   forceESM: true,
 });
 
-app.register(autoload, {
-  dir: join(cwd, `./${__source}/routes`),
-  encapsulate: false,
-  forceESM: true,
-});
+app.register(routes);
 
 export default app;

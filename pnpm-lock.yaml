@@ -676,6 +676,9 @@ importers:
 
   packages/model:
     dependencies:
+      '@nouvelles/date':
+        specifier: workspace:*
+        version: link:../date
       '@nouvelles/error':
         specifier: workspace:*
         version: link:../error
@@ -685,6 +688,9 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
       puppeteer:
         specifier: ^21.6.1
         version: 21.6.1(typescript@5.3.3)

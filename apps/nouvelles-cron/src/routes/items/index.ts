@@ -7,7 +7,7 @@ import { CommonService } from '~/services/common.service';
 import { envVars } from '~/env';
 import { logger } from '~/common/logging/logger';
 
-const items: FastifyPluginCallback = (fastify, opts, done) => {
+const routes: FastifyPluginCallback = (fastify, opts, done) => {
   const itemsService = container.resolve(ItemsService);
   const commonService = container.resolve(CommonService);
 
@@ -43,21 +43,28 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
       const data = await site.run({
         browserWSEndpoint:
           envVars.NODE_ENV === 'production'
-            ? `${envVars.BLESS_URL}?token=${envVars.BLESS_TOKEN}`
+            ? `${envVars.BLESS_URL}?token=${envVars.BLESS_TOKEN}&launch={"headless":"new"}`
             : undefined,
       });
       result.push(...data);
+
+      await site.close();
+
+      logger.log('[API - /collect/neusral] Completed crawler', loggingOpts);
     } catch (error) {
+      await site.close();
       if (error instanceof Error) {
         logger.error(error, loggingOpts);
       }
-    } finally {
-      await site.close();
-      logger.log('[API - /collect/neusral] Completed items job', loggingOpts);
     }
 
     try {
+      logger.log(
+        '[API - /collect/neusral] Starting database insert',
+        loggingOpts,
+      );
       const data = await itemsService.generateItems(result, date);
+      logger.log('[API - /collect/neusral] Completed data insert', loggingOpts);
       reply.status(200).send({
         ok: true,
         items: data,
@@ -72,12 +79,10 @@ const items: FastifyPluginCallback = (fastify, opts, done) => {
         items: [],
         message: 'Failed items job',
       });
-    } finally {
-      logger.log('[API - /collect/neusral] Completed items job', loggingOpts);
     }
   });
 
   done();
 };
 
-export default items;
+export default routes;

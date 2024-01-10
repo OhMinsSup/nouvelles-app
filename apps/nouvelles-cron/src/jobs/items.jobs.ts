@@ -37,17 +37,20 @@ export class ItemsJob extends JobProgress implements Job {
       const data = await site.run({
         browserWSEndpoint:
           envVars.NODE_ENV === 'production'
-            ? `${envVars.BLESS_URL}?token=${envVars.BLESS_TOKEN}`
+            ? `${envVars.BLESS_URL}?token=${envVars.BLESS_TOKEN}&launch={"headless":"new"}`
             : undefined,
       });
       result.push(...data);
+      console.log(result);
+      logger.log('[ItemsJob] Completed items job', loggingOpts);
     } catch (error) {
       if (error instanceof Error) {
         logger.error(error, loggingOpts);
       }
     } finally {
       await site.close();
-      logger.log('[ItemsJob] Completed items job', loggingOpts);
+      site.cleanup();
+      logger.log('[ItemsJob] closed crawler', loggingOpts);
     }
 
     try {
@@ -57,7 +60,7 @@ export class ItemsJob extends JobProgress implements Job {
         logger.error(error, loggingOpts);
       }
     } finally {
-      logger.log('[ItemsJob] Completed items job', loggingOpts);
+      logger.log('[ItemsJob] Completed database insert', loggingOpts);
     }
   }
 }
