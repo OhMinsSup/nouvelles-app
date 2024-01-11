@@ -106,25 +106,22 @@ export class ItemService {
   }
 
   async getRssFeedToday() {
-    const date = dayjs().tz().toDate();
-    const collectingDate = startOfDate(date, 'day');
-
-    const collectingData = await db.crawlerDateCollected.findFirst({
-      where: {
-        collectingDate,
-      },
+    const crawlers = await db.crawlerDateCollected.findMany({
       orderBy: {
         id: 'desc',
       },
+      take: 1,
     });
 
-    if (!collectingData) {
+    const [lastCrawlers] = crawlers;
+
+    if (!lastCrawlers) {
       return [];
     }
 
     const items = await db.item.findMany({
       where: {
-        collectingDateId: collectingData.id,
+        collectingDateId: lastCrawlers.id,
         description: {
           not: null,
         },

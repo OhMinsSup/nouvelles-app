@@ -2,7 +2,8 @@ import { type ClassValue, clsx } from 'clsx';
 import noop from 'lodash-es/noop';
 import { twMerge } from 'tailwind-merge';
 import { isEmpty, isNull, isUndefined } from '@nouvelles/libs';
-import { CORS_WHITELIST } from '~/constants/constants';
+import { CORS_WHITELIST, SITE_CONFIG } from '~/constants/constants';
+import type { ItemSchema } from '~/services/api/items/items.model';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -99,8 +100,34 @@ export function escapeHTMLEntities(str: string) {
     .trim();
 }
 
-export function truncate(str: string, maxLength: number) {
-  if (str.length <= maxLength) return str;
+export function generateRssItemTemplate(item: ItemSchema) {
+  const tit = item?.title?.slice(0, 200) as unknown as string;
+  const desc = item?.description?.slice(0, 200) as unknown as string;
+  const link = encodeURIComponent(item?.realLink as unknown as string);
+  const pubDate = new Date(item.publishedAt as unknown as Date).toUTCString();
 
-  return `${str.slice(0, maxLength)}...`;
+  return `
+  <item>
+    <guid>${item.id}</guid>
+    <title>${escapeHTMLEntities(tit)}</title>
+    <link>${link}</link>
+    <description>${escapeHTMLEntities(desc)}</description>
+    <pubDate>${pubDate}</pubDate>
+  </item>`.trim();
+}
+
+export function generateRssTemplate(link: string, rssItems: string) {
+  const date = new Date().toUTCString();
+  return `
+  <rss version="2.0">
+    <channel>
+      <title>${SITE_CONFIG.title}</title>
+      <link>${link}</link>
+      <description>${SITE_CONFIG.description}</description>
+      <language>ko</language>
+      <lastBuildDate>${date}</lastBuildDate>
+      ${rssItems}
+    </channel>
+  </rss>
+`;
 }
