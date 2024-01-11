@@ -49,18 +49,25 @@ export const API_ENDPOINTS = {
 
 export const ASSET_URL = {};
 
+export const DATE_FORMAT = {
+  KO: {
+    DEFAULT: 'YYYY년 MM월 DD일 HH시 mm분 ss초',
+    DATE: 'YYYY년 MM월 DD일',
+    TIME: 'HH시 mm분 ss초',
+  },
+};
+
 export const PAGE_ENDPOINTS = {
-  NEWS: {
-    ROOT: '/news',
-    TODAY: '/news/today',
-    SEARCH: '/news/search',
-    TAGS: {
-      ID: (tagId: string | number) => `/news/tags/${tagId}`,
-    },
-    CATEGORIES: {
-      ID: (categoryId: string | number) => `/news/categories/${categoryId}`,
+  AUTH: {
+    SIGNIN: '/auth/signin',
+  },
+  DASHBOARD: {
+    ROOT: '/dashboard',
+    CRAWLING: {
+      ROOT: '/dashboard/crawling',
     },
   },
+  ROOT: '/',
 } as const;
 
 export const CORS_WHITELIST = {

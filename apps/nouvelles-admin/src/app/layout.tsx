@@ -46,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase,
     manifest: SITE_CONFIG.manifest,
     alternates: {
-      canonical: PAGE_ENDPOINTS.NEWS.ROOT,
+      canonical: PAGE_ENDPOINTS.ROOT,
     },
     openGraph: {
       title: SITE_CONFIG.title,

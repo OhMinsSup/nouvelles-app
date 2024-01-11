@@ -31,6 +31,7 @@
     "db:push": "dotenv -- turbo run db:push",
     "predev": "eli --env-type local",
     "dev": "dotenv -- turbo run dev --concurrency 255",
+    "dev:admin": "dotenv -- pnpm run dev --filter nouvelles-admin",
     "dev:cron": "dotenv -- pnpm run dev --filter nouvelles-cron",
     "dev:web": "dotenv -- pnpm run dev --filter nouvelles-app",
     "docker:build:cron": "docker build -t nouvelles-cron -f ./apps/nouvelles-cron/Dockerfile .",

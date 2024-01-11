@@ -29,7 +29,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/news',
+        destination: '/auth/signin',
         permanent: true,
       },
     ];

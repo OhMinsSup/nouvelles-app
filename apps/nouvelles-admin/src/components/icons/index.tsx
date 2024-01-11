@@ -1,19 +1,26 @@
 import type { LucideProps } from 'lucide-react';
 import {
+  LayoutDashboard,
   AlertTriangle,
   ArrowRight,
+  ChevronsRight,
+  ChevronsLeft,
   Check,
   ChevronLeft,
   ChevronRight,
   CreditCard,
+  Combine,
   File,
+  PlusCircle,
   FileText,
   HelpCircle,
+  ArrowUp,
   Image,
   Laptop,
   Loader2,
   Moon,
   MoreVertical,
+  EyeOff,
   Pizza,
   Plus,
   Settings,
@@ -77,6 +84,7 @@ import {
   WrapText,
   CalendarCheck2,
   Rss,
+  Menu,
 } from 'lucide-react';
 import { cva } from 'class-variance-authority';
 
@@ -288,6 +296,14 @@ export const Icons = {
   github: Github,
   setting: Settings2,
   rss: Rss,
+  menu: Menu,
+  dashboard: LayoutDashboard,
+  combine: Combine,
+  arrowUp: ArrowUp,
+  eyeOff: EyeOff,
+  plusCircle: PlusCircle,
+  chevronsRight: ChevronsRight,
+  chevronsLeft: ChevronsLeft,
   kakao,
 };
 
