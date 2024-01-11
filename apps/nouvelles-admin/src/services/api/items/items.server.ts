@@ -1,6 +1,8 @@
 'server-only';
+import { startOfDate } from '@nouvelles/date';
 import type { Prisma } from '@nouvelles/database';
 import { db } from '@nouvelles/database';
+import dayjs from 'dayjs';
 import { selectByItem } from '~/services/api/items/items.selector';
 import type { ItemQueryInput } from '~/services/api/items/items.query';
 import type { ItemSchema } from '~/services/api/items/items.model';
@@ -104,22 +106,25 @@ export class ItemService {
   }
 
   async getRssFeedToday() {
-    const crawlers = await db.crawlerDateCollected.findMany({
+    const date = dayjs().tz().toDate();
+    const collectingDate = startOfDate(date, 'day');
+
+    const collectingData = await db.crawlerDateCollected.findFirst({
+      where: {
+        collectingDate,
+      },
       orderBy: {
         id: 'desc',
       },
-      take: 1,
     });
 
-    const [lastCrawlers] = crawlers;
-
-    if (!lastCrawlers) {
+    if (!collectingData) {
       return [];
     }
 
     const items = await db.item.findMany({
       where: {
-        collectingDateId: lastCrawlers.id,
+        collectingDateId: collectingData.id,
         description: {
           not: null,
         },
@@ -276,21 +281,24 @@ export class ItemService {
   }
 
   private async _getItemsByToDay(_: ItemQueryInput, __?: string) {
-    const crawlers = await db.crawlerDateCollected.findMany({
+    const date = dayjs().tz().toDate();
+    const collectingDate = startOfDate(date, 'day');
+
+    const collectingData = await db.crawlerDateCollected.findFirst({
+      where: {
+        collectingDate,
+      },
       orderBy: {
         id: 'desc',
       },
-      take: 1,
     });
 
-    const [lastCrawlers] = crawlers;
-
-    if (!lastCrawlers) {
+    if (!collectingData) {
       return this.getDefaultItems<ItemSchema>();
     }
 
     const searchWhere: Prisma.ItemWhereInput = {
-      collectingDateId: lastCrawlers.id,
+      collectingDateId: collectingData.id,
     };
 
     try {
