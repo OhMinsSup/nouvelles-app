@@ -10,14 +10,14 @@ import { logger } from '~/common/logging/logger';
 
 export interface InputCreate {
   id: string;
-  neusralId: string | undefined;
+  neusralId: string;
   category: string | undefined;
   tag: string | undefined;
   reporter: string | undefined;
-  title: string | undefined;
+  title: string;
   link: string | undefined;
   realLink: string | undefined;
-  date: string | undefined;
+  date: string;
   image: string | undefined;
   description: string | undefined;
 }
@@ -86,17 +86,24 @@ export class ItemsService implements Service {
         }
       }
 
-      const collectedData = await db.crawlerDateCollected.create({
-        data: {
-          collectingDate: date,
-        },
-      });
+      try {
+        const collectedData = await db.crawlerDateCollected.create({
+          data: {
+            collectingDate: date,
+          },
+        });
 
-      const items = await Promise.all(
-        input.map((item) => this.create(item, collectedData.id)),
-      );
+        const items = await Promise.all(
+          input.map((item) => this.create(item, collectedData.id)),
+        );
 
-      return items.filter(Boolean);
+        return items.filter(Boolean);
+      } catch (error) {
+        if (error instanceof Error) {
+          logger.error(error);
+        }
+        return [];
+      }
     }
 
     return [];
@@ -117,8 +124,12 @@ export class ItemsService implements Service {
 
     const exists = await db.item.findFirst({
       where: {
-        title,
-        realLink,
+        title: {
+          equals: title.trim(),
+        },
+        neusralId: {
+          equals: neusralId,
+        },
       },
     });
 
