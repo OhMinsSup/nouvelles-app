@@ -5,7 +5,7 @@ import { injectable, singleton } from 'tsyringe';
 
 interface Service {
   getServerTime: () => string;
-  healthcheck: () => Promise<any>;
+  healthcheck: () => Promise<void>;
 }
 
 @singleton()
@@ -13,8 +13,7 @@ interface Service {
 export class CommonService implements Service {
   public getServerTime() {
     try {
-      const serverTime = new Date();
-      return formatDate(serverTime);
+      return formatDate(new Date());
     } catch (error) {
       return 'Invalid date instance';
     }
@@ -22,23 +21,18 @@ export class CommonService implements Service {
 
   public getTimezoneServerTime() {
     try {
-      const serverTime = new Date();
-      const timezone = dayjs(serverTime).tz().toDate();
-      return formatDate(timezone);
+      return formatDate(dayjs(new Date()).tz().toDate());
     } catch (error) {
       return 'Invalid date instance';
     }
   }
 
   public getStartOfDate(date: Date | number | string, unit: dayjs.UnitType) {
-    const nextDate = dayjs(date).tz().toDate();
-    const nextStartOfDate = startOfDate(nextDate, unit);
-    return nextStartOfDate;
+    return startOfDate(dayjs(date).tz().toDate(), unit);
   }
 
   public getDate(date: Date | number | string) {
-    const nextDate = dayjs(date).tz().toDate();
-    return nextDate;
+    return dayjs(date).tz().toDate();
   }
 
   public async healthcheck() {

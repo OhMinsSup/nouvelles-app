@@ -12,6 +12,8 @@ module.exports = {
     'import/named': 'off',
     'react/jsx-pascal-case': 'off',
     'import/no-named-as-default': 'off',
+    'no-nested-ternary': 'off',
+    'no-useless-catch': 'off',
     'eslint-comments/require-description': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-dynamic-delete': 'off',

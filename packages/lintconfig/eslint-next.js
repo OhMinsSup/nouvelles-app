@@ -35,7 +35,7 @@ module.exports = {
       },
     },
   },
-  ignorePatterns: ['node_modules/', 'dist/'],
+  ignorePatterns: ['node_modules/', 'dist/', '.eslintrc.cjs'],
   rules: {
     'import/no-default-export': 'off',
   },

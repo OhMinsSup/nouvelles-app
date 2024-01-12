@@ -20,7 +20,13 @@ module.exports = {
       },
     },
   },
-  ignorePatterns: ['node_modules/', 'dist/', '.eslintrc.js', '**/*.css'],
+  ignorePatterns: [
+    'node_modules/',
+    'dist/',
+    '.eslintrc.js',
+    '**/*.css',
+    '.eslintrc.cjs',
+  ],
   rules: {
     'import/no-default-export': 'off',
   },

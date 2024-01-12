@@ -1,16 +1,23 @@
-export interface NeusralItem {
+export interface BaseItem {
   id: string;
-  neusralId: string | undefined;
   category: string | undefined;
   tag: string | undefined;
   reporter: string | undefined;
-  title: string | undefined;
   link: string | undefined;
   realLink: string | undefined;
-  date: string | undefined;
   image: string | undefined;
   description: string | undefined;
 }
+
+export interface NeusralItem extends BaseItem {
+  neusralId: string;
+  title: string;
+  date: string;
+}
+
+export type InitNeusralItem = Partial<NeusralItem> & {
+  id: string;
+};
 
 export type PageCloseOptions =
   | {

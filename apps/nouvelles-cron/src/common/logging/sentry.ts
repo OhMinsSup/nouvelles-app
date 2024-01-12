@@ -6,7 +6,6 @@ import { envVars } from '~/env';
 if (envVars.SENTRY_DSN) {
   Sentry.init({
     dsn: envVars.SENTRY_DSN,
-    // @ts-expect-error - This is a valid option
     integrations: [new ProfilingIntegration()],
     // Performance Monitoring
     tracesSampleRate: 1.0, //  Capture 100% of the transactions

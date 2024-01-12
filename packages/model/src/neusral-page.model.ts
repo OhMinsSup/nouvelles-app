@@ -3,7 +3,11 @@ import { formatForNeusralDate } from '@nouvelles/date';
 import { agent } from './agent';
 import { getDescription, getOgImage } from './utils';
 import type { Browser, Page } from 'puppeteer';
-import type { NeusralItem, PageCloseOptions } from './neusral.types';
+import type {
+  InitNeusralItem,
+  NeusralItem,
+  PageCloseOptions,
+} from './neusral.types';
 import dayjs from 'dayjs';
 
 const ELE_ITEM_CONTAINER = '.item-container';
@@ -55,7 +59,7 @@ export class NeusralPage {
           $ELE_ITEM_NEWS_DATE,
           $ELE_ITEM_NEWS_REPORTER,
         }) => {
-          const _items: NeusralItem[] = [];
+          const _items: InitNeusralItem[] = [];
 
           const $items =
             document.querySelectorAll<HTMLDivElement>($ELE_ITEM_CONTAINER);
@@ -105,7 +109,7 @@ export class NeusralPage {
                   title,
                   link,
                   date,
-                } as NeusralItem;
+                } as InitNeusralItem;
 
                 if (input.link) {
                   const neusralId = /r\?n=(.*)/.exec(input.link)?.at(1);
@@ -135,8 +139,8 @@ export class NeusralPage {
     }
   }
 
-  private async $getRealItems(collectItems: NeusralItem[]) {
-    const itemMap = new Map<string, NeusralItem>(
+  private async $getRealItems(collectItems: InitNeusralItem[]) {
+    const itemMap = new Map<string, InitNeusralItem>(
       [...collectItems].map((item) => {
         const id = createId();
         return [id, { ...item, id }];
@@ -148,9 +152,10 @@ export class NeusralPage {
     const tzTime = dayjs(serverTime).tz().startOf('day').toDate();
 
     for (const item of itemMap.values()) {
-      const data = item as unknown as NeusralItem;
+      const data = item as unknown as InitNeusralItem;
 
-      if (data.id === 'none' || !data.title || !data.date) {
+      // 필터 조건
+      if (data.id === 'none' || !data.title || !data.date || !data.neusralId) {
         continue;
       }
 
@@ -161,11 +166,14 @@ export class NeusralPage {
         continue;
       }
 
+      // 이미 아이디가 있는 경우 제외
       if (validateMap.has(data.id)) {
         continue;
       }
 
-      validateMap.set(data.id, data);
+      const newItem = data as unknown as NeusralItem;
+
+      validateMap.set(data.id, newItem);
 
       if (data.link) {
         const response = await fetch(data.link).catch(() => {
@@ -173,12 +181,12 @@ export class NeusralPage {
         });
         if (response) {
           const html = await response.text();
-          validateMap.set(data.id, {
-            ...data,
+          Object.assign(newItem, {
             realLink: response.url,
             image: getOgImage(html),
             description: getDescription(html),
           });
+          validateMap.set(data.id, newItem);
         } else {
           continue;
         }
