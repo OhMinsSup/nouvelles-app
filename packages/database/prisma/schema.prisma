@@ -101,7 +101,7 @@ model Item {
   ItemTag              ItemTag[]
   Category             Category?             @relation(fields: [categoryId], references: [id])
   Newspaper            Newspaper?            @relation(fields: [newspaperId], references: [id])
-  CrawlerDateCollected CrawlerDateCollected? @relation(fields: [collectingDateId], references: [id])
+  CrawlerDateCollected CrawlerDateCollected? @relation(fields: [collectingDateId], references: [id], onDelete: Cascade)
 
   @@index([neusralId])
   @@index([categoryId])
