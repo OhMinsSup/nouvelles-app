@@ -130,7 +130,7 @@ dist
 .pnp.*
 
 # prisma
-migrations
+# migrations
 
 # env
 env/.env.development
