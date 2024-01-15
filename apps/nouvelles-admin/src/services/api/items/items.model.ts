@@ -2,7 +2,7 @@ import type { Category, Item, Newspaper, Tag } from '@nouvelles/database';
 
 export interface ItemSchema {
   id: Item['id'];
-  neutralId: Item['neusralId'];
+  neusralId: Item['neusralId'];
   title: Item['title'];
   link: Item['link'];
   realLink: Item['realLink'];

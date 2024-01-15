@@ -1,5 +1,3 @@
-import { env } from 'env.mjs';
-
 export const QUERIES_KEY = {
   items: {
     root: ['items'],
@@ -53,6 +51,9 @@ export const PAGE_ENDPOINTS = {
     ROOT: '/dashboard',
     CRAWLING: {
       ROOT: '/dashboard/crawling',
+    },
+    NEURAL: {
+      ROOT: '/dashboard/neural',
     },
   },
   ROOT: '/',
