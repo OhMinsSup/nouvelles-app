@@ -50,6 +50,7 @@ const routes: FastifyPluginCallback = (fastify, opts, done) => {
       logger.log('[API - /collect/neusral] Completed crawler');
     } catch (error) {
       await site.close();
+      logger.log('[API - /collect/neusral] Error crawler');
       if (error instanceof Error) {
         logger.error(error);
       }
@@ -65,6 +66,7 @@ const routes: FastifyPluginCallback = (fastify, opts, done) => {
         message: 'Completed items job',
       });
     } catch (error) {
+      logger.log('[API - /collect/neusral] Error database insert');
       if (error instanceof Error) {
         logger.error(error);
       }

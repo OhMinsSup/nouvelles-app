@@ -93,8 +93,17 @@ export class ItemsService implements Service {
           },
         });
 
+        // 중복된 객체 데이터 제거 ("title" 기준)
+        const _input = input.reduce<InputCreate[]>((acc, cur) => {
+          const exists = acc.find((item) => item.title === cur.title);
+          if (!exists) {
+            acc.push(cur);
+          }
+          return acc;
+        }, []);
+
         const items = await Promise.all(
-          input.map((item) => this.create(item, collectedData.id)),
+          _input.map((item) => this.create(item, collectedData.id)),
         );
 
         return items.filter(Boolean);

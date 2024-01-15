@@ -47,6 +47,7 @@ export class ItemsJob extends JobProgress implements Job {
       logger.log('[ItemsJob] Completed crawler');
     } catch (error) {
       await site.close();
+      logger.log('[ItemsJob] Error crawler');
       if (error instanceof Error) {
         logger.error(error, loggingOpts);
       }
@@ -57,6 +58,7 @@ export class ItemsJob extends JobProgress implements Job {
       await itemsService.generateItems(result, date);
       logger.log('[ItemsJob] Completed database insert');
     } catch (error) {
+      logger.log('[ItemsJob] Error database insert');
       if (error instanceof Error) {
         logger.error(error, loggingOpts);
       }
