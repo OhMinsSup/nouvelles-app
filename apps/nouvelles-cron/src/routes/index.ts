@@ -5,11 +5,14 @@ import Sentry from '~/common/logging/sentry';
 import { logger } from '~/common/logging/logger';
 import { envVars } from '~/env';
 import items from './items';
+import webPush from './web-push';
 
 const api: FastifyPluginCallback = (fastify, opts, done) => {
   const commonService = container.resolve(CommonService);
 
   fastify.register(items, { prefix: '/items' });
+
+  fastify.register(webPush, { prefix: '/web-push' });
 
   fastify.get('/ping', (_request, reply) => {
     const serverTime = commonService.getServerTime();
