@@ -2,6 +2,10 @@
 import * as z from 'zod';
 import { RESULT_CODE } from '~/constants/constants';
 import { getSession } from '~/services/server/auth';
+import { userService } from '~/services/api/users/users.server';
+import { crawlingService } from '~/services/api/crawling/crawling.server';
+import { kakaoService } from '~/services/api/kakao/kakao.server';
+import { itemService } from '~/services/api/items/items.server';
 
 interface BindInput {
   id: number;
@@ -23,7 +27,6 @@ const schema = z.object({
 
 export const sendkakaoMsgAction = async (bindInput: BindInput) => {
   try {
-    console.log('sendkakaoMsgAction', bindInput);
     const session = await getSession();
     if (!session) {
       return {
@@ -48,9 +51,21 @@ export const sendkakaoMsgAction = async (bindInput: BindInput) => {
       } as Result;
     }
 
-    const data = await Promise.resolve(bindInput);
+    const accessToken = await userService.byAccessToken(session);
+    if (!accessToken) {
+      return {
+        ok: false,
+        resultCode: RESULT_CODE.NOT_EXIST,
+        resultMessage: 'Access token not found',
+        data: null,
+        errors: null,
+      } as Result;
+    }
 
-    console.log('sendkakaoMsgAction', data);
+    const { list } = await itemService.byToDays(validatedFields.data.id);
+
+    const data = await kakaoService.sendMsg(accessToken, list);
+
     return {
       ok: true,
       resultCode: RESULT_CODE.OK,

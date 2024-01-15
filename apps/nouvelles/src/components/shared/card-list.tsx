@@ -89,7 +89,7 @@ export default function CardList({
       type,
       ...(category ? { category } : {}),
       ...(tag ? { tag } : {}),
-      ...(type === 'search' && q ? { q } : {}),
+      ...(q ? { q } : {}),
       ...(userId ? { userId } : {}),
       limit: 10,
       cursor: cursor ? cursor : undefined,
