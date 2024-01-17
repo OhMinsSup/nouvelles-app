@@ -63,15 +63,13 @@ export default function Card({ item }: CardProps) {
         <div className="flex-1">
           <div className="z-[1] gap-1 flex-1 flex-row flex items-center pb-[2px]">
             <div className="max-w-[80%]">
-              <a
+              <Link
                 aria-label={link.label}
                 className="p-0 text-md font-semibold underline-offset-4 hover:underline"
-                href={link.href}
-                rel="noopener"
-                target="_blank"
+                href={PAGE_ENDPOINTS.NEWS.NEWS_PAPERS.ID(item.Newspaper.slug)}
               >
                 {item?.Newspaper?.name}
-              </a>
+              </Link>
             </div>
             <div
               className="text-sm font-normal text-muted-foreground"
@@ -101,7 +99,7 @@ export default function Card({ item }: CardProps) {
                   <a
                     aria-label={link.label}
                     href={link.href}
-                    rel="noopener"
+                    rel="noreferrer noopener"
                     target="_blank"
                   >
                     <h1 className="font-heading text-base sm:text-xl font-semibold sm:font-bold  text-slate-700 dark:text-slate-200 hn-break-words cursor-pointer">
@@ -113,7 +111,7 @@ export default function Card({ item }: CardProps) {
                   <a
                     aria-label={link.label}
                     href={link.href}
-                    rel="noopener"
+                    rel="noreferrer noopener"
                     target="_blank"
                   >
                     <TipTapEditor
@@ -138,7 +136,7 @@ export default function Card({ item }: CardProps) {
                         aria-label={link.label}
                         className="block w-full h-full overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:dark:ring-offset-slate-800"
                         href={link.href}
-                        rel="noopener"
+                        rel="noreferrer noopener"
                         target="_blank"
                       >
                         <Card.Image item={item} />
@@ -150,7 +148,7 @@ export default function Card({ item }: CardProps) {
                       aria-label={link.label}
                       className="block w-full h-full overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:dark:ring-offset-slate-800"
                       href={link.href}
-                      rel="noopener"
+                      rel="noreferrer noopener"
                       target="_blank"
                     >
                       <Card.Image item={item} />

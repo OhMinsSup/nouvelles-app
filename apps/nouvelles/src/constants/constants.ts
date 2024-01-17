@@ -8,11 +8,16 @@ export const QUERIES_KEY = {
       if (q) searchParams.append('q', q);
       return ['items', 'search', searchParams.toString()];
     },
-    tags: (tagId: string | number) => ['items', 'tags', tagId],
-    categories: (categoryId: string | number) => [
+    tags: (tagId?: string | number) => ['items', 'tags', tagId],
+    categories: (categoryId?: string | number) => [
       'items',
       'categories',
       categoryId,
+    ],
+    newspaper: (newspaperId?: string | number) => [
+      'items',
+      'newspapers',
+      newspaperId,
     ],
     today: ['items', 'today'],
   },
@@ -44,6 +49,7 @@ export const API_ENDPOINTS = {
     today: '/rss/today',
     categories: (slug: string) => `/rss/categories/${slug}`,
     tags: (slug: string) => `/rss/tags/${slug}`,
+    newspapers: (slug: string) => `/rss/newspapers/${slug}`,
   },
 };
 
@@ -59,6 +65,9 @@ export const PAGE_ENDPOINTS = {
     },
     CATEGORIES: {
       ID: (categoryId: string | number) => `/news/categories/${categoryId}`,
+    },
+    NEWS_PAPERS: {
+      ID: (newspaperId: string | number) => `/news/newspapers/${newspaperId}`,
     },
   },
 } as const;

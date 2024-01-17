@@ -3,7 +3,7 @@ import CopyButton from '~/components/shared/copy-button';
 import RssFeedButton from './rss-feed-button';
 
 interface CategoryWithTagHeaderProps {
-  type: 'tags' | 'categories';
+  type: 'tags' | 'categories' | 'newspaper';
   name: string;
   slug: string;
   id: number;

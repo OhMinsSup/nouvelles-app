@@ -17,6 +17,8 @@ export class ItemService {
           return this._getItemsByTag(input);
         case 'categories':
           return this._getItemsByCategory(input);
+        case 'newspaper':
+          return this._getItemsByNewspaper(input);
         default:
           return this._getItemsByCursor(input);
       }
@@ -80,6 +82,43 @@ export class ItemService {
             tagId: tag.id,
           },
         },
+        description: {
+          not: null,
+        },
+        title: {
+          not: null,
+        },
+        publishedAt: {
+          not: null,
+        },
+        realLink: {
+          not: null,
+        },
+      },
+      orderBy: {
+        publishedAt: 'desc',
+      },
+      select: selectByItem,
+      take: 30,
+    });
+
+    return items as unknown as ItemSchema[];
+  }
+
+  async getRssFeedNewspaper(slug: string) {
+    const newspaper = await db.newspaper.findFirst({
+      where: {
+        slug,
+      },
+    });
+
+    if (!newspaper) {
+      return [];
+    }
+
+    const items = await db.item.findMany({
+      where: {
+        newspaperId: newspaper.id,
         description: {
           not: null,
         },
@@ -244,10 +283,12 @@ export class ItemService {
     try {
       const searchWhere: Prisma.ItemWhereInput = {
         title: {
-          search: q,
+          contains: q,
+          mode: 'insensitive',
         },
         description: {
-          search: q,
+          contains: q,
+          mode: 'insensitive',
         },
       };
 
@@ -471,6 +512,75 @@ export class ItemService {
                   lt: endCursor,
                 },
                 categoryId: categoryItem.id,
+              },
+            })) > 0
+          : false;
+
+      return {
+        totalCount,
+        list: list as unknown as ItemSchema[],
+        endCursor,
+        hasNextPage,
+      };
+    } catch (error) {
+      return this.getDefaultItems<ItemSchema>();
+    }
+  }
+
+  private async _getItemsByNewspaper(
+    { newspaper, limit, cursor }: ItemQueryInput,
+    _?: string,
+  ) {
+    try {
+      const newspaperItem = await db.newspaper.findFirst({
+        where: {
+          slug: newspaper,
+        },
+      });
+
+      if (!newspaperItem) {
+        return this.getDefaultItems<ItemSchema>();
+      }
+
+      const newspaperId = newspaperItem.id;
+
+      const [totalCount, list] = await Promise.all([
+        db.item.count({
+          where: {
+            newspaperId,
+          },
+        }),
+        db.item.findMany({
+          orderBy: {
+            id: 'desc',
+          },
+          where: {
+            newspaperId,
+            id: cursor
+              ? {
+                  lt: cursor,
+                }
+              : undefined,
+          },
+          take: limit ?? 10,
+          select: selectByItem,
+        }),
+      ]);
+
+      const endItem = list.at(-1);
+
+      const endCursor = endItem?.id ?? null;
+      const hasNextPage =
+        endItem && endCursor
+          ? (await db.item.count({
+              orderBy: {
+                id: 'desc',
+              },
+              where: {
+                id: {
+                  lt: endCursor,
+                },
+                newspaperId: newspaperItem.id,
               },
             })) > 0
           : false;

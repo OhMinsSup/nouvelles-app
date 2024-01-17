@@ -10,7 +10,10 @@ export type PaginationInput = z.infer<typeof _internalPaginationSchema>;
 const _internalSchema = z.object({
   category: z.string().optional(),
   tag: z.string().optional(),
-  type: z.enum(['root', 'search', 'today', 'tags', 'categories']).optional(),
+  newspaper: z.string().optional(),
+  type: z
+    .enum(['root', 'search', 'today', 'tags', 'categories', 'newspaper'])
+    .optional(),
   q: z.string().optional(),
 });
 
