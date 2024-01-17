@@ -16,7 +16,6 @@ import { QUERIES_KEY } from '~/constants/constants';
 import { KeyProvider } from '~/services/providers/key';
 import type { ItemListSchema } from '~/services/api/items/items.model';
 import { getItemsApi } from '~/services/api/items/items.api';
-import { SkipRenderOnClient } from '@nouvelles/react-components';
 
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 
@@ -286,11 +285,7 @@ export default function CardList({
 
             // 더이상 가져올 데이터가 없을 때
             if (lastItem && !lastItem.hasNextPage) {
-              return (
-                <SkipRenderOnClient shouldRenderOnClient={() => hydrating}>
-                  <CardEnd />
-                </SkipRenderOnClient>
-              );
+              return <CardEnd />;
             }
 
             return null;

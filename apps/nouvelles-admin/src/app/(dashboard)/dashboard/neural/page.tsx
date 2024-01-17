@@ -1,5 +1,5 @@
 import React from 'react';
-import NeuralTable from '~/components/neural/table';
+import Table from '~/components/neural/table';
 import BreadCrumb from '~/components/layout/breadcrumb';
 import { PAGE_ENDPOINTS } from '~/constants/constants';
 import { itemService } from '~/services/api/items/items.server';
@@ -17,7 +17,7 @@ export default async function Page() {
   return (
     <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
       <BreadCrumb items={breadcrumbItems} />
-      <NeuralTable data={list} />
+      <Table data={list} />
     </div>
   );
 }

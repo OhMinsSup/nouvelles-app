@@ -1,13 +1,12 @@
 'use client';
-
 import type { ColumnDef } from '@tanstack/react-table';
-import type { CrawlerDateCollected } from '@nouvelles/database';
 import { formatDate } from '@nouvelles/date';
+import type { TagSchema } from '~/services/api/tags/tags.model';
 import DataTableColumnHeader from '~/components/table/data-table-column-header';
 import DataTableRowActions from '~/components/crawling/data-table-row-actions';
 import { DATE_FORMAT } from '~/constants/constants';
 
-export const columns: ColumnDef<CrawlerDateCollected>[] = [
+export const columns: ColumnDef<TagSchema>[] = [
   {
     accessorKey: 'id',
     header: ({ column }) => (
@@ -20,17 +19,31 @@ export const columns: ColumnDef<CrawlerDateCollected>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'collectingDate',
+    accessorKey: 'name',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="수집일" />
+      <DataTableColumnHeader column={column} title="태그" />
     ),
     cell: ({ row }) => {
-      const value = row.getValue<string>('collectingDate');
+      const value = row.getValue<string>('name');
       return (
         <div className="flex space-x-2">
-          <span className="max-w-[500px] truncate font-medium">
-            {formatDate(value, DATE_FORMAT.KO.DATE)}
-          </span>
+          <span className="max-w-[100px] truncate font-medium">{value}</span>
+        </div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: 'slug',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="태그 슬러그" />
+    ),
+    cell: ({ row }) => {
+      const value = row.getValue<string>('slug');
+      return (
+        <div className="flex space-x-2">
+          <span className="max-w-[100px] truncate font-medium">{value}</span>
         </div>
       );
     },
@@ -50,30 +63,11 @@ export const columns: ColumnDef<CrawlerDateCollected>[] = [
         </div>
       );
     },
+    enableSorting: false,
+    enableHiding: false,
     // filterFn: (row, id, value) => {
     //   return value.includes(row.getValue(id));
     // },
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'updatedAt',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="업데이트일" />
-    ),
-    cell: ({ row }) => {
-      const value = row.getValue<string>('updatedAt');
-      return (
-        <div className="flex items-center">
-          <span>{formatDate(value, DATE_FORMAT.KO.DATE)}</span>
-        </div>
-      );
-    },
-    // filterFn: (row, id, value) => {
-    //   return value.includes(row.getValue(id));
-    // },
-    enableSorting: false,
-    enableHiding: false,
   },
   {
     id: 'actions',

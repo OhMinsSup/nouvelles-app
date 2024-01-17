@@ -3,7 +3,6 @@ import * as z from 'zod';
 import { RESULT_CODE } from '~/constants/constants';
 import { getSession } from '~/services/server/auth';
 import { userService } from '~/services/api/users/users.server';
-import { crawlingService } from '~/services/api/crawling/crawling.server';
 import { kakaoService } from '~/services/api/kakao/kakao.server';
 import { itemService } from '~/services/api/items/items.server';
 

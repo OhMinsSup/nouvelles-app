@@ -34,4 +34,25 @@ export const navItems: NavItem[] = [
     icon: 'layoutList',
     label: 'neural',
   },
+  {
+    id: 4,
+    title: '태그 관리',
+    href: PAGE_ENDPOINTS.DASHBOARD.TAGS.ROOT,
+    icon: 'tag',
+    label: 'tags',
+  },
+  {
+    id: 5,
+    title: '카테고리 관리',
+    href: PAGE_ENDPOINTS.DASHBOARD.CATEGORIES.ROOT,
+    icon: 'tag',
+    label: 'categories',
+  },
+  {
+    id: 6,
+    title: '신문사 관리',
+    href: PAGE_ENDPOINTS.DASHBOARD.NEWSPAPERS.ROOT,
+    icon: 'newspaper',
+    label: 'newspapers',
+  },
 ];

@@ -55,6 +55,15 @@ export const PAGE_ENDPOINTS = {
     NEURAL: {
       ROOT: '/dashboard/neural',
     },
+    TAGS: {
+      ROOT: '/dashboard/tags',
+    },
+    CATEGORIES: {
+      ROOT: '/dashboard/categories',
+    },
+    NEWSPAPERS: {
+      ROOT: '/dashboard/newspapers',
+    },
   },
   ROOT: '/',
 } as const;
