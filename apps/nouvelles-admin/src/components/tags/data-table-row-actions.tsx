@@ -34,7 +34,7 @@ export default function DataTableRowActions<TData>({
   );
 
   useEffect(() => {
-    if (stateBySend && stateBySend.ok) {
+    if (stateBySend?.ok) {
       console.log('ok', stateBySend);
     }
   }, [stateBySend]);

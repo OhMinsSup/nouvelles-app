@@ -11,6 +11,7 @@ import {
   CreditCard,
   Combine,
   File,
+  Newspaper,
   PlusCircle,
   FileText,
   HelpCircle,
@@ -86,6 +87,7 @@ import {
   Rss,
   Menu,
   LayoutList,
+  Tag,
 } from 'lucide-react';
 import { cva } from 'class-variance-authority';
 
@@ -307,6 +309,8 @@ export const Icons = {
   chevronsLeft: ChevronsLeft,
   layoutList: LayoutList,
   kakao,
+  tag: Tag,
+  newspaper: Newspaper,
 };
 
 export const iconVariants = cva('', {
