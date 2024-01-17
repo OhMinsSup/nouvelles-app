@@ -49,6 +49,13 @@ export default function Card({ item }: CardProps) {
     };
   }, [url]);
 
+  const newspaperLink = useMemo(() => {
+    if (!item?.Newspaper?.slug) {
+      return PAGE_ENDPOINTS.NEWS.ROOT;
+    }
+    return PAGE_ENDPOINTS.NEWS.NEWS_PAPERS.ID(item?.Newspaper?.slug);
+  }, [item]);
+
   return (
     <div className=" pr-[15px] pl-[10px] border-b cursor-pointer overflow-hidden">
       <div className="my-2" />
@@ -66,7 +73,7 @@ export default function Card({ item }: CardProps) {
               <Link
                 aria-label={link.label}
                 className="p-0 text-md font-semibold underline-offset-4 hover:underline"
-                href={PAGE_ENDPOINTS.NEWS.NEWS_PAPERS.ID(item.Newspaper.slug)}
+                href={newspaperLink}
               >
                 {item?.Newspaper?.name}
               </Link>
