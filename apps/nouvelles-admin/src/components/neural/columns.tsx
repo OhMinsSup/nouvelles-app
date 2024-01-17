@@ -1,8 +1,7 @@
 'use client';
-
 import type { ColumnDef } from '@tanstack/react-table';
-import type { ItemSchema } from '~/services/api/items/items.model';
 import { formatDate } from '@nouvelles/date';
+import type { ItemSchema } from '~/services/api/items/items.model';
 import { Badge } from '~/components/ui/badge';
 import DataTableColumnHeader from '~/components/table/data-table-column-header';
 import { DATE_FORMAT } from '~/constants/constants';

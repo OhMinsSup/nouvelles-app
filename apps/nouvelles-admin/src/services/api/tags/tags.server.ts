@@ -2,7 +2,7 @@
 import { db } from '@nouvelles/database';
 import { selectByTag } from '~/services/api/tags/tags.selector';
 import type { TagSchema } from '~/services/api/tags/tags.model';
-import { TagsQueryInput } from '~/services/api/tags/tags.query';
+import type { TagsQueryInput } from '~/services/api/tags/tags.query';
 
 export class TagsService {
   async all(input: TagsQueryInput) {

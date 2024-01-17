@@ -1,8 +1,7 @@
 'use client';
-
 import type { ColumnDef } from '@tanstack/react-table';
-import type { TagSchema } from '~/services/api/tags/tags.model';
 import { formatDate } from '@nouvelles/date';
+import type { TagSchema } from '~/services/api/tags/tags.model';
 import DataTableColumnHeader from '~/components/table/data-table-column-header';
 import DataTableRowActions from '~/components/crawling/data-table-row-actions';
 import { DATE_FORMAT } from '~/constants/constants';

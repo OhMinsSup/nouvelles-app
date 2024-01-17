@@ -5,7 +5,7 @@ import { API_ENDPOINTS } from '~/constants/constants';
 import type { ItemSchema } from '~/services/api/items/items.model';
 
 export class KakaoService {
-  private _makeContent(items: ItemSchema) {
+  private _makeContent = (items: ItemSchema) => {
     return {
       title: items.title,
       description: items.description,
@@ -17,9 +17,9 @@ export class KakaoService {
         mobile_web_url: items.realLink,
       },
     };
-  }
+  };
 
-  private _makeButton() {
+  private _makeButton = () => {
     return [
       {
         title: '웹으로 이동',
@@ -29,24 +29,24 @@ export class KakaoService {
         },
       },
     ];
-  }
+  };
 
-  private _makeHeaderLink() {
+  private _makeHeaderLink = () => {
     return {
       web_url: env.SITE_URL,
       mobile_web_url: env.SITE_URL,
     };
-  }
+  };
 
-  private _makeTemplateArgs(items: ItemSchema[]) {
+  private _makeTemplateArgs = (items: ItemSchema[]) => {
     return {
       object_type: 'list',
       header_title: '뉴스럴 트렌드',
       header_link: this._makeHeaderLink(),
-      contents: items.map(this._makeContent),
+      contents: items.map((item) => this._makeContent(item)),
       buttons: this._makeButton(),
     };
-  }
+  };
 
   sendMsg = async (accessToken: string, items: ItemSchema[]) => {
     const res = await fetch(API_ENDPOINTS.kakao_default_message, {
