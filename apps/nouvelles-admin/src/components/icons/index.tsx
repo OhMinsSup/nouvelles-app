@@ -85,6 +85,7 @@ import {
   CalendarCheck2,
   Rss,
   Menu,
+  LayoutList,
 } from 'lucide-react';
 import { cva } from 'class-variance-authority';
 
@@ -304,6 +305,7 @@ export const Icons = {
   plusCircle: PlusCircle,
   chevronsRight: ChevronsRight,
   chevronsLeft: ChevronsLeft,
+  layoutList: LayoutList,
   kakao,
 };
 

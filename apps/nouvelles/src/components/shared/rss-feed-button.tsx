@@ -4,7 +4,7 @@ import { Icons } from '~/components/icons';
 import { API_ENDPOINTS } from '~/constants/constants';
 
 interface RssFeedButtonProps {
-  type: 'tags' | 'categories' | 'today';
+  type: 'tags' | 'categories' | 'today' | 'newspaper';
   slug?: string;
 }
 
@@ -15,14 +15,17 @@ export default function RssFeedButton({ type, slug }: RssFeedButtonProps) {
         if (!slug) {
           throw new Error('slug is required');
         }
-
         return API_ENDPOINTS.rss.tags(slug);
       case 'categories':
         if (!slug) {
           throw new Error('slug is required');
         }
-
         return API_ENDPOINTS.rss.categories(slug);
+      case 'newspaper':
+        if (!slug) {
+          throw new Error('slug is required');
+        }
+        return API_ENDPOINTS.rss.newspapers(slug);
       case 'today':
         return API_ENDPOINTS.rss.today;
       default:
@@ -31,7 +34,7 @@ export default function RssFeedButton({ type, slug }: RssFeedButtonProps) {
   }, [type, slug]);
 
   return (
-    <a href={href} rel="noopener" target="_blank">
+    <a href={href} rel="noreferrer noopener" target="_blank">
       <Button size="icon" variant="outline">
         <Icons.rss />
       </Button>

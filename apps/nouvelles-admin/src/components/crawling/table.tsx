@@ -14,7 +14,7 @@ export default function CrawlingTable({ data }: CrawlingTableProps) {
     <>
       <div className="flex items-start justify-between">
         <Heading
-          description="크롤링한 데이터 날짜를 확인할 수 있습니다."
+          description="크롤링한 날짜를 확인할 수 있습니다."
           title={`크롤링 (${data.length})`}
         />
       </div>

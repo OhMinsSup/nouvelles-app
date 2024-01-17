@@ -1,5 +1,10 @@
 const config = require('@nouvelles/lintconfig/eslint-next');
 
+/**
+ * This is a custom ESLint configuration for use with
+ * Next.js apps.
+ * @type {import('eslint').Linter.Config}
+ */
 module.exports = {
   ...config,
   rules: {

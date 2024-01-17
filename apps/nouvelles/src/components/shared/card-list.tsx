@@ -16,12 +16,14 @@ import { QUERIES_KEY } from '~/constants/constants';
 import { KeyProvider } from '~/services/providers/key';
 import type { ItemListSchema } from '~/services/api/items/items.model';
 import { getItemsApi } from '~/services/api/items/items.api';
+import { SkipRenderOnClient } from '@nouvelles/react-components';
 
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 
 interface CardListProps {
-  type: 'root' | 'search' | 'today' | 'tags' | 'categories';
+  type: 'root' | 'search' | 'today' | 'tags' | 'categories' | 'newspaper';
   category?: string;
+  newspaper?: string;
   tag?: string;
   q?: string;
   userId?: string;
@@ -39,6 +41,7 @@ export default function CardList({
   q,
   tag,
   category,
+  newspaper,
   header,
 }: CardListProps) {
   const queryClient = useQueryClient();
@@ -62,20 +65,23 @@ export default function CardList({
   const hydrating = useIsHydrating('[data-hydrating-signal]');
 
   const queryKey = useMemo(() => {
-    if (type === 'categories' && category) {
+    if (type === 'categories') {
       return QUERIES_KEY.items.categories(category);
     }
-    if (type === 'tags' && tag) {
+    if (type === 'tags') {
       return QUERIES_KEY.items.tags(tag);
     }
     if (type === 'search') {
       return QUERIES_KEY.items.search(q);
     }
+    if (type === 'newspaper') {
+      return QUERIES_KEY.items.newspaper(newspaper);
+    }
     if (type === 'today') {
       return QUERIES_KEY.items.today;
     }
     return QUERIES_KEY.items.root;
-  }, [type, category, tag, q]);
+  }, [type, category, tag, q, newspaper]);
 
   const closeMutationObserver = () => {
     if ($observer.current) {
@@ -89,7 +95,8 @@ export default function CardList({
       type,
       ...(category ? { category } : {}),
       ...(tag ? { tag } : {}),
-      ...(type === 'search' && q ? { q } : {}),
+      ...(q ? { q } : {}),
+      ...(newspaper ? { newspaper } : {}),
       ...(userId ? { userId } : {}),
       limit: 10,
       cursor: cursor ? cursor : undefined,
@@ -139,16 +146,17 @@ export default function CardList({
     }
   };
 
-  const { data, fetchNextPage } = useInfiniteQuery({
-    queryKey,
-    queryFn: ({ pageParam }) => fetcher(pageParam),
-    initialPageParam: null as number | null,
-    getNextPageParam: (lastPage) => {
-      return lastPage?.hasNextPage && lastPage?.endCursor
-        ? lastPage?.endCursor
-        : null;
-    },
-  });
+  const { data, fetchNextPage, isPending, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey,
+      queryFn: ({ pageParam }) => fetcher(pageParam),
+      initialPageParam: null as number | null,
+      getNextPageParam: (lastPage) => {
+        return lastPage?.hasNextPage && lastPage?.endCursor
+          ? lastPage?.endCursor
+          : null;
+      },
+    });
 
   const oldPages = data?.pages ?? [];
   const flatPages = oldPages.map((page) => page?.list).flat() ?? [];
@@ -272,22 +280,20 @@ export default function CardList({
             Header: () => <>{header}</>,
           }),
           Footer: () => {
+            if (isPending || isFetchingNextPage) {
+              return <CardPlaceholder />;
+            }
+
             // 더이상 가져올 데이터가 없을 때
             if (lastItem && !lastItem.hasNextPage) {
               return (
-                <div className="h-[300px]">
-                  <Card.End />
-                </div>
+                <SkipRenderOnClient shouldRenderOnClient={() => hydrating}>
+                  <CardEnd />
+                </SkipRenderOnClient>
               );
             }
-            return (
-              <>
-                {Array.from({ length: 3 }).map((_, index) => (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <Card.Placeholder key={`card-placeholder-${index}`} />
-                ))}
-              </>
-            );
+
+            return null;
           },
         }}
         computeItemKey={(index, item) => {
@@ -309,5 +315,24 @@ export default function CardList({
         totalCount={lastItem?.totalCount ?? 0}
       />
     </KeyProvider>
+  );
+}
+
+function CardPlaceholder() {
+  return (
+    <>
+      {Array.from({ length: 3 }).map((_, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <Card.Placeholder key={`card-placeholder-${index}`} />
+      ))}
+    </>
+  );
+}
+
+function CardEnd() {
+  return (
+    <div className="h-[300px]">
+      <Card.End />
+    </div>
   );
 }

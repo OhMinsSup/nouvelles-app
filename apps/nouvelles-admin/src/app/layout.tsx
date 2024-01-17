@@ -10,7 +10,7 @@ import timezone from 'dayjs/plugin/timezone.js';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import dayjs from 'dayjs';
 import { env } from 'env.mjs';
-import { PAGE_ENDPOINTS, SITE_CONFIG } from '~/constants/constants';
+import { SITE_CONFIG } from '~/constants/constants';
 import { Providers } from '~/app/providers';
 import { PreloadResources } from '~/services/react/preload';
 import { cn, validateOrigin } from '~/utils/utils';
@@ -32,29 +32,12 @@ const fontHeading = localFont({
   variable: '--font-heading',
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await getHeaders();
-  const info = getHeaderInDomainInfo(headersList);
-  const metadataBase = new URL(info.domainUrl);
+export function generateMetadata(): Metadata {
   return {
     title: SITE_CONFIG.title,
     description: SITE_CONFIG.description,
-    keywords: SITE_CONFIG.keywords,
     icons: {
       icon: SITE_CONFIG.favicon,
-    },
-    metadataBase,
-    manifest: SITE_CONFIG.manifest,
-    alternates: {
-      canonical: PAGE_ENDPOINTS.ROOT,
-    },
-    openGraph: {
-      title: SITE_CONFIG.title,
-      description: SITE_CONFIG.description,
-      url: metadataBase.href,
-      siteName: SITE_CONFIG.title,
-      locale: 'ko_KR',
-      type: 'article',
     },
   };
 }

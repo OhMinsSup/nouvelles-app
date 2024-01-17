@@ -27,4 +27,11 @@ export const navItems: NavItem[] = [
     icon: 'combine',
     label: 'crawling',
   },
+  {
+    id: 3,
+    title: '뉴스럴 관리',
+    href: PAGE_ENDPOINTS.DASHBOARD.NEURAL.ROOT,
+    icon: 'layoutList',
+    label: 'neural',
+  },
 ];

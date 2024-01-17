@@ -1,19 +1,23 @@
 import React from 'react';
-import CrawlingTable from '~/components/crawling/table';
+import NeuralTable from '~/components/neural/table';
 import BreadCrumb from '~/components/layout/breadcrumb';
 import { PAGE_ENDPOINTS } from '~/constants/constants';
-import { crawlingService } from '~/services/api/crawling/crawling.server';
+import { itemService } from '~/services/api/items/items.server';
 
 const breadcrumbItems = [
-  { title: '크롤링 관리', link: PAGE_ENDPOINTS.DASHBOARD.CRAWLING.ROOT },
+  { title: '뉴스럴 관리', link: PAGE_ENDPOINTS.DASHBOARD.NEURAL.ROOT },
 ];
 
 export default async function Page() {
-  const data = await crawlingService.all();
+  const { list } = await itemService.all({
+    pageNo: 1,
+    limit: 10,
+  });
+
   return (
     <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
       <BreadCrumb items={breadcrumbItems} />
-      <CrawlingTable data={data} />
+      <NeuralTable data={list} />
     </div>
   );
 }

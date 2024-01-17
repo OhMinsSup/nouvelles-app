@@ -10,7 +10,6 @@ export class CategoriesService {
   }
 
   bySlug(slug: string) {
-    console.log('slug', slug);
     return db.category.findUnique({
       where: {
         slug,

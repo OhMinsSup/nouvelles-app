@@ -1,5 +1,3 @@
-import { env } from 'env.mjs';
-
 export const QUERIES_KEY = {
   items: {
     root: ['items'],
@@ -33,18 +31,6 @@ export const API_ENDPOINTS = {
     }
     return url.href;
   },
-  image: (searchParams: URLSearchParams) => {
-    const url = new URL('/api/assets/image', env.SITE_URL);
-    for (const [key, value] of searchParams.entries()) {
-      url.searchParams.append(key, value);
-    }
-    return url.href;
-  },
-  rss: {
-    today: '/rss/today',
-    categories: (slug: string) => `/rss/categories/${slug}`,
-    tags: (slug: string) => `/rss/tags/${slug}`,
-  },
 };
 
 export const ASSET_URL = {};
@@ -65,6 +51,9 @@ export const PAGE_ENDPOINTS = {
     ROOT: '/dashboard',
     CRAWLING: {
       ROOT: '/dashboard/crawling',
+    },
+    NEURAL: {
+      ROOT: '/dashboard/neural',
     },
   },
   ROOT: '/',

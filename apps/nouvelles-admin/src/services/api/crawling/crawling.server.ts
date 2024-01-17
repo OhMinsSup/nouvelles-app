@@ -8,6 +8,13 @@ export class CrawlingService {
       select: selectByCrawler,
     });
   }
+
+  byId(id: number) {
+    return db.crawlerDateCollected.findUnique({
+      where: { id },
+      select: selectByCrawler,
+    });
+  }
 }
 
 export const crawlingService = new CrawlingService();
