@@ -57,7 +57,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: metadataBase.href,
       siteName: SITE_CONFIG.title,
       locale: 'ko_KR',
-      type: 'article',
+      type: 'website',
     },
   };
 }
@@ -107,7 +107,6 @@ export default async function Layout(props: RoutesProps) {
             window.__DOMAIN_INFO__ = ${JSON.stringify(info)}`,
           }}
         />
-
         <Providers isCORS={isCORS}>{props.children}</Providers>
         {isCORS && env.NODE_ENV === 'production' ? (
           <>
