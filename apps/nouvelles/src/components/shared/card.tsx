@@ -15,6 +15,8 @@ import { TipTapEditor } from '~/components/editor/tiptap-editor';
 import { buttonVariants } from '~/components/ui/button';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { PAGE_ENDPOINTS } from '~/constants/constants';
+import ResourceLoader from '~/utils/resource';
+import { ClientOnly } from '@nouvelles/react-components';
 
 interface CardProps {
   item: ItemSchema;
@@ -152,7 +154,7 @@ export default function Card({ item }: CardProps) {
                         rel="noreferrer noopener"
                         target="_blank"
                       >
-                        <Card.Image item={item} />
+                        <SuspenseImage item={item} />
                       </a>
                     </AspectRatio>
                   </div>
@@ -164,7 +166,7 @@ export default function Card({ item }: CardProps) {
                       rel="noreferrer noopener"
                       target="_blank"
                     >
-                      <Card.Image item={item} />
+                      <SuspenseImage item={item} />
                     </a>
                   </div>
                 </div>
@@ -208,7 +210,7 @@ export default function Card({ item }: CardProps) {
   );
 }
 
-Card.Placeholder = function CardPlaceholder() {
+Card.Skeleton = function CardSkeleton() {
   return (
     <div className=" pr-[15px] pl-[10px] border-b cursor-pointer overflow-hidden">
       <div className="my-2" />
@@ -271,14 +273,59 @@ Card.End = function CardEnd() {
   );
 };
 
-Card.Image = function CardImage({ item }: CardProps) {
+function SuspenseImage({ item }: CardProps) {
+  return (
+    <ClientOnly
+      fallback={
+        <div className="w-full h-full bg-gray-200 rounded-xl md:rounded-lg animate-pulse" />
+      }
+    >
+      <React.Suspense
+        fallback={
+          <div className="w-full h-full bg-gray-200 rounded-xl md:rounded-lg animate-pulse" />
+        }
+      >
+        <CardImage item={item} />
+      </React.Suspense>
+    </ClientOnly>
+  );
+}
+
+function CardImage({ item }: CardProps) {
+  const src = item?.image ? `/api/assets/image?url=${item.image}` : undefined;
+  const alt = item?.title ?? '뉴스 이미지가 없습니다.';
+
+  if (src) {
+    // JSResource is meant for loading resources, but the implementation is
+    // just cached loading of promises. So we reuse that here as a quick
+    // way to suspend while images are loading, with caching in case
+    // we encouter the same image twice (in that case, we'll create
+    // new loader *functions*, but JSResource will return a cached
+    // value and only load the iamge once.
+    const resource = ResourceLoader(src, () => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          resolve(src);
+        };
+        img.onerror = (error) => {
+          console.error(error);
+          resolve(src);
+        };
+        img.src = src;
+      });
+    });
+    resource.load(); // TODO: JSResource::read() should call load() if necessary
+    resource.read(); // suspends while the image is pending
+  }
+
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      alt={item?.title ?? 'No image'}
       className="object-cover w-full h-full rounded-xl md:rounded-lg"
       loading="lazy"
-      src={item?.image ? `/api/assets/image?url=${item.image}` : undefined}
+      src={src}
+      alt={alt}
     />
   );
-};
+}

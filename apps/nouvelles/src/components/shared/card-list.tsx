@@ -353,7 +353,7 @@ export function CardListSkeleton() {
     <>
       {Array.from({ length: 8 }).map((_, index) => (
         // eslint-disable-next-line react/no-array-index-key
-        <Card.Placeholder key={`card-placeholder-${index}`} />
+        <Card.Skeleton key={`card-skeleton-${index}`} />
       ))}
     </>
   );
