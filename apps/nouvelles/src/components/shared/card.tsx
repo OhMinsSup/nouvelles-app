@@ -15,7 +15,6 @@ import { TipTapEditor } from '~/components/editor/tiptap-editor';
 import { buttonVariants } from '~/components/ui/button';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { PAGE_ENDPOINTS } from '~/constants/constants';
-import 'dayjs/locale/ko'; //한국어
 
 interface CardProps {
   item: ItemSchema;
@@ -34,6 +33,13 @@ export default function Card({ item }: CardProps) {
     const _link = item?.realLink ?? item?.link ?? null;
     if (!_link) return null;
     return new URL(_link);
+  }, [item]);
+
+  const description = useMemo(() => {
+    if (item?.description) {
+      return item?.description ?? '';
+    }
+    return item?.title ?? '';
   }, [item]);
 
   const link = useMemo(() => {
@@ -123,14 +129,14 @@ export default function Card({ item }: CardProps) {
                   >
                     <TipTapEditor
                       className={cn(
-                        'text-base hidden font-normal text-slate-500 dark:text-slate-400 hn-break-words cursor-pointer md:line-clamp-2',
+                        'text-base hidden font-normal text-slate-500 dark:text-slate-400 hn-break-words cursor-pointer md:line-clamp-2 max-h-[50px]',
                       )}
                       customClassName="p-0"
                       debouncedUpdatesEnabled={false}
                       editable={false}
                       name="thread-text"
                       noBorder
-                      value={item?.description ? item?.description : ''}
+                      value={description}
                     />
                   </a>
                 </div>

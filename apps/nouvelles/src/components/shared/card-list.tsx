@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 'use client';
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import React, { useRef, useLayoutEffect, useCallback, useMemo } from 'react';
 import last from 'lodash-es/last';
 import { Virtuoso, type VirtuosoHandle } from 'react-virtuoso';
@@ -16,6 +16,10 @@ import { QUERIES_KEY } from '~/constants/constants';
 import { KeyProvider } from '~/services/providers/key';
 import type { ItemListSchema } from '~/services/api/items/items.model';
 import { getItemsApi } from '~/services/api/items/items.api';
+import CopyButton from '~/components/shared/copy-button';
+import RssFeedButton from '~/components/shared/rss-feed-button';
+import { Icons } from '~/components/icons';
+import { Input } from '~/components/ui/input';
 
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 
@@ -280,7 +284,7 @@ export default function CardList({
           }),
           Footer: () => {
             if (isPending || isFetchingNextPage) {
-              return <CardPlaceholder />;
+              return <CardListSkeleton />;
             }
 
             // 더이상 가져올 데이터가 없을 때
@@ -313,10 +317,41 @@ export default function CardList({
   );
 }
 
-function CardPlaceholder() {
+export function CardListWithHeaderSkeleton() {
   return (
     <>
-      {Array.from({ length: 3 }).map((_, index) => (
+      <CardListHeaderSkeleton />
+      <CardListSkeleton />
+    </>
+  );
+}
+
+export function CardListWithSearhHeaderSkeleton() {
+  return (
+    <>
+      <section className="my-5 md:my-8 px-6">
+        <form>
+          <div className="relative">
+            <Icons.search className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
+            <Input
+              className="pl-8"
+              autoComplete="off"
+              name="q"
+              placeholder="검색어를 입력하세요"
+              type="search"
+            />
+          </div>
+        </form>
+      </section>
+      <CardListSkeleton />
+    </>
+  );
+}
+
+export function CardListSkeleton() {
+  return (
+    <>
+      {Array.from({ length: 8 }).map((_, index) => (
         // eslint-disable-next-line react/no-array-index-key
         <Card.Placeholder key={`card-placeholder-${index}`} />
       ))}
@@ -324,10 +359,54 @@ function CardPlaceholder() {
   );
 }
 
-function CardEnd() {
+export function CardEnd() {
   return (
     <div className="h-[300px]">
       <Card.End />
+    </div>
+  );
+}
+
+export function CardListHeaderSkeleton() {
+  return (
+    <div className="w-full relative flex flex-col gap-1 items-start p-6 overflow-hidden border-b">
+      <div className="sm:hidden flex flex-row justify-end w-full items-start">
+        <div className="flex flex-row gap-2 justify-end z-10">
+          <CopyButton />
+          <RssFeedButton type="placeholders" />
+        </div>
+      </div>
+      <div className="flex flex-row justify-between items-center w-full">
+        <div className="flex flex-col justify-start gap-0.5">
+          <div className="font-heading text-2xl text-slate-700 dark:text-slate-200 font-semibold z-10">
+            <span className="bg-gray-200 rounded-sm animate-pulse text-transparent">
+              placeholder
+            </span>
+          </div>
+          <div className="flex-row gap-2 hidden sm:flex">
+            <div className="flex flex-row gap-2 z-10 text-slate-500 dark:text-slate-400">
+              <span className="bg-gray-200 rounded-sm animate-pulse text-transparent">
+                placeholder
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-row items-center w-full justify-between sm:hidden">
+        <div className="flex flex-row gap-2 z-10 text-slate-500 dark:text-slate-400">
+          <span className="bg-gray-200 rounded-sm animate-pulse text-transparent">
+            placeholder
+          </span>
+        </div>
+      </div>
+      <div className="flex flex-row gap-2 items-center z-10 w-full">
+        <div className="sm:flex hidden w-full">
+          <div className="flex flex-row gap-2 justify-end z-10 w-full">
+            <CopyButton />
+            <RssFeedButton type="placeholders" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

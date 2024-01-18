@@ -22,7 +22,6 @@ export function Providers({ children }: ProvidersProps) {
         attribute="class"
         defaultTheme="light"
         disableTransitionOnChange
-        enableSystem
       >
         <AppProvider>{children}</AppProvider>
       </ThemeProvider>

@@ -4,7 +4,7 @@ import { Icons } from '~/components/icons';
 import { API_ENDPOINTS } from '~/constants/constants';
 
 interface RssFeedButtonProps {
-  type: 'tags' | 'categories' | 'today' | 'newspaper';
+  type: 'tags' | 'categories' | 'today' | 'newspaper' | 'placeholders';
   slug?: string;
 }
 
@@ -28,6 +28,9 @@ export default function RssFeedButton({ type, slug }: RssFeedButtonProps) {
         return API_ENDPOINTS.rss.newspapers(slug);
       case 'today':
         return API_ENDPOINTS.rss.today;
+      case 'placeholders': {
+        return '#';
+      }
       default:
         throw new Error('invalid type');
     }

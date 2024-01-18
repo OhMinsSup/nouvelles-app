@@ -1,10 +1,5 @@
-import ContentCenterLayout from '~/components/shared/content-center-layout';
-import { Loader } from '~/components/ui/loader';
+import { CardListWithSearhHeaderSkeleton } from '~/components/shared/card-list';
 
 export default function Loading() {
-  return (
-    <ContentCenterLayout>
-      <Loader />
-    </ContentCenterLayout>
-  );
+  return <CardListWithSearhHeaderSkeleton />;
 }

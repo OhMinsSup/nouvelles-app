@@ -1,7 +1,10 @@
 import React from 'react';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import getQueryClient from '~/services/query/get-query-client';
-import CardList from '~/components/shared/card-list';
+import CardList, {
+  CardListSkeleton,
+  CardListWithHeaderSkeleton,
+} from '~/components/shared/card-list';
 import { itemService } from '~/services/api/items/items.server';
 import { QUERIES_KEY } from '~/constants/constants';
 import TodayHeader from '~/components/shared/today-header';
