@@ -57,7 +57,7 @@ export default function Card({ item }: CardProps) {
 
   const newspaperLink = useMemo(() => {
     if (!item?.Newspaper?.slug) {
-      return PAGE_ENDPOINTS.NEWS.ROOT;
+      return PAGE_ENDPOINTS.NEWS.HOME;
     }
     return PAGE_ENDPOINTS.NEWS.NEWS_PAPERS.ID(item?.Newspaper?.slug);
   }, [item]);

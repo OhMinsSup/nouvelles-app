@@ -58,6 +58,7 @@ export const ASSET_URL = {};
 export const PAGE_ENDPOINTS = {
   NEWS: {
     ROOT: '/news',
+    HOME: '/news/home',
     TODAY: '/news/today',
     SEARCH: '/news/search',
     TAGS: {

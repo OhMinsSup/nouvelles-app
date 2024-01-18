@@ -18,7 +18,7 @@ export const NAV_CONFIG = {
       id: 'home',
       type: 'link',
       title: '홈',
-      href: PAGE_ENDPOINTS.NEWS.ROOT,
+      href: PAGE_ENDPOINTS.NEWS.HOME,
       icon: Icons.home,
     },
     {
