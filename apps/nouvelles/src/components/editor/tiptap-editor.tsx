@@ -96,7 +96,9 @@ function Tiptap(props: TipTapRichTextEditorProps) {
     borderOnFocus ? 'focus:border border-custom-border-300' : 'focus:border-0'
   } ${customClassName}`;
 
-  if (!editor) return null;
+  if (!editor) {
+    return <TiptapSkeleton />;
+  }
   editorRef.current = editor;
 
   return (
@@ -116,6 +118,16 @@ function Tiptap(props: TipTapRichTextEditorProps) {
     </div>
   );
 }
+
+const TiptapSkeleton = () => (
+  <div className="animate-pulse flex flex-col space-y-4 max-h-[50px]">
+    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+    <div className="space-y-2">
+      <div className="h-4 bg-gray-200 rounded"></div>
+      <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+    </div>
+  </div>
+);
 
 const TipTapEditor = forwardRef<
   TipTapRichTextEditorProps,

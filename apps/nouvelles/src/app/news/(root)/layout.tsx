@@ -1,23 +1,27 @@
-import React from 'react';
-import MainLayout from '~/components/layout/main-layout';
-import { SidebarDesktop, SidebarTablet } from '~/components/layout/sidebar';
-import RightSidebar from '~/components/layout/right-sidebar';
-import NavigationArea from '~/components/layout/navigation-area';
-import MobileHeaderArea from '~/components/layout/mobile-header-area';
+import Link from 'next/link';
+import { PAGE_ENDPOINTS } from '~/constants/constants';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
+
 export default function Layout({ children }: LayoutProps) {
   return (
-    <MainLayout
-      desktopSidebar={<SidebarDesktop />}
-      mobileFooter={<NavigationArea />}
-      mobileHeader={<MobileHeaderArea />}
-      rightSidebar={<RightSidebar />}
-      tabletSidebar={<SidebarTablet />}
-    >
+    <div className="mx-auto md:max-w-[600px] md:border-l md:border-r w-full">
+      <div className="hidden md:block md:border-b">
+        <div className="flex flex-row items-center justify-between px-[18px] py-3">
+          <Link
+            className="scroll-m-20 text-xl font-semibold tracking-tight"
+            href={PAGE_ENDPOINTS.NEWS.ROOT}
+          >
+            Nouvelles
+          </Link>
+          {/* <Button variant="ghost">
+            <Icons.settings />
+          </Button> */}
+        </div>
+      </div>
       {children}
-    </MainLayout>
+    </div>
   );
 }
