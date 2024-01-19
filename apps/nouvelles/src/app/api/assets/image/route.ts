@@ -12,41 +12,11 @@ const getParsedQuery = (searchParams: URLSearchParams) => {
   };
 };
 
-export const imageResponse = (
-  file: Uint8Array,
-  status: number,
-  contentType: string,
-  cacheControl: string,
-): Response => {
-  return new Response(file, {
-    status,
-    headers: {
-      'Content-Type': contentType,
-      'Cache-Control': cacheControl,
-    },
-  });
-};
-
-export const redirectResponse = (location: string): Response => {
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: location,
-    },
-  });
-};
-
-export const textResponse = (status: number, message = ''): Response => {
-  return new Response(message, {
-    status,
-  });
-};
-
 const cache = new MemoryCache({
   maxSize: 5e7,
 });
 
-export const fetchResolver = async (url: string) => {
+const fetchResolver = async (url: string) => {
   const request = new Request(url, {
     headers: {
       accept: 'image/*',
@@ -74,6 +44,27 @@ export const fetchResolver = async (url: string) => {
     buffer,
     contentType,
   };
+};
+
+const imageResponse = (
+  file: Uint8Array,
+  status: number,
+  contentType: string,
+  cacheControl: string,
+): Response => {
+  return new Response(file, {
+    status,
+    headers: {
+      'Content-Type': contentType,
+      'Cache-Control': cacheControl,
+    },
+  });
+};
+
+const textResponse = (status: number, message = ''): Response => {
+  return new Response(message, {
+    status,
+  });
 };
 
 export async function GET(request: Request) {
