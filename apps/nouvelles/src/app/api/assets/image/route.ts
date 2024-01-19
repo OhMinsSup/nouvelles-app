@@ -94,11 +94,9 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = schema.safeParse(getParsedQuery(searchParams));
   if (!query.success) {
-    return new Response(
+    return textResponse(
+      400,
       query.error.issues.map((issue) => issue.message).join('\n'),
-      {
-        status: 400,
-      },
     );
   }
 
@@ -114,6 +112,13 @@ export async function GET(request: Request) {
       if (cacheValue) {
         const cacheImg = cacheValue;
         const inputContentType = mimeFromBuffer(cacheImg);
+        // 이미지 타입이 아닌 경우 실패처리
+        if (!inputContentType?.startsWith('image')) {
+          throw new BaseError(
+            'FetchError',
+            'Invalid image retrieved from cache',
+          );
+        }
 
         return imageResponse(
           cacheImg,
@@ -134,10 +139,6 @@ export async function GET(request: Request) {
 
     return imageResponse(buffer, 200, contentType, defaultCacheControl);
   } catch (error) {
-    if (error instanceof BaseError) {
-      return textResponse(400, error.message);
-    }
-
     if (error instanceof Error) {
       return textResponse(400, error.message);
     }

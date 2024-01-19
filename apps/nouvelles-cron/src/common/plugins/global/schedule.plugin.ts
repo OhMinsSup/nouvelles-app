@@ -2,7 +2,6 @@ import type { FastifyPluginCallback } from 'fastify';
 import { container } from 'tsyringe';
 import { DEFAULT_TIME_ZONE } from '~/common/constants/constants';
 import { logger } from '~/common/logging/logger';
-import { envVars } from '~/env';
 import { ItemsJob } from '~/jobs/items.jobs';
 import { CommonService } from '~/services/common.service';
 
@@ -19,9 +18,7 @@ const schedulePlugin: FastifyPluginCallback = (fastify, _opts, done) => {
 
   const jobInfo: JobInfo = {
     name: 'item job in every AM 08:00',
-    cronTime:
-      // 매일 오전 8시에 실행
-      envVars.NODE_ENV === 'production' ? '0 8 * * *' : '*/5 * * * *',
+    cronTime: '0 8 * * *', // 매일 오전 8시에 실행
     jobService: job,
   };
 
