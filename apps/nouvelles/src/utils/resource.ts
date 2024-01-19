@@ -54,7 +54,7 @@ export default function ResourceLoader(
   moduleId: string,
   loader: (...args: any[]) => Promise<any>,
 ) {
-  let resource = resourceMap.get(moduleId);
+  let resource: Resource = resourceMap.get(moduleId);
   if (resource == null) {
     resource = new Resource(loader);
     resourceMap.set(moduleId, resource);
