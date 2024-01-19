@@ -11,6 +11,7 @@ import {
   sharekakaoTemplateAction,
 } from '~/services/server/actions/kakao-template.action';
 import { useToast } from '~/components/ui/use-toast';
+import { isNullOrUndefined } from '@nouvelles/libs';
 
 function InternalShareButton() {
   const { pending } = useFormStatus();
@@ -56,6 +57,10 @@ export default function ShareButton({ id }: ShareButtonProps) {
   );
 
   const sharedKakaoMsg = () => {
+    if (isNullOrUndefined(stateBySend)) {
+      return;
+    }
+
     if (!kakaoSDK) {
       toast({
         title: '카카오톡 SDK가 로드되지 않았습니다.',
@@ -64,7 +69,7 @@ export default function ShareButton({ id }: ShareButtonProps) {
       return;
     }
 
-    const state = stateBySend?.data ?? null;
+    const state = stateBySend.data ?? null;
     if (!state) {
       toast({
         title: '카카오톡 공유에 실패했습니다.',
@@ -73,7 +78,10 @@ export default function ShareButton({ id }: ShareButtonProps) {
       return;
     }
 
-    kakaoSDK.Share.sendDefault(state);
+    kakaoSDK.Share.sendDefault({
+      ...state,
+      installTalk: true,
+    });
   };
 
   const handler = useMemoizedFn(sharedKakaoMsg);
