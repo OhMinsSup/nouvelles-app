@@ -10,12 +10,10 @@ export class KakaoService {
     return {
       title: items.title,
       description: items.description,
-      image_url: items.image,
-      image_width: 640,
-      image_height: 640,
+      imageUrl: items.image,
       link: {
-        web_url: items.realLink,
-        mobile_web_url: items.realLink,
+        webUrl: items.realLink,
+        mobileWebUrl: items.realLink,
       },
     };
   };
@@ -23,16 +21,16 @@ export class KakaoService {
   private _makeLayout = (url: URL) => {
     const stringURL = url.toString();
     return {
-      header_link: {
-        web_url: stringURL,
-        mobile_web_url: stringURL,
+      headerLink: {
+        webUrl: stringURL,
+        mobileWebUrl: stringURL,
       },
       buttons: [
         {
           title: '웹으로 이동',
           link: {
-            web_url: stringURL,
-            mobile_web_url: stringURL,
+            webUrl: stringURL,
+            mobileWebUrl: stringURL,
           },
         },
       ],
@@ -43,16 +41,21 @@ export class KakaoService {
     const url = new URL(PAGE_ENDPOINTS.NEWS.TODAY, baseURL);
     const layout = this._makeLayout(url);
     return {
-      object_type: 'list',
-      header_title: '뉴스럴 트렌드',
-      header_link: layout.header_link,
+      objectType: 'list',
+      headerTitle: '뉴스럴 트렌드',
+      headerLink: layout.headerLink,
       contents: items.map((item) => this._makeContent(item)),
       buttons: layout.buttons,
     };
   };
 
-  sendMsg = async (accessToken: string, items: ItemSchema[]) => {
+  getTemplateArgs = (items: ItemSchema[]) => {
     const info = getHeaderInDomainInfo(headers());
+    return this._makeTemplateArgs(items, info.domainUrl);
+  };
+
+  sendMsg = async (accessToken: string, items: ItemSchema[]) => {
+    const template_object = this.getTemplateArgs(items);
     const res = await fetch(API_ENDPOINTS.kakao_default_message, {
       method: 'POST',
       headers: {
@@ -60,9 +63,7 @@ export class KakaoService {
         Authorization: `Bearer ${accessToken}`,
       },
       body: new URLSearchParams({
-        template_object: JSON.stringify(
-          this._makeTemplateArgs(items, info.domainUrl),
-        ),
+        template_object: JSON.stringify(template_object),
       }),
     });
 

@@ -89,6 +89,11 @@ export default async function Layout(props: RoutesProps) {
         />
         <meta content="light" name="color-scheme" />
         <meta content="#FFFFFF" name="theme-color" />
+        <script
+          src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"
+          integrity="sha384-6MFdIr0zOira1CHQkedUqJVql0YtcZA1P0nbPrQYJXVJZUkTk/oX4U9GhUIs3/z8"
+          crossOrigin="anonymous"
+        />
       </head>
       <body
         className={cn(
@@ -102,7 +107,7 @@ export default async function Layout(props: RoutesProps) {
             __html: `
             window.__ENV__ = ${JSON.stringify({
               SITE_URL: env.SITE_URL,
-              API_HOST: env.API_PREFIX,
+              API_PREFIX: env.API_PREFIX,
             })};
             window.__DOMAIN_INFO__ = ${JSON.stringify(info)}`,
           }}

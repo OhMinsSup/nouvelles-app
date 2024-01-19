@@ -20,6 +20,8 @@ import CopyButton from '~/components/shared/copy-button';
 import RssFeedButton from '~/components/shared/rss-feed-button';
 import { Icons } from '~/components/icons';
 import { Input } from '~/components/ui/input';
+import ShareButton from '~/components/shared/share-button';
+import { Button } from '~/components/ui/button';
 
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 
@@ -317,10 +319,16 @@ export default function CardList({
   );
 }
 
-export function CardListWithHeaderSkeleton() {
+interface CardListWithHeaderSkeletonProps {
+  type?: 'default' | 'today';
+}
+
+export function CardListWithHeaderSkeleton({
+  type,
+}: CardListWithHeaderSkeletonProps) {
   return (
     <>
-      <CardListHeaderSkeleton />
+      <CardListHeaderSkeleton type={type} />
       <CardListSkeleton />
     </>
   );
@@ -367,11 +375,20 @@ export function CardEnd() {
   );
 }
 
-export function CardListHeaderSkeleton() {
+interface CardListHeaderSkeletonProps {
+  type?: 'default' | 'today';
+}
+
+export function CardListHeaderSkeleton({ type }: CardListHeaderSkeletonProps) {
   return (
     <div className="w-full relative flex flex-col gap-1 items-start p-6 overflow-hidden border-b">
       <div className="sm:hidden flex flex-row justify-end w-full items-start">
         <div className="flex flex-row gap-2 justify-end z-10">
+          {type === 'today' ? (
+            <Button type="submit" size="icon" variant="outline">
+              <Icons.share />
+            </Button>
+          ) : null}
           <CopyButton />
           <RssFeedButton type="placeholders" />
         </div>
@@ -402,6 +419,11 @@ export function CardListHeaderSkeleton() {
       <div className="flex flex-row gap-2 items-center z-10 w-full">
         <div className="sm:flex hidden w-full">
           <div className="flex flex-row gap-2 justify-end z-10 w-full">
+            {type === 'today' ? (
+              <Button type="submit" size="icon" variant="outline">
+                <Icons.share />
+              </Button>
+            ) : null}
             <CopyButton />
             <RssFeedButton type="placeholders" />
           </div>

@@ -9,8 +9,20 @@ import { itemService } from '~/services/api/items/items.server';
 import { QUERIES_KEY } from '~/constants/constants';
 import TodayHeader from '~/components/shared/today-header';
 import ContentCenterLayout from '~/components/shared/content-center-layout';
+import { crawlersService } from '~/services/api/crawlers/crawlers.server';
 
 export default async function Pages() {
+  const lastestCrawler = await crawlersService.lastestCrawlers();
+  if (!lastestCrawler) {
+    return (
+      <ContentCenterLayout>
+        <span className="truncate max-w-full text-sm font-normal text-muted-foreground underline-offset-4">
+          오늘의 뉴스가 없습니다.
+        </span>
+      </ContentCenterLayout>
+    );
+  }
+
   const queryClient = getQueryClient();
 
   await queryClient.prefetchInfiniteQuery({
@@ -45,7 +57,10 @@ export default async function Pages() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <CardList header={<TodayHeader count={totalCount} />} type="today" />
+      <CardList
+        header={<TodayHeader id={lastestCrawler.id} count={totalCount} />}
+        type="today"
+      />
     </HydrationBoundary>
   );
 }
