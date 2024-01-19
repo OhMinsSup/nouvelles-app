@@ -56,6 +56,7 @@ export class ErrorBoundary extends React.Component<
     errorBoundaryError.name = `React ErrorBoundary ${errorBoundaryError.name}`;
     errorBoundaryError.stack = componentStack ?? undefined;
 
+    // cause가 있으면 cause를 error로 설정
     error.cause = errorBoundaryError;
 
     if (onError) {

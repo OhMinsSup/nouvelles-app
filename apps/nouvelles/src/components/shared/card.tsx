@@ -16,7 +16,7 @@ import { buttonVariants } from '~/components/ui/button';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { PAGE_ENDPOINTS } from '~/constants/constants';
 import ResourceLoader from '~/utils/resource';
-import { ClientOnly } from '@nouvelles/react-components';
+import { ClientOnly, ErrorBoundary } from '@nouvelles/react-components';
 
 interface CardProps {
   item: ItemSchema;
@@ -240,13 +240,13 @@ Card.Skeleton = function CardSkeleton() {
                 <div className="md:hidden">
                   <AspectRatio ratio={16 / 9}>
                     <div className="w-full h-full overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:dark:ring-offset-slate-800">
-                      <div className="w-full h-full bg-gray-200 rounded-xl md:rounded-lg animate-pulse" />
+                      <Card.SkeletonImage />
                     </div>
                   </AspectRatio>
                 </div>
                 <div className="hidden md:block w-full h-full">
                   <div className="w-full h-full overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:dark:ring-offset-slate-800">
-                    <div className="w-full h-full bg-gray-200 rounded-xl md:rounded-lg animate-pulse" />
+                    <Card.SkeletonImage />
                   </div>
                 </div>
               </div>
@@ -263,6 +263,12 @@ Card.Skeleton = function CardSkeleton() {
   );
 };
 
+Card.SkeletonImage = function CardSkeleteImage() {
+  return (
+    <div className="w-full h-full bg-gray-200 rounded-xl md:rounded-lg animate-pulse" />
+  );
+};
+
 Card.End = function CardEnd() {
   return (
     <div className="w-full py-5">
@@ -275,48 +281,35 @@ Card.End = function CardEnd() {
 
 function SuspenseImage({ item }: CardProps) {
   return (
-    <ClientOnly
-      fallback={
-        <div className="w-full h-full bg-gray-200 rounded-xl md:rounded-lg animate-pulse" />
-      }
-    >
-      <React.Suspense
-        fallback={
-          <div className="w-full h-full bg-gray-200 rounded-xl md:rounded-lg animate-pulse" />
-        }
-      >
-        <CardImage item={item} />
-      </React.Suspense>
+    <ClientOnly fallback={<Card.SkeletonImage />}>
+      <ErrorBoundary fallback={(props) => <Card.ImageError {...props} />}>
+        <React.Suspense fallback={<Card.SkeletonImage />}>
+          <Card.Image item={item} />
+        </React.Suspense>
+      </ErrorBoundary>
     </ClientOnly>
   );
 }
 
-function CardImage({ item }: CardProps) {
+Card.Image = function CardImage({ item }: CardProps) {
   const src = item?.image ? `/api/assets/image?url=${item.image}` : undefined;
   const alt = item?.title ?? '뉴스 이미지가 없습니다.';
 
   if (src) {
-    // JSResource is meant for loading resources, but the implementation is
-    // just cached loading of promises. So we reuse that here as a quick
-    // way to suspend while images are loading, with caching in case
-    // we encouter the same image twice (in that case, we'll create
-    // new loader *functions*, but JSResource will return a cached
-    // value and only load the iamge once.
     const resource = ResourceLoader(src, () => {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => {
           resolve(src);
         };
         img.onerror = (error) => {
-          console.error(error);
-          resolve(src);
+          reject(error);
         };
         img.src = src;
       });
     });
-    resource.load(); // TODO: JSResource::read() should call load() if necessary
-    resource.read(); // suspends while the image is pending
+    resource.load();
+    resource.read();
   }
 
   return (
@@ -328,4 +321,14 @@ function CardImage({ item }: CardProps) {
       alt={alt}
     />
   );
+};
+
+interface CardImageErrorProps {
+  error: Error;
+  componentStack: string | null | undefined;
+  resetError: () => void;
 }
+
+Card.ImageError = function CardImageError(props: CardImageErrorProps) {
+  return null;
+};

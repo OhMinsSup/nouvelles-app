@@ -3,6 +3,7 @@ import {
   AlertTriangle,
   ArrowRight,
   Check,
+  Share,
   ChevronLeft,
   ChevronRight,
   CreditCard,
@@ -288,6 +289,7 @@ export const Icons = {
   github: Github,
   setting: Settings2,
   rss: Rss,
+  share: Share,
   kakao,
 };
 

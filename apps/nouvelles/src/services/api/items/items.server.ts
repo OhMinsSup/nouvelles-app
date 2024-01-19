@@ -4,6 +4,7 @@ import { db } from '@nouvelles/database';
 import { selectByItem } from '~/services/api/items/items.selector';
 import type { ItemQueryInput } from '~/services/api/items/items.query';
 import type { ItemSchema } from '~/services/api/items/items.model';
+import { crawlersService } from '~/services/api/crawlers/crawlers.server';
 
 export class ItemService {
   all(input: ItemQueryInput) {
@@ -24,6 +25,49 @@ export class ItemService {
       }
     } catch (error) {
       return Promise.resolve(this.getDefaultItems<ItemSchema>());
+    }
+  }
+
+  async getShareItems(id: number) {
+    const searchWhere: Prisma.ItemWhereInput = {
+      collectingDateId: id,
+      title: {
+        not: null,
+      },
+      description: {
+        not: null,
+      },
+      image: {
+        not: null,
+      },
+      realLink: {
+        not: null,
+      },
+    };
+
+    try {
+      const [totalCount, list] = await Promise.all([
+        db.item.count({
+          where: searchWhere,
+        }),
+        db.item.findMany({
+          orderBy: {
+            id: 'desc',
+          },
+          where: searchWhere,
+          select: selectByItem,
+          take: 3,
+        }),
+      ]);
+
+      return {
+        totalCount,
+        list: list as unknown as ItemSchema[],
+        endCursor: null,
+        hasNextPage: false,
+      };
+    } catch (error) {
+      return this.getDefaultItems<ItemSchema>();
     }
   }
 
@@ -317,21 +361,14 @@ export class ItemService {
   }
 
   private async _getItemsByToDay(_: ItemQueryInput, __?: string) {
-    const crawlers = await db.crawlerDateCollected.findMany({
-      orderBy: {
-        id: 'desc',
-      },
-      take: 1,
-    });
+    const lastestCrawler = await crawlersService.lastestCrawlers();
 
-    const [lastCrawlers] = crawlers;
-
-    if (!lastCrawlers) {
+    if (!lastestCrawler) {
       return this.getDefaultItems<ItemSchema>();
     }
 
     const searchWhere: Prisma.ItemWhereInput = {
-      collectingDateId: lastCrawlers.id,
+      collectingDateId: lastestCrawler.id,
     };
 
     try {

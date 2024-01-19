@@ -270,6 +270,9 @@ importers:
       '@types/cookie':
         specifier: ^0.6.0
         version: 0.6.0
+      '@types/kakao-js-sdk':
+        specifier: ^1.39.4
+        version: 1.39.4
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
@@ -4419,6 +4422,10 @@ packages:
 
   /@types/json5@0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: true
+
+  /@types/kakao-js-sdk@1.39.4:
+    resolution: {integrity: sha512-s4IcnSW8maC2mja4kPA1CGTu/qYfwxuwVPXnpmASnFVpdaQXM2TKCtzyq6tR21FgDw7OyWwXHOarWQoulfqVkg==}
     dev: true
 
   /@types/lodash-es@4.17.12:

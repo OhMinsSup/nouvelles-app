@@ -12,41 +12,11 @@ const getParsedQuery = (searchParams: URLSearchParams) => {
   };
 };
 
-export const imageResponse = (
-  file: Uint8Array,
-  status: number,
-  contentType: string,
-  cacheControl: string,
-): Response => {
-  return new Response(file, {
-    status,
-    headers: {
-      'Content-Type': contentType,
-      'Cache-Control': cacheControl,
-    },
-  });
-};
-
-export const redirectResponse = (location: string): Response => {
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: location,
-    },
-  });
-};
-
-export const textResponse = (status: number, message = ''): Response => {
-  return new Response(message, {
-    status,
-  });
-};
-
 const cache = new MemoryCache({
   maxSize: 5e7,
 });
 
-export const fetchResolver = async (url: string) => {
+const fetchResolver = async (url: string) => {
   const request = new Request(url, {
     headers: {
       accept: 'image/*',
@@ -76,6 +46,27 @@ export const fetchResolver = async (url: string) => {
   };
 };
 
+const imageResponse = (
+  file: Uint8Array,
+  status: number,
+  contentType: string,
+  cacheControl: string,
+): Response => {
+  return new Response(file, {
+    status,
+    headers: {
+      'Content-Type': contentType,
+      'Cache-Control': cacheControl,
+    },
+  });
+};
+
+const textResponse = (status: number, message = ''): Response => {
+  return new Response(message, {
+    status,
+  });
+};
+
 export async function GET(request: Request) {
   const response = await cors(request, new Response(), {
     origin: commonOriginFunc,
@@ -94,11 +85,9 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = schema.safeParse(getParsedQuery(searchParams));
   if (!query.success) {
-    return new Response(
+    return textResponse(
+      400,
       query.error.issues.map((issue) => issue.message).join('\n'),
-      {
-        status: 400,
-      },
     );
   }
 
@@ -114,6 +103,13 @@ export async function GET(request: Request) {
       if (cacheValue) {
         const cacheImg = cacheValue;
         const inputContentType = mimeFromBuffer(cacheImg);
+        // 이미지 타입이 아닌 경우 실패처리
+        if (!inputContentType?.startsWith('image')) {
+          throw new BaseError(
+            'FetchError',
+            'Invalid image retrieved from cache',
+          );
+        }
 
         return imageResponse(
           cacheImg,
@@ -134,10 +130,6 @@ export async function GET(request: Request) {
 
     return imageResponse(buffer, 200, contentType, defaultCacheControl);
   } catch (error) {
-    if (error instanceof BaseError) {
-      return textResponse(400, error.message);
-    }
-
     if (error instanceof Error) {
       return textResponse(400, error.message);
     }
