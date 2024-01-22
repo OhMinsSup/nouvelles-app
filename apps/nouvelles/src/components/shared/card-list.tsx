@@ -21,7 +21,7 @@ import RssFeedButton from '~/components/shared/rss-feed-button';
 import { Icons } from '~/components/icons';
 import { Input } from '~/components/ui/input';
 import { Button } from '~/components/ui/button';
-import FloatingActionButton from '~/components/shared/floating-action-button';
+import FloatingActionButtons from '~/components/shared/floating-action-buttons';
 
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 
@@ -295,45 +295,44 @@ export default function CardList({
 
   return (
     <KeyProvider queryKey={queryKey}>
-      <Virtuoso
-        components={{
-          ...(header && {
-            Header: () => <>{header}</>,
-          }),
-          Footer: () => {
-            if (isFetchingNextPage) {
-              return <CardListSkeleton />;
-            }
+      <FloatingActionButtons onScrollToTop={onScrollToTop}>
+        <Virtuoso
+          components={{
+            ...(header && {
+              Header: () => <>{header}</>,
+            }),
+            Footer: () => {
+              if (isFetchingNextPage) {
+                return <CardListSkeleton />;
+              }
 
-            // 더이상 가져올 데이터가 없을 때
-            if (isEmptyData) {
-              return <CardEnd />;
-            }
+              // 더이상 가져올 데이터가 없을 때
+              if (isEmptyData) {
+                return <CardEnd />;
+              }
 
-            return null;
-          },
-        }}
-        computeItemKey={(index, item) => {
-          if (!item) {
-            return `${type}-items-${index}`;
-          }
-          return `${type}-items-${item.id}-${index}`;
-        }}
-        data={list}
-        data-hydrating-signal
-        endReached={loadMore}
-        initialItemCount={list.length - 1}
-        itemContent={(_, item) => {
-          return <Card item={item} />;
-        }}
-        overscan={10}
-        ref={$virtuoso}
-        style={{ height: '100%' }}
-        totalCount={totalCount}
-      />
-      {!totalCount ? null : (
-        <FloatingActionButton onScrollToTop={onScrollToTop} />
-      )}
+              return null;
+            },
+          }}
+          computeItemKey={(index, item) => {
+            if (!item) {
+              return `${type}-items-${index}`;
+            }
+            return `${type}-items-${item.id}-${index}`;
+          }}
+          data={list}
+          data-hydrating-signal
+          endReached={loadMore}
+          initialItemCount={list.length - 1}
+          itemContent={(_, item) => {
+            return <Card item={item} />;
+          }}
+          overscan={900}
+          ref={$virtuoso}
+          style={{ height: '100%' }}
+          totalCount={totalCount}
+        />
+      </FloatingActionButtons>
     </KeyProvider>
   );
 }
