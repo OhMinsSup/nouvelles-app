@@ -26,15 +26,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/news',
-        permanent: true,
-      },
-    ];
-  },
   headers() {
     return [
       {

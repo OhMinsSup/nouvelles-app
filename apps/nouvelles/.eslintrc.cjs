@@ -7,7 +7,7 @@ const config = require('@nouvelles/lintconfig/eslint-next');
  */
 module.exports = {
   ...config,
-  ignorePatterns: [config.ignorePatterns, '.eslintrc.cjs'],
+  ignorePatterns: [...config.ignorePatterns, '.eslintrc.cjs'],
   rules: {
     ...config.rules,
     'tsdoc/syntax': 'off',

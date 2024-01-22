@@ -39,7 +39,7 @@ export default async function Pages() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <CardList type="root" />
+      <CardList totalCount={totalCount} type="root" />
     </HydrationBoundary>
   );
 }

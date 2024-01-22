@@ -26,6 +26,14 @@ export default async function Pages({ searchParams }: PageProps) {
     },
   });
 
+  const data = await queryClient.getQueryData<any>(QUERIES_KEY.items.search(q));
+
+  const totalCount =
+    data?.pages
+      ?.map((page: any) => page?.totalCount)
+      .flat()
+      ?.at(0) ?? 0;
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <CardList
@@ -35,6 +43,7 @@ export default async function Pages({ searchParams }: PageProps) {
           </section>
         }
         q={q}
+        totalCount={totalCount}
         type="search"
       />
     </HydrationBoundary>

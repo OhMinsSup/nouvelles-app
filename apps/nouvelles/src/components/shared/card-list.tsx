@@ -20,13 +20,14 @@ import CopyButton from '~/components/shared/copy-button';
 import RssFeedButton from '~/components/shared/rss-feed-button';
 import { Icons } from '~/components/icons';
 import { Input } from '~/components/ui/input';
-import ShareButton from '~/components/shared/share-button';
 import { Button } from '~/components/ui/button';
+import FloatingActionButton from '~/components/shared/floating-action-button';
 
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 
 interface CardListProps {
   type: 'root' | 'search' | 'today' | 'tags' | 'categories' | 'newspaper';
+  totalCount: number;
   category?: string;
   newspaper?: string;
   tag?: string;
@@ -42,6 +43,7 @@ interface Restoration {
 
 export default function CardList({
   userId,
+  totalCount,
   type = 'root',
   q,
   tag,
@@ -151,22 +153,27 @@ export default function CardList({
     }
   };
 
-  const { data, fetchNextPage, isPending, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey,
-      queryFn: ({ pageParam }) => fetcher(pageParam),
-      initialPageParam: null as number | null,
-      getNextPageParam: (lastPage) => {
-        return lastPage?.hasNextPage && lastPage?.endCursor
-          ? lastPage?.endCursor
-          : null;
-      },
-    });
-
+  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey,
+    queryFn: ({ pageParam }) => fetcher(pageParam),
+    initialPageParam: null as number | null,
+    getNextPageParam: (lastPage) => {
+      return lastPage?.hasNextPage && lastPage?.endCursor
+        ? lastPage?.endCursor
+        : null;
+    },
+  });
   const oldPages = data?.pages ?? [];
   const flatPages = oldPages.map((page) => page?.list).flat() ?? [];
 
   const list = flatPages.filter(Boolean);
+
+  const lastItem = last(data?.pages ?? []);
+
+  // 더이상 가져올 데이터가 없을 때
+  const isEmptyData = lastItem
+    ? flatPages.length === totalCount && !lastItem.hasNextPage
+    : false;
 
   const loadMore = (index: number) => {
     if (index <= 0) return;
@@ -177,6 +184,17 @@ export default function CardList({
       void fetchNextPage();
     }
   };
+
+  const onScrollToTop = useCallback(() => {
+    $virtuoso.current?.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+
+    if (sessionStorage.getItem(key)) {
+      sessionStorage.removeItem(key);
+    }
+  }, [key]);
 
   useBeforeUnload(() => {
     const $api = $virtuoso.current;
@@ -275,8 +293,6 @@ export default function CardList({
     closeMutationObserver();
   });
 
-  const lastItem = last(data?.pages ?? []);
-
   return (
     <KeyProvider queryKey={queryKey}>
       <Virtuoso
@@ -285,12 +301,12 @@ export default function CardList({
             Header: () => <>{header}</>,
           }),
           Footer: () => {
-            if (isPending || isFetchingNextPage) {
+            if (isFetchingNextPage) {
               return <CardListSkeleton />;
             }
 
             // 더이상 가져올 데이터가 없을 때
-            if (lastItem && !lastItem.hasNextPage) {
+            if (isEmptyData) {
               return <CardEnd />;
             }
 
@@ -313,8 +329,11 @@ export default function CardList({
         overscan={10}
         ref={$virtuoso}
         style={{ height: '100%' }}
-        totalCount={lastItem?.totalCount ?? 0}
+        totalCount={totalCount}
       />
+      {!totalCount ? null : (
+        <FloatingActionButton onScrollToTop={onScrollToTop} />
+      )}
     </KeyProvider>
   );
 }
@@ -342,8 +361,8 @@ export function CardListWithSearhHeaderSkeleton() {
           <div className="relative">
             <Icons.search className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
             <Input
-              className="pl-8"
               autoComplete="off"
+              className="pl-8"
               name="q"
               placeholder="검색어를 입력하세요"
               type="search"
@@ -359,7 +378,7 @@ export function CardListWithSearhHeaderSkeleton() {
 export function CardListSkeleton() {
   return (
     <>
-      {Array.from({ length: 8 }).map((_, index) => (
+      {Array.from({ length: 3 }).map((_, index) => (
         // eslint-disable-next-line react/no-array-index-key
         <Card.Skeleton key={`card-skeleton-${index}`} />
       ))}
@@ -385,7 +404,7 @@ export function CardListHeaderSkeleton({ type }: CardListHeaderSkeletonProps) {
       <div className="sm:hidden flex flex-row justify-end w-full items-start">
         <div className="flex flex-row gap-2 justify-end z-10">
           {type === 'today' ? (
-            <Button type="submit" size="icon" variant="outline">
+            <Button size="icon" type="submit" variant="outline">
               <Icons.share />
             </Button>
           ) : null}
@@ -420,7 +439,7 @@ export function CardListHeaderSkeleton({ type }: CardListHeaderSkeletonProps) {
         <div className="sm:flex hidden w-full">
           <div className="flex flex-row gap-2 justify-end z-10 w-full">
             {type === 'today' ? (
-              <Button type="submit" size="icon" variant="outline">
+              <Button size="icon" type="submit" variant="outline">
                 <Icons.share />
               </Button>
             ) : null}

@@ -1,10 +1,7 @@
 import React from 'react';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import getQueryClient from '~/services/query/get-query-client';
-import CardList, {
-  CardListSkeleton,
-  CardListWithHeaderSkeleton,
-} from '~/components/shared/card-list';
+import CardList from '~/components/shared/card-list';
 import { itemService } from '~/services/api/items/items.server';
 import { QUERIES_KEY } from '~/constants/constants';
 import TodayHeader from '~/components/shared/today-header';
@@ -58,7 +55,8 @@ export default async function Pages() {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <CardList
-        header={<TodayHeader id={lastestCrawler.id} count={totalCount} />}
+        header={<TodayHeader count={totalCount} id={lastestCrawler.id} />}
+        totalCount={totalCount}
         type="today"
       />
     </HydrationBoundary>

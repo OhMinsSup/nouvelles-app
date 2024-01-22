@@ -10,6 +10,7 @@ import {
   File,
   FileText,
   HelpCircle,
+  ChevronUp,
   Image,
   Laptop,
   Loader2,
@@ -290,6 +291,7 @@ export const Icons = {
   setting: Settings2,
   rss: Rss,
   share: Share,
+  arrowUp: ChevronUp,
   kakao,
 };
 

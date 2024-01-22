@@ -73,6 +73,7 @@ export default async function Pages({ params }: PageProps) {
           />
         }
         tag={tagInfo.slug}
+        totalCount={totalCount}
         type="tags"
       />
     </HydrationBoundary>
