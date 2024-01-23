@@ -1,6 +1,5 @@
 'use client';
 import React, {
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -12,32 +11,26 @@ import { Button } from '~/components/ui/button';
 import { Icons } from '~/components/icons';
 import { cn, optimizeAnimation } from '~/utils/utils';
 
-export interface FloatingScrollTopActionButtonProps {
-  onScrollToTop: () => void;
+interface FloatingWriteActionButtonProps {
   scrollPosition?: 'up' | 'down' | 'idle';
 }
 
-export default function FloatingScrollTopActionButton(
-  props: FloatingScrollTopActionButtonProps,
-) {
+export default function FloatingWriteActionButton({
+  scrollPosition,
+}: FloatingWriteActionButtonProps) {
   const $btn = useRef<HTMLButtonElement>(null);
-  const [left, setLeft] = useState<string | undefined>(undefined);
+  const [right, setRight] = useState<string | undefined>(undefined);
   const [, startTransition] = useTransition();
 
   const caculateLeft = (width: number) => {
     // width: 768px이하 모바일
     if (width < 768) {
-      setLeft('18px');
+      setRight('24px');
     }
 
     // width: 768px~1024px 태블릿
     if (width >= 768 && width <= 1280) {
-      setLeft('calc(50vw - 282px)');
-    }
-
-    // // width: 1280px 이상 데스크탑
-    if (width > 1280) {
-      setLeft('calc(50vw - 282px)');
+      setRight('50px');
     }
   };
 
@@ -56,37 +49,30 @@ export default function FloatingScrollTopActionButton(
     memoizedResizeFn();
   }, []);
 
-  const onScrollToTop = useCallback(() => {
-    startTransition(() => {
-      props.onScrollToTop();
-    });
-  }, [props]);
-
   const styles: React.CSSProperties = useMemo(() => {
     return {
-      left,
+      right,
     };
-  }, [left]);
+  }, [right]);
 
   return (
     <div
       className={cn('fixed z-[1001] bottom-[90px]', {
-        hidden: !left,
+        hidden: !right,
       })}
       style={styles}
     >
       <Button
         className={cn('rounded-full shadow-sm', {
-          hidden: props.scrollPosition === 'up',
+          'opacity-50': scrollPosition === 'up',
         })}
-        data-name="floating-scrolltop-action-button"
-        onClick={onScrollToTop}
+        data-name="floating-write-action-button"
         ref={$btn}
         size="icon"
         type="button"
         variant="outline"
       >
-        <Icons.arrowUp />
+        <Icons.squarePen />
       </Button>
     </div>
   );

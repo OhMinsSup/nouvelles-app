@@ -1,15 +1,16 @@
 'use client';
 import React, { useRef, useState } from 'react';
-import { useEventListener, useMemoizedFn } from '@nouvelles/react-hooks';
+import {
+  useEventListener,
+  useMemoizedFn,
+  useMediaQuery,
+} from '@nouvelles/react-hooks';
 import { getWindowScrollTop } from '@nouvelles/react';
 import FloatingScrollTopActionButton, {
   type FloatingScrollTopActionButtonProps,
 } from '~/components/shared/floating-scrolltop-action-button';
 import { optimizeAnimation } from '~/utils/utils';
-
-function FloatingWriteActionButton() {
-  return null;
-}
+import FloatingWriteActionButton from '~/components/shared/floating-write-action-button';
 
 type FloatingActionButtonProps = FloatingScrollTopActionButtonProps & {
   children: React.ReactNode;
@@ -20,6 +21,7 @@ export default function FloatingActionButtons({
   children,
 }: FloatingActionButtonProps) {
   const $prevScrollTop = useRef(0);
+  const isDesktop = useMediaQuery('(min-width: 1280px)', false);
   const [scrollPosition, setScrollPosition] = useState<'up' | 'down' | 'idle'>(
     'idle',
   );
@@ -55,7 +57,9 @@ export default function FloatingActionButtons({
         scrollPosition={scrollPosition}
       />
       {children}
-      <FloatingWriteActionButton />
+      {isDesktop ? null : (
+        <FloatingWriteActionButton scrollPosition={scrollPosition} />
+      )}
     </>
   );
 }

@@ -78,6 +78,7 @@ import {
   Underline,
   WrapText,
   CalendarCheck2,
+  SquarePen,
   Rss,
 } from 'lucide-react';
 import { cva } from 'class-variance-authority';
@@ -292,6 +293,7 @@ export const Icons = {
   rss: Rss,
   share: Share,
   arrowUp: ChevronUp,
+  squarePen: SquarePen,
   kakao,
 };
 
