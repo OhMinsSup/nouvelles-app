@@ -5,7 +5,7 @@ import CardImage from '~/components/skeleton/card-image';
 
 export default function Card() {
   return (
-    <div className=" pr-[15px] pl-[10px] border-b cursor-pointer overflow-hidden">
+    <div className=" pr-[15px] pl-[10px] border-b cursor-pointer overflow-hidden border-x">
       <div className="my-2" />
       <div className="mt-[1px] gap-[10px] flex flex-row">
         <div className="pl-2">

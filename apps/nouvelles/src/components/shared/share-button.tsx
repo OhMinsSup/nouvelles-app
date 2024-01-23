@@ -78,10 +78,7 @@ export default function ShareButton({ id }: ShareButtonProps) {
       return;
     }
 
-    kakaoSDK.Share.sendDefault({
-      ...state,
-      installTalk: true,
-    });
+    kakaoSDK.Share.sendDefault(state);
   };
 
   const handler = useMemoizedFn(sharedKakaoMsg);

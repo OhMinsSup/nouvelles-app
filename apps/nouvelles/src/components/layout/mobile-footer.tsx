@@ -1,7 +1,7 @@
 'use client';
-import { getTargetElement, getWindowScrollTop } from '@nouvelles/react';
+import { getWindowScrollTop } from '@nouvelles/react';
 import { useEventListener } from '@nouvelles/react-hooks';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { optimizeAnimation } from '~/utils/utils';
 
 interface FooterMobileProps {
@@ -14,8 +14,8 @@ export default function FooterMobile({ children }: FooterMobileProps) {
 
 FooterMobile.Internal = function Item({ children }: FooterMobileProps) {
   const ref = useRef<HTMLElement>(null);
-  const [height, setHeight] = useState(0);
-  const [translateY, setTranslateY] = useState(0);
+
+  const [opacity, setOpacity] = useState(1);
 
   const prevScrollTop = useRef(0);
 
@@ -25,17 +25,12 @@ FooterMobile.Internal = function Item({ children }: FooterMobileProps) {
     // 현재 스크롤이 내려가는지 올라가는지 판단
     const isScrollDown = scrollTop > prevScrollTop.current;
 
-    // 스크롤이 내려가는 경우
+    // 스크롤이 내려가면 서서히 반투명하게 만들기
     if (isScrollDown) {
-      // 헤더가 사라지는 경우
-      if (scrollTop > height) {
-        setTranslateY(height);
-      } else {
-        setTranslateY(scrollTop);
-      }
+      // 0.25ms 마다 0.05씩 감소해서 0.5가 되면 멈추기
+      setOpacity(0.6);
     } else {
-      // 스크롤이 올라가는 경우
-      setTranslateY(0);
+      setOpacity(1);
     }
 
     prevScrollTop.current = scrollTop;
@@ -43,18 +38,11 @@ FooterMobile.Internal = function Item({ children }: FooterMobileProps) {
 
   useEventListener('scroll', scrollMethod);
 
-  useEffect(() => {
-    const $ele = getTargetElement(ref);
-    if (!$ele) return;
-    const bounding = $ele.getBoundingClientRect();
-    setHeight(bounding.height + 10);
-  }, []);
-
   const styles: React.CSSProperties = useMemo(() => {
     return {
-      transform: `translateY(${translateY}px)`,
+      opacity,
     };
-  }, [translateY]);
+  }, [opacity]);
 
   return (
     <nav

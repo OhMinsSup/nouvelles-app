@@ -38,7 +38,7 @@ export default async function Pages({ searchParams }: PageProps) {
     <HydrationBoundary state={dehydrate(queryClient)}>
       <CardList
         header={
-          <section className="my-5 md:my-8 px-6">
+          <section className="border-x py-5 md:py-8 px-6">
             <SearchForm initialValue={q} />
           </section>
         }

@@ -18,7 +18,7 @@ export default function CategoryWithTagHeader({
 }: CategoryWithTagHeaderProps) {
   const text = decodeURIComponent(name);
   return (
-    <div className="w-full relative flex flex-col gap-1 items-start p-6 overflow-hidden border-b">
+    <div className="w-full relative flex flex-col gap-1 items-start p-6 overflow-hidden border-b border-x">
       <div className="sm:hidden flex flex-row justify-end w-full items-start">
         <div className="flex flex-row gap-2 justify-end z-10">
           <CopyButton />

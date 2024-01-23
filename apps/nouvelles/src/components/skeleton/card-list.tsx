@@ -36,7 +36,7 @@ export function CardListWithHeaderSkeleton({
 export function CardListWithSearhHeaderSkeleton() {
   return (
     <>
-      <section className="my-5 md:my-8 px-6">
+      <section className="py-5 md:py-8 px-6 border-x">
         <form>
           <div className="relative">
             <Icons.search className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
@@ -61,7 +61,7 @@ interface CardListHeaderSkeletonProps {
 
 export function CardListHeaderSkeleton({ type }: CardListHeaderSkeletonProps) {
   return (
-    <div className="w-full relative flex flex-col gap-1 items-start p-6 overflow-hidden border-b">
+    <div className="w-full relative flex flex-col gap-1 items-start p-6 overflow-hidden border-b border-x">
       <div className="sm:hidden flex flex-row justify-end w-full items-start">
         <div className="flex flex-row gap-2 justify-end z-10">
           {type === 'today' ? (

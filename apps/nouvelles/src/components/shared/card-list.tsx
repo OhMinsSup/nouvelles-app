@@ -158,6 +158,7 @@ export default function CardList({
         : null;
     },
   });
+
   const oldPages = data?.pages ?? [];
   const flatPages = oldPages.map((page) => page?.list).flat() ?? [];
 

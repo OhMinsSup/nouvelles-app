@@ -7,8 +7,8 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="mx-auto md:max-w-[600px] md:border-l md:border-r w-full">
-      <div className="hidden md:block md:border-b">
+    <div className="mx-auto md:max-w-[600px] w-full">
+      <div className="hidden md:block md:border-b md:border-l md:border-r">
         <div className="flex flex-row items-center justify-between px-[18px] py-3">
           <Link
             className="scroll-m-20 text-xl font-semibold tracking-tight"

@@ -67,7 +67,7 @@ export default function Card({ item }: CardProps) {
 
   return (
     <div
-      className=" pr-[15px] pl-[10px] border-b cursor-pointer overflow-hidden"
+      className="pr-[15px] pl-[10px] border-b cursor-pointer overflow-hidden border-x"
       data-name="card-item"
     >
       <div className="my-2" />
