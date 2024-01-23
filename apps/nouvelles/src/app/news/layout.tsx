@@ -1,5 +1,4 @@
 import React from 'react';
-import WindowScrollBlock from '~/components/layout/window-scroll-block';
 import MainLayout from '~/components/layout/main-layout';
 import { SidebarDesktop, SidebarTablet } from '~/components/layout/sidebar';
 import RightSidebar from '~/components/layout/right-sidebar';
@@ -11,16 +10,14 @@ interface LayoutProps {
 }
 export default function Layout({ children }: LayoutProps) {
   return (
-    <WindowScrollBlock>
-      <MainLayout
-        desktopSidebar={<SidebarDesktop />}
-        mobileFooter={<NavigationArea />}
-        mobileHeader={<MobileHeaderArea />}
-        rightSidebar={<RightSidebar />}
-        tabletSidebar={<SidebarTablet />}
-      >
-        {children}
-      </MainLayout>
-    </WindowScrollBlock>
+    <MainLayout
+      desktopSidebar={<SidebarDesktop />}
+      mobileFooter={<NavigationArea />}
+      mobileHeader={<MobileHeaderArea />}
+      rightSidebar={<RightSidebar />}
+      tabletSidebar={<SidebarTablet />}
+    >
+      {children}
+    </MainLayout>
   );
 }

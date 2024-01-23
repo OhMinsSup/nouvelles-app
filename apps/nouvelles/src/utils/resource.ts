@@ -1,3 +1,5 @@
+import { isNullOrUndefined } from '@nouvelles/libs';
+
 const resourceMap = new Map();
 
 class Resource {
@@ -15,10 +17,11 @@ class Resource {
 
   load() {
     let promise = this._promise;
-    if (promise == null) {
+    if (isNullOrUndefined(promise)) {
       promise = this._loader()
         .then((result) => {
           if (result.default) {
+            // eslint-disable-next-line no-param-reassign
             result = result.default;
           }
           this._result = result;
@@ -34,17 +37,18 @@ class Resource {
   }
 
   get() {
-    if (this._result != null) {
+    if (!isNullOrUndefined(this._result)) {
       return this._result;
     }
   }
 
   read() {
-    if (this._result != null) {
+    if (!isNullOrUndefined(this._result)) {
       return this._result;
-    } else if (this._error != null) {
+    } else if (!isNullOrUndefined(this._error)) {
       throw this._error;
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-throw-literal
       throw this._promise;
     }
   }
@@ -55,7 +59,7 @@ export default function ResourceLoader(
   loader: (...args: any[]) => Promise<any>,
 ) {
   let resource: Resource = resourceMap.get(moduleId);
-  if (resource == null) {
+  if (isNullOrUndefined(resource)) {
     resource = new Resource(loader);
     resourceMap.set(moduleId, resource);
   }

@@ -73,6 +73,7 @@ export default async function Pages({ params }: PageProps) {
             type="categories"
           />
         }
+        totalCount={totalCount}
         type="categories"
       />
     </HydrationBoundary>

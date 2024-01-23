@@ -13,6 +13,7 @@ export interface Result {
   ok: boolean;
   resultCode: number;
   resultMessage: string;
+  // eslint-disable-next-line no-undef
   data: Kakao.Share.DefaultListSettings | null;
   errors: any;
 }
@@ -23,33 +24,30 @@ const schema = z.object({
 });
 
 export const sharekakaoTemplateAction = async (bindInput: BindInput) => {
-  try {
-    const validatedFields = schema.safeParse(bindInput);
+  const validatedFields = schema.safeParse(bindInput);
 
-    // Return early if the form data is invalid
-    if (!validatedFields.success) {
-      return {
-        ok: false,
-        resultCode: RESULT_CODE.INVALID,
-        resultMessage: 'Invalid form data',
-        data: null,
-        errors: validatedFields.error.flatten().fieldErrors,
-      } as Result;
-    }
-
-    const { list } = await itemService.getShareItems(validatedFields.data.id);
-    const template = kakaoService.getTemplateArgs(
-      list,
-    ) as Kakao.Share.DefaultListSettings;
-
+  // Return early if the form data is invalid
+  if (!validatedFields.success) {
     return {
-      ok: true,
-      resultCode: RESULT_CODE.OK,
-      resultMessage: 'Success',
-      data: template,
-      errors: null,
+      ok: false,
+      resultCode: RESULT_CODE.INVALID,
+      resultMessage: 'Invalid form data',
+      data: null,
+      errors: validatedFields.error.flatten().fieldErrors,
     } as Result;
-  } catch (error) {
-    throw error;
   }
+
+  const { list } = await itemService.getShareItems(validatedFields.data.id);
+  const template = kakaoService.getTemplateArgs(
+    list,
+    // eslint-disable-next-line no-undef
+  ) as Kakao.Share.DefaultListSettings;
+
+  return {
+    ok: true,
+    resultCode: RESULT_CODE.OK,
+    resultMessage: 'Success',
+    data: template,
+    errors: null,
+  } as Result;
 };

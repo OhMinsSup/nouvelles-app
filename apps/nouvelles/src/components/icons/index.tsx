@@ -10,6 +10,7 @@ import {
   File,
   FileText,
   HelpCircle,
+  ChevronUp,
   Image,
   Laptop,
   Loader2,
@@ -77,6 +78,7 @@ import {
   Underline,
   WrapText,
   CalendarCheck2,
+  SquarePen,
   Rss,
 } from 'lucide-react';
 import { cva } from 'class-variance-authority';
@@ -290,6 +292,8 @@ export const Icons = {
   setting: Settings2,
   rss: Rss,
   share: Share,
+  arrowUp: ChevronUp,
+  squarePen: SquarePen,
   kakao,
 };
 

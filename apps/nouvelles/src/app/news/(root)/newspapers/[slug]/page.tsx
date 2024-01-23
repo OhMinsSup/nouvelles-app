@@ -63,7 +63,6 @@ export default async function Pages({ params }: PageProps) {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <CardList
-        newspaper={info.slug}
         header={
           <CategoryWithTagHeader
             count={info._count?.Item}
@@ -73,6 +72,8 @@ export default async function Pages({ params }: PageProps) {
             type="newspaper"
           />
         }
+        newspaper={info.slug}
+        totalCount={totalCount}
         type="newspaper"
       />
     </HydrationBoundary>

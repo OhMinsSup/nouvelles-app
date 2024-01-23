@@ -1,18 +1,16 @@
 'use client';
 import React from 'react';
-import ResourceLoader from '~/utils/resource';
 import { createContext } from '@nouvelles/react-hooks';
 import { ClientOnly } from '@nouvelles/react-components';
-import { CardListHeaderSkeleton } from '~/components/shared/card-list';
-
-type KakaoAction = {};
+import ResourceLoader from '~/utils/resource';
+import { CardListHeaderSkeleton } from '~/components/skeleton/card-list';
 
 interface KakaoState {
   kakaoSDK: typeof window.Kakao | null;
 }
 
 interface KakaoContext extends KakaoState {
-  dispatch: React.Dispatch<KakaoAction>;
+  dispatch: React.DispatchWithoutAction;
 }
 
 const initialState: KakaoState = {
@@ -25,8 +23,7 @@ const [Provider, useKakaoContext] = createContext<KakaoContext>({
   defaultValue: initialState as KakaoContext,
 });
 
-// eslint-disable-next-line @typescript-eslint/default-param-last
-function reducer(state = initialState, action: KakaoAction) {
+function reducer(state = initialState) {
   return state;
 }
 
@@ -36,10 +33,10 @@ interface KakaoProviderProps {
 }
 
 function KakaoProvider({ children, initialKakaoSDK }: KakaoProviderProps) {
-  const [state, dispatch] = React.useReducer(
-    reducer,
-    Object.assign({}, initialState, { kakaoSDK: initialKakaoSDK }),
-  );
+  const [state, dispatch] = React.useReducer(reducer, {
+    ...initialState,
+    kakaoSDK: initialKakaoSDK,
+  });
 
   const actions = React.useMemo(
     () => ({
@@ -70,6 +67,7 @@ function InternalKakaoIntialize({
     });
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   resource.load();
   resource.read();
 
@@ -78,7 +76,7 @@ function InternalKakaoIntialize({
   return <KakaoProvider initialKakaoSDK={kakaoSDK}>{children}</KakaoProvider>;
 }
 
-interface KakaoSDKLoaderProps extends InternalKakaoIntializeProps {}
+type KakaoSDKLoaderProps = InternalKakaoIntializeProps;
 
 function KakaoSDKLoader({ children, clientId }: KakaoSDKLoaderProps) {
   return (

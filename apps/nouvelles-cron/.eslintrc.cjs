@@ -3,6 +3,7 @@ const config = require('@nouvelles/lintconfig/eslint-node');
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   ...config,
+  ignorePatterns: [...config.ignorePatterns, '.eslintrc.cjs'],
   rules: {
     ...config.rules,
     'no-console': 'off',

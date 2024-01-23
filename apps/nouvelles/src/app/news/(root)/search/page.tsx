@@ -26,15 +26,24 @@ export default async function Pages({ searchParams }: PageProps) {
     },
   });
 
+  const data = await queryClient.getQueryData<any>(QUERIES_KEY.items.search(q));
+
+  const totalCount =
+    data?.pages
+      ?.map((page: any) => page?.totalCount)
+      .flat()
+      ?.at(0) ?? 0;
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <CardList
         header={
-          <section className="my-5 md:my-8 px-6">
+          <section className="border-x py-5 md:py-8 px-6">
             <SearchForm initialValue={q} />
           </section>
         }
         q={q}
+        totalCount={totalCount}
         type="search"
       />
     </HydrationBoundary>

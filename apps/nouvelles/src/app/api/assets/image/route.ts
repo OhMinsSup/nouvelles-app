@@ -1,10 +1,12 @@
 import mimeFromBuffer from 'mime-tree';
 import { BaseError } from '@nouvelles/error';
+import { getRequestInDomainInfo } from '@nouvelles/libs';
 import { MemoryCache } from '~/services/api/image/image.cache';
 import { schema } from '~/services/api/image/image.query';
 import type { MimeType } from '~/services/api/image/image.type';
 import { logger } from '~/services/logger/logger';
 import cors, { commonOriginFunc } from '~/services/server/utils/cors';
+import { ASSET_URL } from '~/constants/constants';
 
 const getParsedQuery = (searchParams: URLSearchParams) => {
   return {
@@ -61,12 +63,6 @@ const imageResponse = (
   });
 };
 
-const textResponse = (status: number, message = ''): Response => {
-  return new Response(message, {
-    status,
-  });
-};
-
 export async function GET(request: Request) {
   const response = await cors(request, new Response(), {
     origin: commonOriginFunc,
@@ -82,20 +78,20 @@ export async function GET(request: Request) {
     return response;
   }
 
-  const { searchParams } = new URL(request.url);
-  const query = schema.safeParse(getParsedQuery(searchParams));
-  if (!query.success) {
-    return textResponse(
-      400,
-      query.error.issues.map((issue) => issue.message).join('\n'),
-    );
-  }
+  const nextUrl = getRequestInDomainInfo(request);
 
-  const { url } = query.data;
   const defaultCacheControl = `public, max-age=${60 * 60 * 24 * 365}`;
   const defaultContentType = 'image/png';
 
   try {
+    const { searchParams } = new URL(request.url);
+    const query = schema.safeParse(getParsedQuery(searchParams));
+    if (!query.success) {
+      throw new BaseError('FetchError', 'Invalid query');
+    }
+
+    const { url } = query.data;
+
     if (cache && cache.has(url)) {
       logger.info(`Cache HIT: ${url}`);
       const cacheValue = cache.get(url);
@@ -130,10 +126,13 @@ export async function GET(request: Request) {
 
     return imageResponse(buffer, 200, contentType, defaultCacheControl);
   } catch (error) {
-    if (error instanceof Error) {
-      return textResponse(400, error.message);
-    }
-
-    return textResponse(400, 'Failed to fetch image');
+    const staticFolderUrl = new URL(
+      ASSET_URL.PAGE_NOT_FOUND,
+      nextUrl.domainUrl,
+    );
+    const { buffer, contentType } = await fetchResolver(
+      staticFolderUrl.toString(),
+    );
+    return imageResponse(buffer, 200, contentType, defaultCacheControl);
   }
 }

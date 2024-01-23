@@ -1,8 +1,8 @@
 'server-only';
 import { BaseError, ErrorType } from '@nouvelles/error';
 import { headers } from 'next/headers';
-import { API_ENDPOINTS, PAGE_ENDPOINTS } from '~/constants/constants';
 import { getHeaderInDomainInfo } from '@nouvelles/libs';
+import { API_ENDPOINTS, PAGE_ENDPOINTS } from '~/constants/constants';
 import type { ItemSchema } from '~/services/api/items/items.model';
 
 export class KakaoService {
@@ -55,7 +55,7 @@ export class KakaoService {
   };
 
   sendMsg = async (accessToken: string, items: ItemSchema[]) => {
-    const template_object = this.getTemplateArgs(items);
+    const templateObject = this.getTemplateArgs(items);
     const res = await fetch(API_ENDPOINTS.kakao_default_message, {
       method: 'POST',
       headers: {
@@ -63,7 +63,7 @@ export class KakaoService {
         Authorization: `Bearer ${accessToken}`,
       },
       body: new URLSearchParams({
-        template_object: JSON.stringify(template_object),
+        template_object: JSON.stringify(templateObject),
       }),
     });
 

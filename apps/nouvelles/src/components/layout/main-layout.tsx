@@ -25,15 +25,21 @@ export default function MainLayout({
   return (
     <>
       {mobileHeader ? <HeaderMobile>{mobileHeader}</HeaderMobile> : null}
-      <div className={cn('flex h-screen', className)} data-name="main-layout">
-        <div className="hidden md:block xl:hidden" data-name="tablet-sidebar">
+      <div className={cn('flex h-full', className)} data-name="main-layout">
+        <div
+          className="hidden md:block xl:hidden fixed h-full"
+          data-name="tablet-sidebar"
+        >
           {tabletSidebar}
         </div>
-        <div className="hidden xl:block" data-name="desktop-sidebar">
+        <div
+          className="hidden xl:block fixed h-full left-desktop-sidebar"
+          data-name="desktop-sidebar"
+        >
           {desktopSidebar}
         </div>
         {children}
-        <div className="hidden xl:block" data-name="right-sidebar">
+        <div className="hidden xl:block fixed h-full" data-name="right-sidebar">
           {rightSidebar}
         </div>
       </div>

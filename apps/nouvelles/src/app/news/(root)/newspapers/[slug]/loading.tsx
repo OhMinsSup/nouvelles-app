@@ -1,4 +1,4 @@
-import { CardListWithHeaderSkeleton } from '~/components/shared/card-list';
+import { CardListWithHeaderSkeleton } from '~/components/skeleton/card-list';
 
 export default function Loading() {
   return <CardListWithHeaderSkeleton />;

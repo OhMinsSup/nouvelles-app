@@ -64,7 +64,6 @@ NavigationArea.Link = function Item({ item, type }: ItemProps) {
               'justify-start space-x-2 w-full px-3 py-2',
             )}
             href={item.disabled ? '#' : href}
-            scroll={false}
           >
             <item.icon />
             {type === 'desktop' ? (

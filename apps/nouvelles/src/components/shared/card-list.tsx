@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
 'use client';
 import { useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import React, { useRef, useLayoutEffect, useCallback, useMemo } from 'react';
@@ -16,17 +15,14 @@ import { QUERIES_KEY } from '~/constants/constants';
 import { KeyProvider } from '~/services/providers/key';
 import type { ItemListSchema } from '~/services/api/items/items.model';
 import { getItemsApi } from '~/services/api/items/items.api';
-import CopyButton from '~/components/shared/copy-button';
-import RssFeedButton from '~/components/shared/rss-feed-button';
-import { Icons } from '~/components/icons';
-import { Input } from '~/components/ui/input';
-import ShareButton from '~/components/shared/share-button';
-import { Button } from '~/components/ui/button';
+import FloatingActionButtons from '~/components/shared/floating-action-buttons';
+import CardListSkeleton from '~/components/skeleton/card-list';
 
 const useSSRLayoutEffect = !isBrowser ? () => {} : useLayoutEffect;
 
 interface CardListProps {
   type: 'root' | 'search' | 'today' | 'tags' | 'categories' | 'newspaper';
+  totalCount: number;
   category?: string;
   newspaper?: string;
   tag?: string;
@@ -42,6 +38,7 @@ interface Restoration {
 
 export default function CardList({
   userId,
+  totalCount,
   type = 'root',
   q,
   tag,
@@ -151,22 +148,28 @@ export default function CardList({
     }
   };
 
-  const { data, fetchNextPage, isPending, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey,
-      queryFn: ({ pageParam }) => fetcher(pageParam),
-      initialPageParam: null as number | null,
-      getNextPageParam: (lastPage) => {
-        return lastPage?.hasNextPage && lastPage?.endCursor
-          ? lastPage?.endCursor
-          : null;
-      },
-    });
+  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey,
+    queryFn: ({ pageParam }) => fetcher(pageParam),
+    initialPageParam: null as number | null,
+    getNextPageParam: (lastPage) => {
+      return lastPage?.hasNextPage && lastPage?.endCursor
+        ? lastPage?.endCursor
+        : null;
+    },
+  });
 
   const oldPages = data?.pages ?? [];
   const flatPages = oldPages.map((page) => page?.list).flat() ?? [];
 
   const list = flatPages.filter(Boolean);
+
+  const lastItem = last(data?.pages ?? []);
+
+  // 더이상 가져올 데이터가 없을 때
+  const isEmptyData = lastItem
+    ? flatPages.length === totalCount && !lastItem.hasNextPage
+    : false;
 
   const loadMore = (index: number) => {
     if (index <= 0) return;
@@ -177,6 +180,17 @@ export default function CardList({
       void fetchNextPage();
     }
   };
+
+  const onScrollToTop = useCallback(() => {
+    $virtuoso.current?.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+
+    if (sessionStorage.getItem(key)) {
+      sessionStorage.removeItem(key);
+    }
+  }, [key]);
 
   useBeforeUnload(() => {
     const $api = $virtuoso.current;
@@ -275,160 +289,54 @@ export default function CardList({
     closeMutationObserver();
   });
 
-  const lastItem = last(data?.pages ?? []);
-
   return (
     <KeyProvider queryKey={queryKey}>
-      <Virtuoso
-        components={{
-          ...(header && {
-            Header: () => <>{header}</>,
-          }),
-          Footer: () => {
-            if (isPending || isFetchingNextPage) {
-              return <CardListSkeleton />;
-            }
+      <FloatingActionButtons onScrollToTop={onScrollToTop}>
+        <Virtuoso
+          components={{
+            ...(header && {
+              // eslint-disable-next-line react/no-unstable-nested-components
+              Header: () => <>{header}</>,
+            }),
+            // eslint-disable-next-line react/no-unstable-nested-components
+            Footer: () => {
+              if (isFetchingNextPage) {
+                return <CardListSkeleton />;
+              }
 
-            // 더이상 가져올 데이터가 없을 때
-            if (lastItem && !lastItem.hasNextPage) {
-              return <CardEnd />;
-            }
+              // 더이상 가져올 데이터가 없을 때
+              if (isEmptyData) {
+                return (
+                  <div className="h-[300px]">
+                    <Card.End />
+                  </div>
+                );
+              }
 
-            return null;
-          },
-        }}
-        computeItemKey={(index, item) => {
-          if (!item) {
-            return `${type}-items-${index}`;
-          }
-          return `${type}-items-${item.id}-${index}`;
-        }}
-        data={list}
-        data-hydrating-signal
-        endReached={loadMore}
-        initialItemCount={list.length - 1}
-        itemContent={(_, item) => {
-          return <Card item={item} />;
-        }}
-        overscan={10}
-        ref={$virtuoso}
-        style={{ height: '100%' }}
-        totalCount={lastItem?.totalCount ?? 0}
-      />
+              return null;
+            },
+          }}
+          computeItemKey={(index, item) => {
+            if (!item) {
+              return `${type}-items-${index}`;
+            }
+            return `${type}-items-${item.id}-${index}`;
+          }}
+          data={list}
+          data-hydrating-signal
+          endReached={loadMore}
+          initialItemCount={list.length - 1}
+          // eslint-disable-next-line react/no-unstable-nested-components
+          itemContent={(_, item) => {
+            return <Card item={item} />;
+          }}
+          overscan={900}
+          ref={$virtuoso}
+          style={{ height: '100%' }}
+          totalCount={totalCount}
+          useWindowScroll
+        />
+      </FloatingActionButtons>
     </KeyProvider>
-  );
-}
-
-interface CardListWithHeaderSkeletonProps {
-  type?: 'default' | 'today';
-}
-
-export function CardListWithHeaderSkeleton({
-  type,
-}: CardListWithHeaderSkeletonProps) {
-  return (
-    <>
-      <CardListHeaderSkeleton type={type} />
-      <CardListSkeleton />
-    </>
-  );
-}
-
-export function CardListWithSearhHeaderSkeleton() {
-  return (
-    <>
-      <section className="my-5 md:my-8 px-6">
-        <form>
-          <div className="relative">
-            <Icons.search className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
-            <Input
-              className="pl-8"
-              autoComplete="off"
-              name="q"
-              placeholder="검색어를 입력하세요"
-              type="search"
-            />
-          </div>
-        </form>
-      </section>
-      <CardListSkeleton />
-    </>
-  );
-}
-
-export function CardListSkeleton() {
-  return (
-    <>
-      {Array.from({ length: 8 }).map((_, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <Card.Skeleton key={`card-skeleton-${index}`} />
-      ))}
-    </>
-  );
-}
-
-export function CardEnd() {
-  return (
-    <div className="h-[300px]">
-      <Card.End />
-    </div>
-  );
-}
-
-interface CardListHeaderSkeletonProps {
-  type?: 'default' | 'today';
-}
-
-export function CardListHeaderSkeleton({ type }: CardListHeaderSkeletonProps) {
-  return (
-    <div className="w-full relative flex flex-col gap-1 items-start p-6 overflow-hidden border-b">
-      <div className="sm:hidden flex flex-row justify-end w-full items-start">
-        <div className="flex flex-row gap-2 justify-end z-10">
-          {type === 'today' ? (
-            <Button type="submit" size="icon" variant="outline">
-              <Icons.share />
-            </Button>
-          ) : null}
-          <CopyButton />
-          <RssFeedButton type="placeholders" />
-        </div>
-      </div>
-      <div className="flex flex-row justify-between items-center w-full">
-        <div className="flex flex-col justify-start gap-0.5">
-          <div className="font-heading text-2xl text-slate-700 dark:text-slate-200 font-semibold z-10">
-            <span className="bg-gray-200 rounded-sm animate-pulse text-transparent">
-              placeholder
-            </span>
-          </div>
-          <div className="flex-row gap-2 hidden sm:flex">
-            <div className="flex flex-row gap-2 z-10 text-slate-500 dark:text-slate-400">
-              <span className="bg-gray-200 rounded-sm animate-pulse text-transparent">
-                placeholder
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-row items-center w-full justify-between sm:hidden">
-        <div className="flex flex-row gap-2 z-10 text-slate-500 dark:text-slate-400">
-          <span className="bg-gray-200 rounded-sm animate-pulse text-transparent">
-            placeholder
-          </span>
-        </div>
-      </div>
-      <div className="flex flex-row gap-2 items-center z-10 w-full">
-        <div className="sm:flex hidden w-full">
-          <div className="flex flex-row gap-2 justify-end z-10 w-full">
-            {type === 'today' ? (
-              <Button type="submit" size="icon" variant="outline">
-                <Icons.share />
-              </Button>
-            ) : null}
-            <CopyButton />
-            <RssFeedButton type="placeholders" />
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }
