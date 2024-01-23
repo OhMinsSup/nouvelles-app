@@ -15,10 +15,11 @@ class Resource {
 
   load() {
     let promise = this._promise;
-    if (promise == null) {
+    if (promise === null) {
       promise = this._loader()
         .then((result) => {
           if (result.default) {
+            // eslint-disable-next-line no-param-reassign
             result = result.default;
           }
           this._result = result;
@@ -34,17 +35,18 @@ class Resource {
   }
 
   get() {
-    if (this._result != null) {
+    if (this._result !== null) {
       return this._result;
     }
   }
 
   read() {
-    if (this._result != null) {
+    if (this._result !== null) {
       return this._result;
-    } else if (this._error != null) {
+    } else if (this._error !== null) {
       throw this._error;
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-throw-literal
       throw this._promise;
     }
   }
@@ -55,7 +57,7 @@ export default function ResourceLoader(
   loader: (...args: any[]) => Promise<any>,
 ) {
   let resource: Resource = resourceMap.get(moduleId);
-  if (resource == null) {
+  if (resource === null) {
     resource = new Resource(loader);
     resourceMap.set(moduleId, resource);
   }

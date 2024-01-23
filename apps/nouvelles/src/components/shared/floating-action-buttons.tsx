@@ -1,65 +1,11 @@
 'use client';
-import React, { useCallback, useMemo, useTransition } from 'react';
-import { useMediaQuery } from '@nouvelles/react-hooks';
-import { Button } from '~/components/ui/button';
-import { Icons } from '~/components/icons';
-
-interface FloatingScrollTopActionButtonProps {
-  onScrollToTop: () => void;
-}
-
-function FloatingScrollTopActionButton(
-  props: FloatingScrollTopActionButtonProps,
-) {
-  const isMobile = useMediaQuery('(max-width: 640px)', false);
-  const isTablet = useMediaQuery('(max-width: 768px)', false);
-  const isDesktop = useMediaQuery('(min-width: 1024px)', false);
-
-  const [isPending, startTransition] = useTransition();
-
-  const onScrollToTop = useCallback(() => {
-    startTransition(() => {
-      props.onScrollToTop();
-    });
-  }, [props]);
-
-  const left = useMemo(() => {
-    if (isMobile) {
-      return '3.3%';
-    }
-
-    if (isTablet) {
-      return '2.5%';
-    }
-
-    // if (isDesktop) {
-    //   return '35.8%';
-    // }
-
-    return '18%';
-  }, [isMobile, isTablet, isDesktop]);
-
-  const styles: React.CSSProperties = useMemo(() => {
-    return {
-      left,
-    };
-  }, [left]);
-
-  return (
-    <div className="fixed bottom-[10%] z-[1001]" style={styles}>
-      <Button
-        className="rounded-full shadow-md"
-        disabled={isPending}
-        onClick={onScrollToTop}
-        size="icon"
-        type="button"
-        variant="outline"
-      >
-        <Icons.arrowUp />
-      </Button>
-    </div>
-  );
-}
+import React, { useRef, useState } from 'react';
+import { useEventListener, useMemoizedFn } from '@nouvelles/react-hooks';
+import { getWindowScrollTop } from '@nouvelles/react';
+import FloatingScrollTopActionButton, {
+  type FloatingScrollTopActionButtonProps,
+} from '~/components/shared/floating-scrolltop-action-button';
+import { optimizeAnimation } from '~/utils/utils';
 
 function FloatingWriteActionButton() {
   return null;
@@ -69,13 +15,46 @@ type FloatingActionButtonProps = FloatingScrollTopActionButtonProps & {
   children: React.ReactNode;
 };
 
-export default function FloatingActionButtons(
-  props: FloatingActionButtonProps,
-) {
+export default function FloatingActionButtons({
+  onScrollToTop,
+  children,
+}: FloatingActionButtonProps) {
+  const $prevScrollTop = useRef(0);
+  const [scrollPosition, setScrollPosition] = useState<'up' | 'down' | 'idle'>(
+    'idle',
+  );
+  const scroll = () => {
+    const scrollTop = getWindowScrollTop();
+
+    // 현재 스크롤이 내려가는지 올라가는지 판단
+    const isScrollDown = scrollTop > $prevScrollTop.current;
+
+    if (isScrollDown) {
+      // 헤더가 사라지는 경우
+      if (scrollTop > 0) {
+        setScrollPosition('up');
+      } else {
+        setScrollPosition('down');
+      }
+    } else {
+      // 스크롤이 올라가는 경우
+      setScrollPosition('down');
+    }
+
+    $prevScrollTop.current = scrollTop;
+  };
+
+  const memoizedScrollFn = useMemoizedFn(optimizeAnimation(scroll));
+
+  useEventListener('scroll', memoizedScrollFn);
+
   return (
     <>
-      <FloatingScrollTopActionButton onScrollToTop={props.onScrollToTop} />
-      {props.children}
+      <FloatingScrollTopActionButton
+        onScrollToTop={onScrollToTop}
+        scrollPosition={scrollPosition}
+      />
+      {children}
       <FloatingWriteActionButton />
     </>
   );

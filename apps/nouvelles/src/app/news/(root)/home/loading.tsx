@@ -1,4 +1,4 @@
-import { CardListSkeleton } from '~/components/shared/card-list';
+import CardListSkeleton from '~/components/skeleton/card-list';
 
 export default function Loading() {
   return <CardListSkeleton />;

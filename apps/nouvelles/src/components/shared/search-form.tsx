@@ -13,8 +13,8 @@ export default function SearchForm({ initialValue }: SearchFormProps) {
       <div className="relative">
         <Icons.search className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
         <Input
-          className="pl-8"
           autoComplete="off"
+          className="pl-8"
           defaultValue={initialValue}
           name="q"
           placeholder="검색어를 입력하세요"

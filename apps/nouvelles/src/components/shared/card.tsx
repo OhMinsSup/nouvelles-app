@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import React, { useMemo } from 'react';
 import { formatDate } from '@nouvelles/date';
+import { ClientOnly, ErrorBoundary } from '@nouvelles/react-components';
 import Avatars from '~/components/shared/avatars';
 import {
   Tooltip,
@@ -16,7 +17,7 @@ import { buttonVariants } from '~/components/ui/button';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { PAGE_ENDPOINTS } from '~/constants/constants';
 import ResourceLoader from '~/utils/resource';
-import { ClientOnly, ErrorBoundary } from '@nouvelles/react-components';
+import SkeletonCardImage from '~/components/skeleton/card-image';
 
 interface CardProps {
   item: ItemSchema;
@@ -65,7 +66,10 @@ export default function Card({ item }: CardProps) {
   }, [item]);
 
   return (
-    <div className=" pr-[15px] pl-[10px] border-b cursor-pointer overflow-hidden">
+    <div
+      className=" pr-[15px] pl-[10px] border-b cursor-pointer overflow-hidden"
+      data-name="card-item"
+    >
       <div className="my-2" />
       <div className="mt-[1px] gap-[10px] flex flex-row">
         <div className="pl-2">
@@ -210,65 +214,6 @@ export default function Card({ item }: CardProps) {
   );
 }
 
-Card.Skeleton = function CardSkeleton() {
-  return (
-    <div className=" pr-[15px] pl-[10px] border-b cursor-pointer overflow-hidden">
-      <div className="my-2" />
-      <div className="mt-[1px] gap-[10px] flex flex-row">
-        <div className="pl-2">
-          <div className="w-12 h-12 bg-gray-200 rounded-full animate-pulse" />
-        </div>
-        <div className="flex-1">
-          <div className="z-[1] gap-1 flex-1 flex-row flex items-center pb-[2px]">
-            <div className="max-w-[80%]">
-              <div className="w-24 h-4 bg-gray-200 rounded-full animate-pulse" />
-            </div>
-            <div className="text-sm font-normal text-muted-foreground">·</div>
-            <div className="w-24 h-4 bg-gray-200 rounded-full animate-pulse" />
-          </div>
-          <div className="flex flex-col gap-4 md:gap-5 w-full">
-            <div className="w-full flex flex-col md:flex-row gap-3 sm:gap-4 md:gap-6 justify-between">
-              <div className="flex flex-col gap-1 ">
-                <div>
-                  <div className="w-24 h-4 bg-gray-200 rounded-full animate-pulse" />
-                </div>
-                <div className="hidden md:block">
-                  <div className="w-24 h-4 bg-gray-200 rounded-full animate-pulse" />
-                </div>
-              </div>
-              <div className="w-full rounded-xl md:rounded-lg bg-slate-100 dark:bg-slate-800 relative cursor-pointer md:basis-[180px] md:h-[108px] md:shrink-0">
-                <div className="md:hidden">
-                  <AspectRatio ratio={16 / 9}>
-                    <div className="w-full h-full overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:dark:ring-offset-slate-800">
-                      <Card.SkeletonImage />
-                    </div>
-                  </AspectRatio>
-                </div>
-                <div className="hidden md:block w-full h-full">
-                  <div className="w-full h-full overflow-hidden rounded-xl md:rounded-lg focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white focus:dark:ring-offset-slate-800">
-                    <Card.SkeletonImage />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center justify-end space-x-4 py-4">
-            <div className="flex items-center space-x-1">
-              <div className="w-24 h-4 bg-gray-200 rounded-full animate-pulse" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-Card.SkeletonImage = function CardSkeleteImage() {
-  return (
-    <div className="w-full h-full bg-gray-200 rounded-xl md:rounded-lg animate-pulse" />
-  );
-};
-
 Card.End = function CardEnd() {
   return (
     <div className="w-full py-5">
@@ -281,9 +226,9 @@ Card.End = function CardEnd() {
 
 function SuspenseImage({ item }: CardProps) {
   return (
-    <ClientOnly fallback={<Card.SkeletonImage />}>
-      <ErrorBoundary fallback={(props) => <Card.ImageError {...props} />}>
-        <React.Suspense fallback={<Card.SkeletonImage />}>
+    <ClientOnly fallback={<SkeletonCardImage />}>
+      <ErrorBoundary fallback={<Card.ImageError />}>
+        <React.Suspense fallback={<SkeletonCardImage />}>
           <Card.Image item={item} />
         </React.Suspense>
       </ErrorBoundary>
@@ -291,7 +236,7 @@ function SuspenseImage({ item }: CardProps) {
   );
 }
 
-Card.Image = function CardImage({ item }: CardProps) {
+Card.Image = function Item({ item }: CardProps) {
   const src = item?.image ? `/api/assets/image?url=${item.image}` : undefined;
   const alt = item?.title ?? '뉴스 이미지가 없습니다.';
 
@@ -308,27 +253,21 @@ Card.Image = function CardImage({ item }: CardProps) {
         img.src = src;
       });
     });
-    resource.load();
+    void resource.load();
     resource.read();
   }
 
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
+      alt={alt}
       className="object-cover w-full h-full rounded-xl md:rounded-lg"
       loading="lazy"
       src={src}
-      alt={alt}
     />
   );
 };
 
-interface CardImageErrorProps {
-  error: Error;
-  componentStack: string | null | undefined;
-  resetError: () => void;
-}
-
-Card.ImageError = function CardImageError(props: CardImageErrorProps) {
+Card.ImageError = function Item() {
   return null;
 };

@@ -66,8 +66,8 @@ export function SidebarDesktop() {
   }, [setTheme, theme]);
 
   return (
-    <div className="absolute top-[10px] left-desktop-sidebar h-full">
-      <div className="flex flex-col space-y-5">
+    <div className="h-full">
+      <div className="flex flex-col space-y-5 mt-5">
         <MainNav type="desktop" />
       </div>
       <div className="absolute bottom-[30px] w-full space-y-4">

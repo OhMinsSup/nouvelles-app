@@ -1,16 +1,16 @@
 import React from 'react';
+import { KakaoSDKLoader } from '~/services/providers/kakao';
+import { env } from 'env.mjs';
 import CopyButton from './copy-button';
 import RssFeedButton from './rss-feed-button';
 import ShareButton from './share-button';
-import { KakaoSDKLoader } from '~/services/providers/kakao';
-import { env } from 'env.mjs';
 
 interface TodayHeaderProps {
   id: number;
   count: number;
 }
 
-export default async function TodayHeader({ count, id }: TodayHeaderProps) {
+export default function TodayHeader({ count, id }: TodayHeaderProps) {
   return (
     <KakaoSDKLoader clientId={env.KAKAO_SDK_CLIENT_ID}>
       <div className="w-full relative flex flex-col gap-1 items-start p-6 overflow-hidden border-b">

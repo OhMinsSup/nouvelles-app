@@ -1,8 +1,8 @@
-import { getRequestInDomainInfo } from '@nouvelles/libs';
 import { Buffer } from 'node:buffer';
+import { getRequestInDomainInfo } from '@nouvelles/libs';
 import { PAGE_ENDPOINTS } from '~/constants/constants';
 
-export async function GET(request: Request) {
+export function GET(request: Request) {
   const info = getRequestInDomainInfo(request);
   if (!info.domainUrl) {
     throw new Error('Could not determine domain URL.');
