@@ -69,6 +69,10 @@ export function SidebarDesktop() {
     <div className="h-full">
       <div className="flex flex-col space-y-5 mt-5">
         <MainNav type="desktop" />
+        <Button className="rounded-full" size="sm" type="button">
+          <Icons.squarePen />
+          <span className="ml-2">글쓰기</span>
+        </Button>
       </div>
       <div className="absolute bottom-[30px] w-full space-y-4">
         <Button

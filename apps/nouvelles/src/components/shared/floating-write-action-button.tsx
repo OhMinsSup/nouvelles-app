@@ -57,7 +57,7 @@ export default function FloatingWriteActionButton({
 
   return (
     <div
-      className={cn('fixed z-[1001] bottom-[90px]', {
+      className={cn('fixed z-[49] bottom-[90px]', {
         hidden: !right,
       })}
       style={styles}

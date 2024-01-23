@@ -35,6 +35,10 @@ export default function MobileHeaderArea() {
               </SheetHeader>
               <div className="flex flex-col space-y-4">
                 <NavigationArea type="desktop" />
+                <Button className="rounded-full" size="sm" type="button">
+                  <Icons.squarePen />
+                  <span className="ml-2">글쓰기</span>
+                </Button>
               </div>
               <div
                 className="absolute bottom-6"
