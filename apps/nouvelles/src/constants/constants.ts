@@ -53,7 +53,9 @@ export const API_ENDPOINTS = {
   },
 };
 
-export const ASSET_URL = {};
+export const ASSET_URL = {
+  PAGE_NOT_FOUND: '/images/undraw_page_not_found.png',
+};
 
 export const PAGE_ENDPOINTS = {
   NEWS: {

@@ -67,7 +67,8 @@ function InternalKakaoIntialize({
     });
   });
 
-  void resource.load();
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  resource.load();
   resource.read();
 
   const kakaoSDK = resource.get() ?? null;

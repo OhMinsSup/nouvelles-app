@@ -1,6 +1,6 @@
 'use client';
 import { getTargetElement, getWindowScrollTop } from '@nouvelles/react';
-import { useEventListener, useMediaQuery } from '@nouvelles/react-hooks';
+import { useEventListener } from '@nouvelles/react-hooks';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { optimizeAnimation } from '~/utils/utils';
 
@@ -9,11 +9,6 @@ interface FooterMobileProps {
 }
 
 export default function FooterMobile({ children }: FooterMobileProps) {
-  const isMobile = useMediaQuery('(max-width: 768px)', false);
-  console.log('isMobile!!!', isMobile);
-  if (!isMobile) {
-    return null;
-  }
   return <FooterMobile.Internal>{children}</FooterMobile.Internal>;
 }
 

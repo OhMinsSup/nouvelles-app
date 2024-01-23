@@ -15,7 +15,7 @@ import type { ItemSchema } from '~/services/api/items/items.model';
 import { TipTapEditor } from '~/components/editor/tiptap-editor';
 import { buttonVariants } from '~/components/ui/button';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
-import { PAGE_ENDPOINTS } from '~/constants/constants';
+import { ASSET_URL, PAGE_ENDPOINTS } from '~/constants/constants';
 import ResourceLoader from '~/utils/resource';
 import SkeletonCardImage from '~/components/skeleton/card-image';
 
@@ -242,18 +242,19 @@ Card.Image = function Item({ item }: CardProps) {
 
   if (src) {
     const resource = ResourceLoader(src, () => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         const img = new Image();
         img.onload = () => {
           resolve(src);
         };
-        img.onerror = (error) => {
-          reject(error);
+        img.onerror = () => {
+          resolve(ASSET_URL.PAGE_NOT_FOUND);
         };
         img.src = src;
       });
     });
-    void resource.load();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    resource.load();
     resource.read();
   }
 

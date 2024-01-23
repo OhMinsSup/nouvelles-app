@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { getTargetElement, getWindowScrollTop } from '@nouvelles/react';
-import { useEventListener, useMediaQuery } from '@nouvelles/react-hooks';
+import { useEventListener } from '@nouvelles/react-hooks';
 import { optimizeAnimation } from '~/utils/utils';
 
 interface HeaderMobileProps {
@@ -9,10 +9,6 @@ interface HeaderMobileProps {
 }
 
 export default function HeaderMobile({ children }: HeaderMobileProps) {
-  const isMobile = useMediaQuery('(max-width: 768px)', false);
-  if (!isMobile) {
-    return null;
-  }
   return <HeaderMobile.Internal>{children}</HeaderMobile.Internal>;
 }
 
