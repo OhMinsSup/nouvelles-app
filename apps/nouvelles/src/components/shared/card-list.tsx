@@ -182,14 +182,14 @@ export default function CardList({
   };
 
   const onScrollToTop = useCallback(() => {
-    $virtuoso.current?.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-
     if (sessionStorage.getItem(key)) {
       sessionStorage.removeItem(key);
     }
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   }, [key]);
 
   useBeforeUnload(() => {
