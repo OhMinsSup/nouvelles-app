@@ -136,9 +136,17 @@ export default function CardList({
         const _oldPages = (queryData.pages ?? []) as ItemListSchema[];
         const _oldPageParams = (queryData.pageParams ?? []) as number[];
         const _nextPageParams = prefetchData.map((page) => page?.endCursor);
+        // 중복된 endCursor가 있는 경우 제거
+        const pages = _oldPages.filter(
+          (page) => !_nextPageParams.includes(page?.endCursor),
+        );
+        const pageParams = _oldPageParams.filter(
+          (page) => !_nextPageParams.includes(page),
+        );
+
         return {
-          pages: [..._oldPages, ...prefetchData],
-          pageParams: [..._oldPageParams, ..._nextPageParams],
+          pages: [...pages, ...prefetchData],
+          pageParams: [...pageParams, ..._nextPageParams],
         };
       });
     } catch (error) {
