@@ -20,6 +20,7 @@ export default function FloatingActionButtons({
   onScrollToTop,
   children,
 }: FloatingActionButtonProps) {
+  const [top, setTop] = useState(0);
   const $prevScrollTop = useRef(0);
   const isDesktop = useMediaQuery('(min-width: 1280px)', false);
   const [scrollPosition, setScrollPosition] = useState<'up' | 'down' | 'idle'>(
@@ -44,6 +45,7 @@ export default function FloatingActionButtons({
     }
 
     $prevScrollTop.current = scrollTop;
+    setTop(scrollTop);
   };
 
   const memoizedScrollFn = useMemoizedFn(optimizeAnimation(scroll));
@@ -52,14 +54,16 @@ export default function FloatingActionButtons({
 
   return (
     <>
-      <FloatingScrollTopActionButton
-        onScrollToTop={onScrollToTop}
-        scrollPosition={scrollPosition}
-      />
+      {top > 0 ? (
+        <FloatingScrollTopActionButton
+          onScrollToTop={onScrollToTop}
+          scrollPosition={scrollPosition}
+        />
+      ) : null}
       {children}
-      {isDesktop ? null : (
+      {!isDesktop ? (
         <FloatingWriteActionButton scrollPosition={scrollPosition} />
-      )}
+      ) : null}
     </>
   );
 }
