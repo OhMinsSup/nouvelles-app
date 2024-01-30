@@ -35,12 +35,5 @@ export const NAV_CONFIG = {
       href: PAGE_ENDPOINTS.NEWS.SEARCH,
       icon: Icons.search,
     },
-    // {
-    //   id: 'setting',
-    //   type: 'link',
-    //   title: '더보기',
-    //   href: PAGE_ENDPOINTS.NEWS.SETTING,
-    //   icon: Icons.moreHorizontal,
-    // },
   ] as NavItem[],
 };

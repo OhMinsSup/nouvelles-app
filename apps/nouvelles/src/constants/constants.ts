@@ -72,6 +72,9 @@ export const PAGE_ENDPOINTS = {
     NEWS_PAPERS: {
       ID: (newspaperId: string | number) => `/news/newspapers/${newspaperId}`,
     },
+    WRITE: {
+      ROOT: '/news/write',
+    },
   },
 } as const;
 

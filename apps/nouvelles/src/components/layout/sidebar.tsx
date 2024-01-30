@@ -2,6 +2,7 @@
 import React, { useCallback } from 'react';
 import { useTheme } from 'next-themes';
 import { SkipRenderOnClient, ClientOnly } from '@nouvelles/react-components';
+import Link from 'next/link';
 import MainNav from '~/components/layout/navigation-area';
 import {
   Tooltip,
@@ -10,7 +11,8 @@ import {
   TooltipTrigger,
 } from '~/components/ui/tooltip';
 import { Icons } from '~/components/icons';
-import { Button } from '~/components/ui/button';
+import { Button, buttonVariants } from '~/components/ui/button';
+import { PAGE_ENDPOINTS } from '~/constants/constants';
 
 export function SidebarTablet() {
   const { setTheme, theme } = useTheme();
@@ -69,10 +71,16 @@ export function SidebarDesktop() {
     <div className="h-full">
       <div className="flex flex-col space-y-5 mt-5">
         <MainNav type="desktop" />
-        <Button className="rounded-full" size="sm" type="button">
+        <Link
+          className={buttonVariants({
+            className: '!rounded-full',
+            size: 'sm',
+          })}
+          href={PAGE_ENDPOINTS.NEWS.WRITE.ROOT}
+        >
           <Icons.squarePen />
           <span className="ml-2">글쓰기</span>
-        </Button>
+        </Link>
       </div>
       <div className="absolute bottom-[30px] w-full space-y-4">
         <Button

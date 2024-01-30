@@ -1,15 +1,11 @@
 'use client';
-import React, {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useTransition,
-} from 'react';
+import React, { useEffect, useMemo, useState, useTransition } from 'react';
 import { useEventListener, useMemoizedFn } from '@nouvelles/react-hooks';
-import { Button } from '~/components/ui/button';
+import Link from 'next/link';
+import { buttonVariants } from '~/components/ui/button';
 import { Icons } from '~/components/icons';
 import { cn, optimizeAnimation } from '~/utils/utils';
+import { PAGE_ENDPOINTS } from '~/constants/constants';
 
 interface FloatingWriteActionButtonProps {
   scrollPosition?: 'up' | 'down' | 'idle';
@@ -18,7 +14,6 @@ interface FloatingWriteActionButtonProps {
 export default function FloatingWriteActionButton({
   scrollPosition,
 }: FloatingWriteActionButtonProps) {
-  const $btn = useRef<HTMLButtonElement>(null);
   const [right, setRight] = useState<string | undefined>(undefined);
   const [, startTransition] = useTransition();
 
@@ -62,18 +57,19 @@ export default function FloatingWriteActionButton({
       })}
       style={styles}
     >
-      <Button
-        className={cn('rounded-full shadow-sm', {
-          'opacity-50': scrollPosition === 'up',
+      <Link
+        className={buttonVariants({
+          className: cn('!rounded-full shadow-sm', {
+            'opacity-50': scrollPosition === 'up',
+          }),
+          size: 'icon',
+          variant: 'outline',
         })}
         data-name="floating-write-action-button"
-        ref={$btn}
-        size="icon"
-        type="button"
-        variant="outline"
+        href={PAGE_ENDPOINTS.NEWS.WRITE.ROOT}
       >
         <Icons.squarePen />
-      </Button>
+      </Link>
     </div>
   );
 }

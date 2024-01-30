@@ -64,7 +64,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 interface RoutesProps {
   children: React.ReactNode;
-  modal: React.ReactNode;
+  modal?: React.ReactNode;
 }
 
 // Lazy load headers
@@ -90,9 +90,9 @@ export default async function Layout(props: RoutesProps) {
         <meta content="light" name="color-scheme" />
         <meta content="#FFFFFF" name="theme-color" />
         <script
-          src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"
-          integrity="sha384-6MFdIr0zOira1CHQkedUqJVql0YtcZA1P0nbPrQYJXVJZUkTk/oX4U9GhUIs3/z8"
           crossOrigin="anonymous"
+          integrity="sha384-6MFdIr0zOira1CHQkedUqJVql0YtcZA1P0nbPrQYJXVJZUkTk/oX4U9GhUIs3/z8"
+          src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"
         />
       </head>
       <body
@@ -112,7 +112,10 @@ export default async function Layout(props: RoutesProps) {
             window.__DOMAIN_INFO__ = ${JSON.stringify(info)}`,
           }}
         />
-        <Providers isCORS={isCORS}>{props.children}</Providers>
+        <Providers isCORS={isCORS}>
+          {props.children}
+          {props.modal}
+        </Providers>
         {isCORS && env.NODE_ENV === 'production' ? (
           <>
             <AxiomWebVitals />
