@@ -4,7 +4,6 @@ import { getRequestInDomainInfo } from '@nouvelles/libs';
 import { MemoryCache } from '~/services/api/image/image.cache';
 import { schema } from '~/services/api/image/image.query';
 import type { MimeType } from '~/services/api/image/image.type';
-import { logger } from '~/services/logger/logger';
 import cors, { commonOriginFunc } from '~/services/server/utils/cors';
 import { ASSET_URL } from '~/constants/constants';
 
@@ -25,7 +24,9 @@ const fetchResolver = async (url: string) => {
     },
   });
 
-  const response = await fetch(request);
+  const response = await fetch(request, {
+    cache: 'no-store',
+  });
 
   if (!response.ok) {
     throw new BaseError('FetchError', 'Failed to fetch image');
@@ -42,9 +43,13 @@ const fetchResolver = async (url: string) => {
     'content-type',
   ) as unknown as MimeType;
 
+  // FIXED: fetch for over 2MB of data can not be cached
+  const isOver2MB = buffer.byteLength > 2 * 1024 * 1024;
+
   return {
     buffer,
     contentType,
+    isOver2MB,
   };
 };
 
@@ -92,8 +97,7 @@ export async function GET(request: Request) {
 
     const { url } = query.data;
 
-    if (cache && cache.has(url)) {
-      logger.info(`Cache HIT: ${url}`);
+    if (cache.has(url)) {
       const cacheValue = cache.get(url);
 
       if (cacheValue) {
@@ -114,13 +118,13 @@ export async function GET(request: Request) {
           defaultCacheControl,
         );
       }
-    } else {
-      logger.info(`Cache MISS: ${url}`);
     }
 
-    const { buffer, contentType } = await fetchResolver(url);
+    const { buffer, contentType, isOver2MB } = await fetchResolver(url);
 
-    if (cache) {
+    if (isOver2MB) {
+      // FIXED: fetch for over 2MB of data can not be cached
+    } else {
       cache.set(url, buffer);
     }
 
